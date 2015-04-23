@@ -1,0 +1,33 @@
+\tikzset{
+  /CMM tips/.style={
+    tip_stealth/.tip={stealth},
+    %/.tip={Parenthesis[sep=1pt]},
+    tip_memory/.tip={Bar[sep=1pt]},
+    % output
+    tip_output/.tip={Straight Barb[sep=1pt]},
+    % demand and regret
+    tip_demand/.tip={FlatInverted[color_orange]},
+    tip_demand_in/.tip={tip_demand[open]},
+    tip_regret/.tip={InvertedDiamond[color_green]},
+    % explanation and consumption
+    tip_explanation/.tip={FlatInverted[reversed, color_blue, sep=0.5pt]},
+    tip_explanation_in/.tip={tip_explanation[open]},
+    tip_deduction/.tip={tip_memory[] tip_explanation},
+    % pooling
+    tip_pooling/.tip={Circle[sep=0.25pt, color_red]},  % value
+    tip_ipooling/.tip={tip_memory[] tip_pooling},  % integrated pooling
+    tip_onset/.tip={Semicircle[color_red]},
+    tip_forgetting/.tip={Circle[sep=0.25pt, color_red, open]},   % forgetting
+    % intention and realization
+    tip_intention/.tip={Square[sep=1pt, color_green]},
+    tip_realization/.tip={Diamond[color_green]},
+    % boosting
+    tip_boosting/.tip={Tee Barb[reversed, sep=1pt, color_green]},
+    % unused
+%   /.tip={Hooks[arc=240, color_red, sep=1pt]},
+%   /.tip={Hooks[reversed, arc=240, sep=1pt, color_red]},
+%   /.tip={Straight Barb[length=+1.8pt +2.7, sep=0.5pt, color_green]},
+%   /.tip={Arc Barb[sep=0.5pt, color_orange]},
+%   /.tip={Arc Barb[sep=0.5pt, color_green, reversed]},
+  },
+}

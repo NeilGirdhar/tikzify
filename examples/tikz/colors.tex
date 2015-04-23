@@ -1,0 +1,22 @@
+\input{latex/color_macros.tex}
+
+% Color macro used to set up colors.
+\tikzset{define color/.code 2 args={\definecolor{#1}{HTML}{#2}}}
+
+% These colors can be used within a tikz diagram.
+\tikzset{
+  /Lakeside Camping/.style={
+    define color={color_blue}{\colorb},
+    define color={color_orange}{\coloro},
+    define color={color_green}{\colorg},
+    define color={color_red}{\colorr},
+    define color={color_brown}{\colorbrown},
+    define color={color_yellow}{\colory},
+    define color={h_color_blue}{\hcolorb},
+    define color={h_color_orange}{\hcoloro},
+    define color={h_color_green}{\hcolorg},
+    define color={h_color_red}{\hcolorr},
+    define color={h_color_brown}{\hcolorbrown},
+    define color={h_color_yellow}{\hcolory},
+  }
+}

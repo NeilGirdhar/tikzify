@@ -1,0 +1,44 @@
+# Local
+examples/*.tex
+
+# Python distribution / packaging
+build/
+dist/
+.eggs/
+*.egg-info/
+setup.py
+
+# hypothesis
+.hypothesis/
+
+# my[py]
+.mypy_cache/
+
+# pytype
+.pytype/
+
+# Byte-compiled Python
+*.pyc
+
+# uml
+uml/*.png
+uml/*.dot
+
+# vim
+*.orig
+
+# LaTeX
+*.aux
+*.auxlock
+*.bbl
+*.bcf
+*.blg
+*.dpth
+*.fdb_latexmk
+*.fls
+*.log
+*.md5
+*.out
+*.pdf
+*.run.xml
+*.toc

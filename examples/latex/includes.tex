@@ -1,0 +1,107 @@
+% latex only
+%\usepackage[ruled,vlined]{algorithm2e}  % algorithm environment
+\usepackage{ellipsis}  % for \textellipsis
+
+% lualatex only
+%\usepackage{fontspec}
+
+% all kinds of latex
+\makeatletter  % changes the catcode of @ to 11
+\@ifclassloaded{memoir}
+{
+  \usepackage[svgnames,hyperref]{xcolor}  % colors for hyperref
+  \usepackage{bm}  % bold for greek
+}
+{
+}
+\@ifclassloaded{beamer}
+{
+  \usepackage{caption}
+  \usepackage{subcaption}
+  \usepackage{comment}   % included by memoir, but not by beamer
+  \usepackage{bm}  % bold for greek
+}
+{
+}
+\@ifclassloaded{standalone}
+{
+  \usepackage{comment}
+}
+{
+}
+
+\makeatother
+\usepackage{adjustbox}  % \begin{adjustbox}
+\usepackage{amsmath}  % equations
+\usepackage{amssymb}  % mathematical symbols (not compatible with MinionPro)
+\usepackage{bbm}  % mathbbm used for indicator
+\usepackage{colortbl}  % \arrayrulecolor
+\usepackage{float}  % allows the "here" specifier for floats (after fixltx2e)
+\usepackage[T1]{fontenc}  % accented characters work better
+\usepackage[utf8]{inputenc}  % Force UTF-8 input encoding
+\usepackage{multirow}  % multirow and multicolumn in tabular
+\PassOptionsToPackage{log-declarations=false}{xparse}  % xparse is loaded by physics.
+\usepackage{physics}  % \dv, etc.
+\usepackage[rightcaption]{sidecap}  % \begin{SCfigure}
+\usepackage{threeparttable}  % nice tables
+\usepackage{wrapfig}  % adds wrapfig
+\usepackage{units}  % adds nicefrac, unit
+%\usepackage[linecolor=blue!70!white, backgroundcolor=blue!30!white]{todonotes}  % \todo
+%\usepackage[nopar]{lipsum}  % Some dummy text
+%\usepackage[xcolor]{changebar}  % bars that indicate where changes have been made
+%\usepackage{cancel}  % cancel symbol in equations
+%\usepackage{minted}  % Python
+%\usepackage{pdflscape}  % landscape
+%\usepackage{url}  % allows \url
+
+\hyphenation{pa-ram-e-triza-tion
+  Bayes-ian
+  Bayes-ians
+  Dhil-lon
+  Mün-chen
+  com-po-nen-t-wise
+  con-cor-dance
+  con-tin-u-a-tive
+  con-tin-u-ous
+  de-con-foun-der
+  de-con-foun-ders
+  diplo-ma
+  pa-ram-e-triza-tion
+  pa-ram-e-triza-tions
+  pa-ram-e-trized
+  pro-gres-sive
+  reg-u-lar-iz-er
+  reg-u-lar-iz-ers
+  reg-u-lar-iza-tion
+  rep-re-sen-ta-tion
+  rep-re-sen-ta-tions
+  üni-ver-si-tät
+  Koik-kalain-en}
+\hfuzz=2pt
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% citations:
+\usepackage[
+    backend=biber,
+    citestyle=authoryear,
+    bibstyle=ieee,
+    isbn=false,
+    url=false,
+    doi=false,
+    eprint=false,
+    natbib=false,
+    sorting=nty,
+    uniquename=init,
+]{biblatex}
+
+\defbibenvironment{bibliography}
+  {\list
+     {}
+     {\setlength{\leftmargin}{\bibhang}%
+      \setlength{\itemindent}{-\leftmargin}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item}
+
+%\newminted{python3}{linenos=true,fontsize=\footnotesize}

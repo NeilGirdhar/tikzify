@@ -1,0 +1,438 @@
+% Names
+\newcommand{\dseption}{\emph{d}-separation}
+\newcommand{\dsep}{\emph{d}-separate}
+\newcommand{\dseps}{\emph{d}-separates}
+\newcommand{\dcon}{\emph{d}-connect}
+\newcommand{\dcons}{\emph{d}-connects}
+\newcommand{\dsepped}{\emph{d}-separated}
+\newcommand{\dconned}{\emph{d}-connected}
+% C++
+\newcommand\CC{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+
+% Standard math operators
+\newcommand{\mb}[1]{\vb{#1}}
+\newcommand{\suchthat}{\ni}
+\newcommand{\defeq}{\triangleq}%{\stackrel{\text{def}}{=}}
+\newcommand{\defapprox}{\stackrel{\text{def}}{\approx}}
+\newcommand{\conjugate}[1]{\overline{#1}}
+\newcommand{\conjugatep}[1]{\overline{#1}}
+\newcommand{\hermitiansymbol}{{\mathsf{H}}}
+\newcommand{\transposesymbol}{{\mkern-1.5mu\mathsf{T}}}
+\newcommand{\trans}[1]{#1^{\transposesymbol}}
+\newcommand{\transp}[1]{\left(#1\right)^{\transposesymbol}}
+\newcommand{\ctrans}[1]{#1^{\hermitiansymbol}}
+\newcommand{\ctransp}[1]{\left(#1\right)^{\hermitiansymbol}}
+\newcommand{\detq}[1]{\det #1}
+\newcommand{\detp}[1]{\det\left(#1\right)}
+\newcommand{\elwise}[1]{\left\{#1\right\}^{\text{ew}}}
+%\newcommand{\diagop}[1]{{#1^{\rightthreetimes}}}
+%\newcommand{\diagopp}[1]{\diagop{\left({#1}\right)}}
+\newcommand{\diagop}[1]{{\diag{\left({#1}\right)}}}
+\newcommand{\diagopp}[1]{{\diag{\left({#1}\right)}}}
+\newcommand{\expp}[1]{{\exp{\left({#1}\right)}}}
+\newcommand{\expq}[1]{{e^{#1}}}
+\newcommand{\harmonicsum}{\mathbin{\|}}
+\newcommand{\identity}{\mb{I}}
+\newcommand{\logistic}[1]{{\sigma\left({#1}\right)}}
+\newcommand{\logp}[1]{{\log{\left({#1}\right)}}}
+\newcommand{\mathcol}[2]{{\color[HTML]{#1} #2}}
+\newcommand{\zerovector}{\vb{0}}
+\newcommand{\onevector}{\vb{1}}
+\newcommand{\relmiddle}[1]{\mathrel{}\middle#1\mathrel{}}
+\newcommand{\tracep}[1]{{\trace({#1})}}
+\newcommand{\vecsum}[1]{\trans{\onevector} {#1}}
+\newcommand{\hadamard}{\circ}
+%\newcommand{\diaggradient}[2]{\identity \hadamard {\pdv{#1}{#2}}}
+\newcommand{\gradientx}[2]{\grad_{#1}{#2}}  % gradient of y wrt x.
+\newcommand{\hessian}[2]{{\pdv[2]{#2}{#1}{#1}}}  % Hessian of y wrt x
+\newcommand{\chessian}[2]{{\pdv[2]{#2}{#1}{\conjugate{#1}}}}
+\newcommand{\diaggradientp}[2]{\left(\diaggradient{#1}{#2}\right)}
+\newcommand{\gradientp}[2]{\left(\gradientx{#1}{#2}\right)}
+\newcommand{\hessianp}[2]{\left(\hessian{#1}{#2}\right)}
+\newcommand{\chessianp}[2]{\left(\chessian{#1}{#2}\right)}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\bigo}{\mathcal{O}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\bigast}{\huge \mathlarger{*}}
+\DeclareMathOperator*{\doublesum}{\sum\sum}
+\DeclareMathOperator{\vect}{vec}
+
+% Shorthand
+\newcommand{\integral}[4]{\int_{#2}^{#3} {#4} \dd{#1}}
+
+% Analytical functions
+\newcommand{\logg}{\Psi}  % logg is roughly xlogx
+\newcommand{\loggd}[1]{\Psi_{#1}}  % loggd is roughly epsilon(logx+1)
+\newcommand{\digammaf}{\psi}  % roughly logx + 1
+\newcommand{\digammafd}[1]{\psi_{#1}}  % rougly epsilon/x
+\newcommand{\trigamma}{\psi'}  % roughly 1/x
+\newcommand{\trigammad}{\psi'_\epsilon}  % roughly -epsilon/x^2
+\DeclareMathOperator{\betaf}{B}
+
+\begin{comment}
+\newcommand{\logg}{\psi^{(-1)}}
+\newcommand{\loggd}{\psi^{(-1)}_\epsilon}
+\newcommand{\digammaf}{\psi^{(0)}}
+\newcommand{\digammafd}{\psi^{(0)}_\epsilon}
+\newcommand{\trigamma}{\psi^{(1)}}
+\newcommand{\trigammad}{\psi^{(1)}_\epsilon}
+\end{comment}
+
+% Probability operators
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newcommand{\indicator}{\mathbbm{1}}
+\DeclareMathOperator{\Prob}{\mathcal{P}}
+\DeclareMathOperator{\Lh}{\mathcal{L}}  % likelihood
+\DeclareMathOperator*{\Exp}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\entropy}{\mathcal{H}}
+\DeclareMathOperator{\crossentropy}{\entropy^\times}
+\DeclareMathOperator{\surprisal}{I}
+\DeclareMathOperator{\kl}{\entropy^{\textnormal{KL}}}
+\DeclareMathOperator{\pearldo}{do}
+\newcommand{\pearldox}{\ensuremath{\pearldo(X)}}
+\DeclareMathOperator{\score}{\mathcal{V}}
+\DeclareMathOperator{\fisher}{\mathcal{I}}
+\DeclareMathOperator{\obsfisher}{\fisher_{\textnormal{observed}}}
+
+% Probability distributions
+\newcommand{\distributiontext}[1]{{\textnormal{#1}}}
+\newcommand{\bernoulli}{\distributiontext{Bernoulli}}
+\newcommand{\betadist}{\distributiontext{Beta}}
+\newcommand{\cat}{\distributiontext{Cat}}
+\newcommand{\dir}{\distributiontext{Dir}}
+\newcommand{\expdist}{\distributiontext{Exponential}}
+\newcommand{\gammadist}{\distributiontext{Gamma}}
+\newcommand{\normaldist}{\mathcal{N}}
+\newcommand{\normalgamma}{\distributiontext{Gamma-Normal}}
+\newcommand{\students}{\distributiontext{Student's}}
+\newcommand{\poissondist}{\distributiontext{Poisson}}
+
+% Sets
+\newcommand{\setcomplex}{\mathbb{C}}
+\newcommand{\setint}{\mathbb{Z}}
+\newcommand{\setleak}{\mathbb{L}}
+\newcommand{\setmass}{\mathbb{M}}
+\newcommand{\setnonpositive}{\mathbb{R}_{\le 0}}
+\newcommand{\setnonnegative}{\mathbb{R}_{\ge 0}}
+\newcommand{\setposint}{\mathbb{Z}_{\ge 0}}
+\newcommand{\setpos}{\mathbb{R}_{>0}}
+\newcommand{\setreal}{\mathbb{R}}
+\newcommand{\setsymmetric}[1]{\setreal^{#1 \cross #1}_{\textnormal{ps,s}}}
+\newcommand{\sethermitian}[1]{\setcomplex^{#1 \cross #1}_{\textnormal{ps,h}}}
+
+% -----------------------------------------------------------------------------
+
+% Information theory
+\newcommand{\obsdist}{X}
+\newcommand{\obsdists}{\vb{X}}
+\newcommand{\predist}{Y}
+\newcommand{\avgobs}{Z}
+\newcommand{\outcome}{\omega}
+\newcommand{\setoutcomes}{\Omega}
+
+% Parameter optimization
+\newcommand{\somedist}{D}
+\newcommand{\linearfn}{\mathcal{W}}
+\newcommand{\nonlinearfn}{\mathcal{N}}
+\newcommand{\stochasticfn}{\mathcal{S}}
+\newcommand{\learningrate}{\eta}
+\newcommand{\learningrates}{\vb*{\eta}}
+
+% Stochastic meta-descent
+\newcommand{\somefunction}{f}
+\newcommand{\metalearningrate}{\mu}
+\newcommand{\loglearningrate}{\eta'}
+\newcommand{\loglearningrates}{\vb*{\eta}'}
+\newcommand{\diaglr}{\diagop{\learningrates}}
+\newcommand{\diaglrt}{\diagop{\learningrates_t}}
+\newcommand{\rtec}[1]{\mathcal{R}\left\{#1\right\}}
+\newcommand{\rtecdot}[1]{\texorpdfstring{$\rtec{\cdot}$}{R\{⋅\}}}
+
+% Hessian-free R-term
+\newcommand{\hfrl}{\rtec{\loss}}
+\newcommand{\hfrv}{\rtec{\mb{V}}}
+\newcommand{\hfrw}{\rtec{\mb{W}}}
+\newcommand{\hfrx}{\rtec{\vb{x}}}
+\newcommand{\hfry}{\rtec{\vb{y}}}
+\newcommand{\hfrz}{\rtec{\vb{z}}}
+
+% Hessian-free R-term loss-gradient
+\newcommand{\hfrlp}{\rtec{\lossgradient{\loss}}}
+\newcommand{\hfrvp}{\rtec{\lossgradient{\vb{v}}}}
+\newcommand{\hfrwp}{\rtec{\lossgradient{\vb{w}}}}
+\newcommand{\hfrWp}{\rtec{\lossgradient{\mb{W}}}}
+\newcommand{\hfrxp}{\rtec{\lossgradient{\vb{x}}}}
+\newcommand{\hfryp}{\rtec{\lossgradient{\vb{y}}}}
+\newcommand{\hfrzp}{\rtec{\lossgradient{\vb{z}}}}
+\newcommand{\hfrnatp}{\rtec{\lossgradient{\natparameters}}}
+
+% Loss gradients
+\newcommand{\loss}{L}
+\newcommand{\lossgradient}[1]{\pdv{\loss}{#1}}
+\newcommand{\lgW}{\lossgradient{\mb{W}}}
+\newcommand{\lgv}{\lossgradient{\mb{V}}}
+\newcommand{\lgw}{\lossgradient{\vb{w}}}
+\newcommand{\lgwt}{\pdv{\loss_t}{\vb{w}}}
+\newcommand{\lgx}{\lossgradient{\vb{x}}}
+\newcommand{\lgy}{\lossgradient{\vb{y}}}
+\newcommand{\lgz}{\lossgradient{\vb{z}}}
+\newcommand{\lgnatp}{\lossgradient{\natparameters}}
+
+% Exponential families
+\newcommand{\support}{\Omega}
+\newcommand{\familysupport}{\mathcal{S}}
+\newcommand{\otherfamilysupport}{\mathcal{T}}
+\newcommand{\densityfunc}{f}
+\newcommand{\massfunc}{f}
+\newcommand{\distfunc}{F}
+\newcommand{\family}{\mathcal F}
+\newcommand{\otherfamily}{\mathcal G}
+\newcommand{\sufficientstats}{T}
+\newcommand{\lognormalizer}{g}
+\newcommand{\carriermeasure}{h}
+\newcommand{\natparameter}{\eta}
+\newcommand{\natparameters}{\vb*{\eta}}
+\newcommand{\expparameter}{\chi}
+\newcommand{\expparameters}{\vb*{\chi}}
+\newcommand{\someparameter}{\theta}
+\newcommand{\someparameters}{\vb*{\theta}}
+\newcommand{\someangle}{\theta}
+\newcommand{\variancematrix}{\mb{S}}
+\newcommand{\pvariancematrix}{\mb{U}}
+\newcommand{\precisionmatrix}{\mb{H}}
+\newcommand{\pprecisionmatrix}{\mb{J}}
+
+% Stochastic processes
+
+% Poisson process
+\newcommand{\poissonintensity}{\lambda}
+\newcommand{\poissonintensities}{\vb*{\poissonintensity}}
+\newcommand{\poissonintrate}{\Lambda}
+\newcommand{\timeperiod}{T}
+\newcommand{\signaltimes}{S}
+
+% Harmonic oscillator
+\newcommand{\angularfrequency}{\omega}
+\newcommand{\undampedangularfrequency}{\omega_0}
+\newcommand{\dampingratio}{\zeta}
+\newcommand{\holde}{a}
+\newcommand{\hostiffness}{k}
+\newcommand{\hodamping}{c}
+\newcommand{\hoinertia}{m}
+\newcommand{\hoposition}{x}
+\newcommand{\hoexternalforce}{\beta}
+\newcommand{\hoexternalforcet}{\hoexternalforce(t)}
+
+% Brownian motion
+\newcommand{\drift}{\theta}
+\newcommand{\drifts}{\vb*{\theta}}
+\newcommand{\rootdoublediffusion}{\sigma}
+\newcommand{\diffusion}{\frac{\sigma^2}{2}}
+\newcommand{\diffusiont}{\frac{\sigma_t^2}{2}}
+\newcommand{\doublediffusion}{\sigma^2}
+\newcommand{\doublediffusions}{\vb*{\sigma}^2}
+\newcommand{\doublediffusionprime}{{\sigma'}^2}
+\newcommand{\doublediffusionsprime}{{\vb*{\sigma}'}^2}
+
+% Missing data
+
+% Whitening and colouring
+\newcommand{\whiteningw}{\mb{W}}
+\newcommand{\whiteningq}{\mb{Q}}
+\newcommand{\whiteningu}{\mb{U}}
+\newcommand{\whiteningl}{\vb*{\Lambda}}
+\newcommand{\whiteningp}{\vb*{\Phi}}
+
+% Coding principles
+
+% Deep architectures
+
+% Causal models
+\newcommand{\parents}{\textnormal{parents}}
+\newcommand{\children}{\textnormal{children}}
+\newcommand{\parent}{\textnormal{pa}}
+\newcommand{\child}{\textnormal{ch}}
+
+% Energy-based models
+\newcommand{\energy}{\mathcal{E}}
+\newcommand{\energies}{\bm{\mathcal{E}}}
+\newcommand{\lossfun}{\mathcal{L}}
+\newcommand{\weight}{w}
+\newcommand{\weights}{\vb{w}}
+\newcommand{\jumpprobability}{\alpha}
+\newcommand{\inversetemperature}{\beta}
+
+% Boltzmann machines
+
+% -----------------------------------------------------------------------------
+
+% Presence
+\newcommand{\presence}{\pi}
+\newcommand{\presences}{\vb*{\presence}}
+
+% Rival encoding
+\newcommand{\rivalcode}{r}
+\newcommand{\rivalcodes}{\vb{r}}
+\newcommand{\belief}{\hoposition}
+\newcommand{\beliefs}{\vb{\hoposition}}
+\newcommand{\consumption}{\zeta}  % rhymes with eta
+\newcommand{\consumptions}{\vb*{\consumption}}
+\newcommand{\cvalue}{\phi}  % rhymes with pi and chi
+\newcommand{\cvalues}{\vb*{\cvalue}}  % rhymes with pi and chi
+\newcommand{\cpresence}{\psi}  % rhymes with pi and chi
+\newcommand{\cpresences}{\vb*{\cpresence}}  % rhymes with pi and chi
+\newcommand{\rivalg}{g}  % gating weight
+\newcommand{\rivalgs}{\vb{g}}
+\newcommand{\rivald}{D}  % demand weight
+\newcommand{\rivalds}{\mb{D}}
+\newcommand{\rivalc}{c}  % consumption weight
+\newcommand{\rivalcs}{\vb{c}}
+\newcommand{\rivalw}{W}  % explanation weight
+\newcommand{\rivalws}{\mb{W}}
+\newcommand{\rivalu}{U}  % memo
+\newcommand{\rivalus}{\mb{U}}
+\newcommand{\rivalv}{V}  % memo
+\newcommand{\rivalvs}{\vb{v}}
+
+% Rival pooling
+
+% Causal agents
+\newcommand{\gating}{\gamma}
+\newcommand{\forgetting}{\mu}
+
+\newcommand{\scoreenergy}{\energy_\textnormal{score}}
+\newcommand{\gatingenergy}{\energy_\textnormal{gating}}
+
+% Ideas from other sections:
+% expparameters chi
+% natparameters eta
+
+% -----------------------------------------------------------------------------
+
+% Temporal models
+\DeclareMathOperator{\MassOp}{{\mathtt{M}}}
+\DeclareMathOperator{\LeakyIntegralOp}{{\mathtt{L}}}
+\DeclareMathOperator{\LeakyAverageOp}{{\mathtt{A}}}
+\newcommand{\LeakyIntegralUntimed}[2]{\LeakyIntegralOp\left({#1}, {#2}\right)}
+\newcommand{\LeakyIntegral}[3]{\LeakyIntegralOp\left({#1}, {#2}, {#3}\right)}
+\newcommand{\LeakyAverageUntimed}[2]{\LeakyAverageOp\left({#1}, {#2}\right)}
+\newcommand{\LeakyAverage}[3]{\LeakyAverageOp\left({#1}, {#2}, {#3}\right)}
+\newcommand{\MassUntimed}[1]{\MassOp\left({#1}\right)}
+\newcommand{\Mass}[2]{\MassOp\left({#1}, {#2}\right)}
+\newcommand{\timesignal}{\tau}
+\newcommand{\recentness}{k}
+\newcommand{\xtimeconstant}{\ell}
+\newcommand{\ytimeconstant}{m}
+\newcommand{\signal}{x}
+\newcommand{\signals}{\vb{x}}
+\newcommand{\countablesignal}{m}
+
+% Mechanical models
+\newcommand{\mmoutput}{r}
+\newcommand{\mmoutputs}{\vb{\mmoutput}}
+
+\newcommand{\driftedoutput}{\alpha}
+\newcommand{\diffusedoutput}{\varepsilon}
+\newcommand{\diffusedoutputs}{\vb*{\varepsilon}}
+\newcommand{\decay}{\timesignal}
+\newcommand{\decays}{\vb*{\decay}}
+
+\newcommand{\source}{\textnormal{source}}
+\newcommand{\target}{\textnormal{target}}
+\newcommand{\link}{\textnormal{link}}
+
+\newcommand{\force}{F}
+\newcommand{\momentumcluster}{\textnormal{momentum}}
+\newcommand{\positioncluster}{\textnormal{position}}
+\newcommand{\kinetic}{\textnormal{kinetic}}
+\newcommand{\potential}{\textnormal{potential}}
+
+% Ideas from other sections:
+% hoposition
+% hoinertia
+% stiffness
+% energy
+% drift
+% damping
+% hoexternalforcet
+
+% alphabet:
+% alpha driftedoutput
+% beta pooling
+% phi cvalue
+% gamma gating
+% delta
+% epsilon/varepsilon diffusedoutput
+% zeta consumption
+% eta natparameter
+% theta drift
+% iota
+% kappa
+% lambda poissonintensity
+% mu forgetting
+% nu
+% xi
+% pi presence
+% rho
+% sigma rootdoublediffusion
+% tau decay
+% upsilon
+% chi expparameter
+% psi cpresence
+% omega
+% alphabet: alpha beta phi gamma delta epsilon/varepsilon zeta eta theta iota kappa lambda mu nu xi pi rho sigma tau upsilon chi psi omega
+% unused: kappa xi nu upsilon iota delta rho omega
+
+% -----------------------------------------------------------------------------
+
+% Architecture
+
+\newcommand{\thescore}{s}
+\newcommand{\thebelief}{b}
+\newcommand{\scores}{\vb{s}}
+\newcommand{\onsets}{\vb{o}}
+\newcommand{\attentions}{\vb{a}}
+\newcommand{\intentions}{\vb{a}}
+\newcommand{\detections}{\vb{a}}
+\newcommand{\realizations}{\vb{a}}
+
+% -----------------------------------------------------------------------------
+
+% Biological terms
+\newcommand{\ctxpt}{\mathrm{C_{PT}}}  % Cortex pyramidal tract-type
+\newcommand{\ctxit}{\mathrm{C_{IT}}}  % Cortex intratelencephalically projecting type
+\newcommand{\ctxct}{\mathrm{C_{CT}}}  % Corticothalamic neurons
+\newcommand{\gpi}{\mathrm{GPi}}  % internal segment of the globus pallidus
+\newcommand{\gpe}{\mathrm{GPe}}  % external segment of the globus pallidus
+\newcommand{\gpep}{\mathrm{GPe_{+}}}  % parvalbuminic
+\newcommand{\gpen}{\mathrm{GPe_{-}}}  % non-parvalbuminic
+
+\newcommand{\trn}{\mathrm{TRN}}  % Thalamic reticular nucleus
+\newcommand{\tha}{\mathrm{ThA}}  % ``action thalamus'':
+\newcommand{\thp}{\mathrm{ThP}}  % ``perception thalamus'': pulvinar, ventral posterior, ventral posterior
+
+\newcommand{\basketcell}{\mathrm{BC}}  % basket cell
+\newcommand{\purkinje}{\mathrm{PC}}  % Purkinje cell
+\newcommand{\stellate}{\mathrm{SC}}  % stellate cell
+\newcommand{\granule}{\mathrm{Gr}}  % granule cell
+\newcommand{\golgi}{\mathrm{Go}}  % Golgi cell
+\newcommand{\inferiorolive}{\mathrm{IO}}  % inferior olive
+\newcommand{\prn}{\mathrm{pRN}}  % parvicellular red nucleus
+\newcommand{\pontine}{\mathrm{PN}} % pontine nuclei
+\newcommand{\dcn}{\mathrm{DCN}} % deep cerebellar nuclei
+
+\newcommand{\strmd}{\mathrm{S_{md}}}
+\newcommand{\strmi}{\mathrm{S_{mi}}}
+\newcommand{\strpd}{\mathrm{S_{pd}}}
+\newcommand{\strpi}{\mathrm{S_{pi}}}
+
+\newcommand{\stn}{\mathrm{STN}}
+\newcommand{\snc}{\mathrm{SNc}}
+\newcommand{\sncd}{\mathrm{SNc_D}}
+\newcommand{\sncv}{\mathrm{SNc_V}}

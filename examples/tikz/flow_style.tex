@@ -1,0 +1,27 @@
+\tikzset{
+  /Flow diagram/.style={
+    % Colors
+    /Lakeside Camping,
+    % Node placement
+    auto,
+    node distance=14mm and 14mm,
+    on grid,
+    % Edge style
+    thick,
+    ->,
+    >=Stealthy[round],
+    % Node border styles
+    rectangle/.style={shape=rectangle, rounded corners, draw, inner sep=2pt, minimum size=8.0mm},
+    state/.style={shape=circle,draw,inner sep=0pt,minimum size=6.8mm},
+    big_circle/.style={shape=circle, draw, inner sep=0pt, minimum size=9mm},
+    no_border/.style={shape=rectangle,inner sep=0pt,minimum size=5.0mm},
+    % Node fill styles
+    unobserved/.style={},
+    intervention/.style={color_blue, very thick, fill=color_blue!30},
+    observation/.style={color_orange, very thick, fill=color_orange!30},
+    %
+    annotation_brace/.style={-,decoration={brace,amplitude=7pt},decorate,thick,color=ann_col},
+    %
+    roundline/.style={rounded corners=4mm}
+  },
+}

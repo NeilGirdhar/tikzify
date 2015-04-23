@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools", "poetry_core>=1.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "tikzify"
+version = "0.9.1"
+description = "Utilities for programmatically generating TikZ code."
+license = "MIT"
+authors = ["Neil Girdhar <mistersheik@gmail.com>"]
+readme = "README.rst"
+repository = "https://github.com/NeilGirdhar/tikzify"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: MIT License"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+more_itertools = "^8"
+networkx = "^2.5"
+numpy = "^1.19"
+tjax = "^0.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5"
+
+[tool.isort]
+line_length = 100
+known_first_party = ["tikzify"]
+known_third_party = []
+multi_line_output = 0
+skip_glob = [".pytype/*.py"]
+skip = []
+
+[tool.pycodestyle]
+max-line-length = 100
+exclude = ["__init__.py", "__pycache__", "README.rst"]
+
+[tool.pytest]
+
+[tool.pytype]
+disable = "ignored-abstractmethod"
+exclude = ["**/*_test.py", "**/test_*.py'"]
+
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}
