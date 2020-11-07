@@ -14,8 +14,8 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
       returns
       'expanded expanded c'.
     * If a keyword is a comma-separated list like “a, b, c”, then each of the keywords "a", "b", and
-    "c" are expanded and the results of joined with intervening commas.  If any expansion results in
-    the None object, the formatter acts as if that term were not there.  E.g.,
+      "c" are expanded and the results of joined with intervening commas.  If any expansion results
+      in the None object, the formatter acts as if that term were not there.  E.g.,
       formatter("“a, b, c”", a="expanded a", b=None, c="expanded c")
       returns
       'expanded a, expanded c'.

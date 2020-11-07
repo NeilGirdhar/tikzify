@@ -15,7 +15,7 @@ MARK_HEIGHT = 0.3
 
 
 def function_graph_mark(f: TextIO, x: float, y: float, col: Optional[str],
-                             scale: float = 1.0) -> None:
+                        scale: float = 1.0) -> None:
     h = scale * MARK_HEIGHT * 0.5
     w = scale * MARK_WIDTH
     pf(r"""

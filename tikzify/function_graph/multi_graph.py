@@ -1,6 +1,7 @@
 import string
 from typing import Callable, Iterable, Sequence, TextIO, Tuple
 
+from ..node_graph import NodeText
 from .annotation import Annotation
 from .curve_generator import generate_curve
 from .curve_source import CurveSource
@@ -59,7 +60,7 @@ class FunctionMultiGraph:
                     transform = self.get_curve_transform(altitude, trait.scale)
                     this_clip = (clip[0] + altitude, clip[1] + altitude)
                     draw_curve(f, color, fill_color, curve, fill=True, transform=transform,
-                            clip=this_clip)
+                               clip=this_clip)
                 if trait in graphed_element.trait_to_marks:
                     marks = graphed_element.trait_to_marks[trait]
                     function_graph_marks(f, altitude, marks, color)
@@ -75,16 +76,10 @@ class FunctionMultiGraph:
 
     def generate_annotations(self, f: TextIO, annotations: Iterable[Annotation]) -> None:
         annotation_letter = 0
-        last_annotation = None
         for annotation in annotations:
-            if annotation.text == '*':
-                annotation.text = string.ascii_uppercase[annotation_letter]
+            if annotation.text is None:
+                annotation.text = NodeText([string.ascii_uppercase[annotation_letter]])
                 annotation_letter += 1
-            if annotation.text == '"':
-                if last_annotation is None:
-                    raise ValueError
-                annotation.text = last_annotation.text
-            last_annotation = annotation
             annotation.generate(f)
 
     def generate_legend(self, f: TextIO) -> None:

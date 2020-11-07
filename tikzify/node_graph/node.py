@@ -1,139 +1,213 @@
-from copy import copy
 from dataclasses import dataclass
-from typing import Any, Iterable, Mapping, Optional, Sequence, TextIO
+from enum import Enum, auto
+from typing import Any, Collection, Mapping, Optional, Sequence, TextIO
 
-from ..foundation.pf import pf, pf_option
+from ..foundation import formatter
+from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
 
-__all__ = ['Label']
+__all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment']
+
+
+def format_length(length: Optional[float]) -> Optional[str]:
+    if length is None:
+        return None
+    if int(length) == length:
+        length = int(length)
+        if length % 10 == 0:
+            return f"{length // 10}cm"
+    return f"{length}mm"
+
+
+def wrap_text(text_lines: Sequence[str],
+              color: Optional[str] = None,
+              wrap_command: Optional[str] = None) -> str:
+    def wrap(line: str) -> str:
+        if not isinstance(line, str):
+            raise TypeError
+        if color is not None:
+            line = r'\textcolor{' + color + '}{' + line + '}'
+        if wrap_command is not None:
+            line = rf"\{wrap_command}{{{line}}}"
+        return line
+    retval = r' \\ '.join(wrap(line) for line in text_lines)
+    # if '\\' in retval:
+    #     retval = '{' + retval + '}'
+    return retval
+
+
+class Alignment(Enum):
+    left = auto()
+    right = auto()
+    center = auto()
 
 
 @dataclass
-class Label:
-    lines: Sequence[str]
+class NodeText:
+    text_lines: Sequence[str]
+    wrap_command: Optional[str] = None
+    color: Optional[str] = None
+    width: Optional[float] = None
+    align: Optional[Alignment] = None
+
+    def latex(self, inherit_color: Optional[str]) -> str:
+        return wrap_text(self.text_lines,
+                         inherit_color if self.color is None else self.color,
+                         self.wrap_command)
+
+    def latex_options(self) -> Optional[str]:
+        if self.align is None and len(self.text_lines) >= 2:
+            raise ValueError("No alignment specified")
+        retval = formatter("“text_width,align”",
+                           text_width=tikz_option('text width', format_length(self.width)),
+                           align=(None
+                                  if self.align is None
+                                  else tikz_option('align', self.align.name)))
+        return retval if retval else None
+
+
+@dataclass
+class NodeLabel:
+    text_lines: Sequence[str]
     location: Optional[str] = None
     color: Optional[str] = None
 
-    def latex(self) -> str:
-        lines = self.lines
-        if self.color is not None:
-            lines = [r'\textcolor{' + self.color + '}{' + line + '}'
-                     for line in lines]
-        retval = r' \\ '.join(lines)
-        if '\\' in retval:
-            retval = '{' + retval + '}'
+    def latex(self, inherit_color: Optional[str]) -> str:
+        text_lines = self.text_lines
+
+        color = inherit_color if self.color is None else self.color
+        text = wrap_text(text_lines, color)
         if self.location:
-            retval = f'{self.location}:{retval}'
-        return retval
+            text = f'{self.location}:{text}'
+        return 'label=' + text
+
+
+@dataclass
+class NodePosition:
+    anchor: Anchor
+    left: Optional[float] = None
+    right: Optional[float] = None
+    above: Optional[float] = None
+    below: Optional[float] = None
+
+    def __post_init__(self) -> None:
+        assert self.left is None or self.right is None
+        assert self.above is None or self.below is None
+
+    def is_relative(self) -> bool:
+        return not all(x is None for x in [self.left, self.right, self.above, self.below])
+
+    def latex_position(self) -> str:
+        if self.is_relative():
+            return ""
+        return 'at ({}) '.format(self.anchor.as_tikz())
+
+    def latex_relative_position(self) -> str:
+        if not self.is_relative():
+            return ""
+        words = []
+        values = []
+        if self.above is not None:
+            words.append('above')
+            values.append(self.above)
+        elif self.below is not None:
+            words.append('below')
+            values.append(self.below)
+        if self.left is not None:
+            words.append('left')
+            values.append(self.left)
+        elif self.right is not None:
+            words.append('right')
+            values.append(self.right)
+        words_str = " ".join(words)
+        direction_str = " and ".join(str(v) for v in values)
+        return f'[{words_str}={direction_str} of {self.anchor.as_tikz()}] '
+
+
+@dataclass
+class NodeContainer:
+    nodes: Collection[str]
+    corner_text: Optional[NodeText] = None
+    corner_color: Optional[str] = None
+
+    def latex_fit(self) -> str:
+        nodes = sorted('(' + node + ')' for node in self.nodes)
+        return 'fit={' + " ".join(nodes) + '}'
+
+    def latex_corner(self,
+                     parent_name: str,
+                     opacity: Optional[float],
+                     inherit_color: Optional[str]) -> str:
+        if self.corner_text is None:
+            return ""
+        color = self.corner_color if self.corner_color is not None else inherit_color
+        return formatter(
+            r"\node[“color,opacity,text_options,”align=right, below left] at (“name”.north east) "
+            r"{“text”}",
+            name=parent_name,
+            text_options=None if self.corner_text is None else self.corner_text.latex_options(),
+            text=None if self.corner_text is None else self.corner_text.latex(color),
+            color=color,
+            opacity=None if opacity is None else tikz_option('opacity', str(opacity)))
 
 
 def generate_node(name: Optional[str],
                   node_dict: Mapping[str, Any],
                   *,
+                  opacity: Optional[float] = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
-    fit: Optional[str] = None
-    if 'fit' in node_dict:
-        def get_fits() -> Iterable[str]:
-            for fit in node_dict['fit']:
-                assert isinstance(fit, str)
-                yield '(' + fit + ')'
-        fit = 'fit={' + " ".join(get_fits()) + '}'
-
-    relpos = pos = None
-    if node_dict.get('pos', None) is not None:
-        pos_node = node_dict['pos']
-        assert isinstance(pos_node, Anchor)
-        pos = 'at ({}) '.format(pos_node.as_tikz())
-    if 'relpos' in node_dict:
-        x, y, rel_node = node_dict['relpos']
-        words = []
-        values = []
-        if x == 0 and y == 0:
-            pos = 'at ({}) '.format(rel_node.as_tikz())
-        else:
-            if isinstance(y, tuple):
-                words.append('above' if y[0] else 'below')
-                values.append(y[1])
-            elif y > 0:
-                words.append('above')
-                values.append(y)
-            elif y < 0:
-                words.append('below')
-                values.append(-y)
-            if isinstance(x, tuple):
-                words.append('right' if x[0] else 'left')
-                values.append(x[1])
-            elif x > 0:
-                words.append('right')
-                values.append(x)
-            elif x < 0:
-                words.append('left')
-                values.append(-x)
-            relpos = '[{}={} of {}] '.format(
-                " ".join(words),
-                " and ".join(str(v) for v in values),
-                rel_node.as_tikz())
+    """
+    Generate text for a node.
+    """
+    # Arguments.
+    position = node_dict.get('position', None)
+    coordinate = node_dict.get('is_coordinate', False)
     text = node_dict.get('text', None)
-    state = node_dict.get('state', None)
-    coordinate = node_dict.get('coordinate', False)
-    col = node_dict.get('col', None)
     label = node_dict.get('label', None)
-    if label is not None:
-        assert isinstance(label, Label)
-        if label.color is None:
-            label = copy(label)
-            label.color = col
-        label = 'label=' + label.latex()
+    size = node_dict.get('size', None)
+    shape = node_dict.get('shape', None)
+    color = node_dict.get('color', None)
+    dash = node_dict.get('dash', None)
+    inner_sep = node_dict.get('inner_sep', None)
+    container = node_dict.get('container', None)
+
+    size_latex = (None
+                  if size is None
+                  else (f'minimum width={format_length(size[0])}, '
+                        f'minimum height={format_length(size[1])}'))
+
     d = dict(name=name,
-             text=text,
-             state=state,
-             label=label,
-             fit=fit,
-             pos=pos,
-             relpos=relpos,
-             col=col,
-             opacity=pf_option(node_dict, 'opacity'),
-             inner_sep=pf_option(node_dict, 'inner_sep', 'inner sep'),
-             text_width=pf_option(node_dict, 'text_width', 'text width'),
-             text_centered=pf_option(node_dict,
-                                     'text_centered',
-                                     'text centered'),
-             dash=node_dict.get('dash', None),
-             nodepos=pf_option(node_dict, 'nodepos', 'pos'),
-             swap=pf_option(node_dict, 'swap'))
+             position=None if position is None else position.latex_position(),
+             relative_position=None if position is None else position.latex_relative_position(),
+             text=None if text is None else text.latex(color),
+             text_options=None if text is None else text.latex_options(),
+             label=None if label is None else label.latex(color),
+             size=size_latex,
+             shape=shape,
+             color=color,
+             dash=dash,
+             opacity=None if opacity is None else tikz_option('opacity', str(opacity)),
+             inner_sep=tikz_option('inner sep', format_length(inner_sep)),
+             fit=None if container is None else container.latex_fit())
     if coordinate:
-        pf(r"""
-           \coordinate “relpos” (“name”) “pos”
-           """,
+        pf(r"\coordinate “relative_position” (“name”) “position”",
+           **d,
+           file=file,
+           end=end)
+    elif name is None:
+        assert position is None
+        pf(r"node[“text_options,label,size,shape,color,dash,opacity,inner_sep,fit”] {“text”}",
            **d,
            file=file,
            end=end)
     else:
-        if name is None:
-            pf(r"""
-               node[“state,opacity,fit,col,dash,inner_sep,label,text_width,text_centered,swap,nodepos”] {“text”}
-               """,
-               **d,
-               file=file,
-               end=end)
-        else:
-            pf(r"""
-               \node[“state,opacity,fit,col,dash,inner_sep,label,text_width,text_centered”] “pos”(“name”) “relpos”{“text”}
-               """,
-               **d,
-               file=file,
-               end=end)
-    if 'corner' in node_dict:
-        conditional_dictionary = {}
-        if 'opacity' in d:
-            conditional_dictionary['opacity'] = d['opacity']
-        pf(r"""
-           \node[“col,opacity,”align=right, below left] at (“name”.north east) {“text”}
-           """,
-           name=name,
-           col=node_dict['corner'].get('col', col),
-           text=node_dict['corner']['text'],
-           **conditional_dictionary,
+        pf(r"\node[“text_options,label,size,shape,color,dash,opacity,inner_sep,fit”] "
+           r"“position” (“name”) “relative_position” {“text”}",
+           **d,
            file=file,
            end=end)
+    if container is not None:
+        print(container.latex_corner(name, opacity, color),
+              file=file,
+              end=end)

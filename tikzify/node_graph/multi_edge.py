@@ -19,7 +19,7 @@ def default_waypoint_names() -> Iterable[str]:
 
 
 def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str, stop: str, vertical: bool,
-                    create: str, arm: int) -> None:
+                    create: str, arm: int, color: str) -> None:
     """
     Prints a round edge in the direction of the waypoint.
     """
@@ -42,17 +42,17 @@ def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str, stop: str, ve
     edge_copy.pf(f,
                  source,
                  create,
-                 color=edge.color,
+                 color=color,
                  more_options='roundline',
                  to_command=to_command)
 
 
 def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str], vertical: bool,
-                     waypoint_names: Iterable[str]) -> None:
+                     waypoint_names: Iterable[str],
+                     color: str) -> None:
     drawn = False
-    # edge.col = edge.color
     for arm, (turn, next_turn, create) in enumerate(zip(turns, turns[1:], waypoint_names)):
-        create_waypoint(f, edge, source, turn, next_turn, vertical, create, arm)
+        create_waypoint(f, edge, source, turn, next_turn, vertical, create, arm, color)
         if not drawn:
             from_, edge.from_ = edge.from_, None
             drawn = True
@@ -63,7 +63,11 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str], v
     if edge.text_node is not None:
         if edge.text_node['arm'] != len(turns) - 1:
             edge_copy.text_node = None
-    edge_copy.pf(f, source, turns[-1], more_options='roundline',
-                 to_command=to_command)
+    edge_copy.pf(f,
+                 source,
+                 turns[-1],
+                 more_options='roundline',
+                 to_command=to_command,
+                 color=color)
     if drawn:
         edge.from_ = from_

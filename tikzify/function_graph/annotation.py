@@ -1,7 +1,7 @@
-from typing import Mapping, Optional, Sequence, TextIO
+from typing import Optional, Sequence, TextIO
 
-from ..foundation.pf import pf, pf_option_value
-from ..node_graph import Edge
+from ..foundation.pf import pf, tikz_option
+from ..node_graph import Edge, NodeText
 from .draw import FUNCTION_GRAPH_WIDTH, MARK_HEIGHT, MARK_WIDTH
 
 __all__ = ['Annotation', 'RectAnnotation', 'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation']
@@ -19,7 +19,7 @@ LOOP_LOOSENESS = 1.5
 
 class Annotation:
 
-    def __init__(self, text: str):
+    def __init__(self, text: Optional[NodeText]):
         self.text = text
 
     def generate(self, f: TextIO) -> None:
@@ -35,7 +35,7 @@ class RectAnnotation(Annotation):
                  bottom: float,
                  color: str,
                  fill_color: str,
-                 text: str = '*',
+                 text: Optional[NodeText] = None,
                  direction: str = 'above',
                  coordinate: str = 'top',
                  text_size: str = r'\footnotesize',
@@ -84,7 +84,7 @@ class BraceAnnotation(Annotation):
                  y: float,
                  color: str,
                  *,
-                 text: str = '*',
+                 text: Optional[NodeText] = None,
                  direction: str = 'above',
                  text_size: str = r'\footnotesize',
                  widen: bool = True):
@@ -113,7 +113,7 @@ class BraceAnnotation(Annotation):
            y=self.y + BRACE_HEIGHT,
            color=self.color,
            direction=self.direction,
-           text=self.text,
+           text=None if self.text is None else self.text.latex(self.color),
            text_size=self.text_size,
            file=f)
 
@@ -124,7 +124,7 @@ class CircleAnnotation(Annotation):
                  x: float,
                  y: float,
                  color: str,
-                 text: str = '*',
+                 text: Optional[NodeText] = None,
                  direction: str = 'above',
                  draw_circle: bool = True):
         super().__init__(text=text)
@@ -155,26 +155,18 @@ class CircleAnnotation(Annotation):
 class EdgeAnnotation(Annotation):
 
     def __init__(self,
+                 edge: Edge,
                  y_source: float,
                  y_targets: Sequence[float],
                  x_source: float,
-                 edge_colors: Mapping[str, str],
                  *,
                  x_target: Optional[float] = None,
                  swipe: Optional[bool] = None,
                  # edge options
-                 from_: Optional[str] = None,
-                 to: Optional[str] = None,
-                 bend: float = 0,
-                 in_: Optional[float] = None,
-                 out: Optional[float] = None,
-                 looseness: Optional[float] = None,
                  loop: Optional[str] = None,
-                 opacity: float = 1,
-                 dash: Optional[str] = None,
                  swipe_right: bool = False,
                  # edge label options
-                 text: str = '*',
+                 text: Optional[NodeText] = None,
                  swap: bool = False,
                  pos: Optional[float] = None):
         super().__init__(text=text)
@@ -191,15 +183,7 @@ class EdgeAnnotation(Annotation):
             assert isinstance(pos, float)
         self.pos = str(pos) if pos is not None else None
         self.loop = loop
-        self.edge = Edge(edge_colors=edge_colors,
-                         from_=from_,
-                         to=to,
-                         bend=bend,
-                         in_=in_,
-                         out=out,
-                         looseness=looseness,
-                         opacity=opacity,
-                         dash=dash)
+        self.edge = edge
         self.swipe_right = swipe_right
 
     def generate(self, f: TextIO) -> None:
@@ -242,7 +226,7 @@ class EdgeAnnotation(Annotation):
                 direction = 1
 
         text_node = (dict(col=self.edge.color,
-                          pos=pf_option_value('pos', self.pos),
+                          pos=tikz_option('pos', self.pos),
                           swap='swap' if swap else None,
                           text=self.text)
                      if self.text is not None
