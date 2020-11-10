@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "tikzify"
-version = "0.9.1"
+version = "0.10.0"
 description = "Utilities for programmatically generating TikZ code."
 license = "MIT"
 authors = ["Neil Girdhar <mistersheik@gmail.com>"]
