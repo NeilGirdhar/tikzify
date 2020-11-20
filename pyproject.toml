@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "tikzify"
-version = "0.10.0"
+version = "0.10.1"
 description = "Utilities for programmatically generating TikZ code."
 license = "MIT"
 authors = ["Neil Girdhar <mistersheik@gmail.com>"]
@@ -28,7 +28,7 @@ python = "^3.7"
 more_itertools = "^8"
 networkx = "^2.5"
 numpy = "^1.19"
-tjax = "^0.6"
+tjax = ">=0.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5"
