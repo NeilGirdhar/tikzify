@@ -197,12 +197,12 @@ def generate_node(name: Optional[str],
            end=end)
     elif name is None:
         assert position is None
-        pf(r"node[“text_options,label,size,shape,color,dash,opacity,inner_sep,fit”] {“text”}",
+        pf(r"node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] {“text”}",
            **d,
            file=file,
            end=end)
     else:
-        pf(r"\node[“text_options,label,size,shape,color,dash,opacity,inner_sep,fit”] "
+        pf(r"\node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] "
            r"“position” (“name”) “relative_position” {“text”}",
            **d,
            file=file,
