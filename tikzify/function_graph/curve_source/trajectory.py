@@ -15,7 +15,7 @@ class TrajectoryCurveSource(CurveSource):
                  p_trajectory: PlottableTrajectory[Any],
                  name: str,
                  index: Tuple[int, ...]):
-        super().__init__(0.0, (p_trajectory.iterations - 1) * p_trajectory.time_step)
+        super().__init__(p_trajectory.times[0], p_trajectory.times[-1])
 
         if not isinstance(p_trajectory, PlottableTrajectory):
             raise TypeError
@@ -26,12 +26,11 @@ class TrajectoryCurveSource(CurveSource):
 
     # Implemented methods --------------------------------------------------------------------------
     def times_and_values(self, resolution: int) -> Iterable[np.ndarray]:
-        data_length = self.p_trajectory.iterations
+        data_length = len(self.p_trajectory.times)
         use_resample = data_length > resolution
         return_length = resolution if use_resample else data_length
 
-        times = np.linspace(0.0, return_length * self.p_trajectory.time_step, return_length,
-                            endpoint=False)
+        times = self.p_trajectory.times
         values = getattr(self.p_trajectory.trajectory, self.name)
         values = values[(slice(None), *self.index)]
         assert values.ndim == 1
