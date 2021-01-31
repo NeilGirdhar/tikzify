@@ -27,7 +27,7 @@ classifiers = [
 python = "^3.7"
 more_itertools = "^8"
 networkx = "^2.5"
-numpy = "^1.19"
+numpy = "^1.20"
 tjax = ">=0.7.11"
 
 [tool.poetry.dev-dependencies]
