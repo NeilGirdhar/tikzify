@@ -38,10 +38,8 @@ class RectAnnotation(Annotation):
                  text: Optional[NodeText] = None,
                  direction: str = 'above',
                  coordinate: str = 'top',
-                 text_size: str = r'\footnotesize',
                  widen: bool = True):
         super().__init__(text=text)
-        self.text_size = text_size
         self.left = left
         self.right = right
         self.top = top
@@ -61,7 +59,7 @@ class RectAnnotation(Annotation):
            \coordinate (ll) at (“left”, “bottom”);
            \coordinate (ur) at (“right”, “top”);
            \node [shape=rectangle, thin, draw=“color”, fill=“fill_color”, fill opacity=0.4, fit={(ll) (ur)}] (A) {};
-           \node [“color”, “direction”=0mm of A.“coordinate”] {“text_size” “text”};
+           \node [“color”, “direction”=0mm of A.“coordinate”] {“text”};
            """,
            coordinate=self.coordinate,
            top=top,
@@ -71,8 +69,7 @@ class RectAnnotation(Annotation):
            color=self.color,
            fill_color=self.fill_color,
            direction=self.direction,
-           text_size=self.text_size,
-           text=self.text,
+           text=None if self.text is None else self.text.latex(inherit_color=self.color),
            file=f)
 
 
@@ -148,7 +145,7 @@ class CircleAnnotation(Annotation):
            color=self.color,
            x=self.x * FUNCTION_GRAPH_WIDTH,
            y=self.y,
-           text=self.text,
+           text=None if self.text is None else self.text.latex(inherit_color=self.color),
            file=f)
 
 
