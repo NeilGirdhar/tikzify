@@ -6,7 +6,26 @@ from ..foundation import formatter
 from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
 
-__all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment']
+__all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment', 'TextSize']
+
+
+class Alignment(Enum):
+    left = auto()
+    right = auto()
+    center = auto()
+
+
+class TextSize(Enum):
+    tiny = auto()
+    script = auto()
+    footnote = auto()
+    small = auto()
+    normalsize = auto()
+    large = auto()
+    Large = auto()
+    LARGE = auto()
+    huge = auto()
+    Huge = auto()
 
 
 def format_length(length: Optional[float]) -> Optional[str]:
@@ -20,13 +39,24 @@ def format_length(length: Optional[float]) -> Optional[str]:
 
 
 def wrap_text(text_lines: Sequence[str],
-              color: Optional[str] = None,
-              wrap_command: Optional[str] = None) -> str:
+              color: Optional[str],
+              wrap_command: Optional[str],
+              size: Optional[TextSize],
+              standard_height: bool) -> str:
     def wrap(line: str) -> str:
+        if standard_height:
+            line = r'\vphantom{Ag}' + line
+        if size is not None:
+            size_text = '\\' + (size.name + 'size'
+                                if size in {TextSize.script, TextSize.footnote}
+                                else size.name) + ' '
+            line = size_text + line
         if not isinstance(line, str):
             raise TypeError
         if color is not None:
             line = r'\textcolor{' + color + '}{' + line + '}'
+        elif size is not None:
+            line = '{' + line + '}'
         if wrap_command is not None:
             line = rf"\{wrap_command}{{{line}}}"
         return line
@@ -36,12 +66,6 @@ def wrap_text(text_lines: Sequence[str],
     return retval
 
 
-class Alignment(Enum):
-    left = auto()
-    right = auto()
-    center = auto()
-
-
 @dataclass
 class NodeText:
     text_lines: Sequence[str]
@@ -49,11 +73,15 @@ class NodeText:
     color: Optional[str] = None
     width: Optional[float] = None
     align: Optional[Alignment] = None
+    size: Optional[TextSize] = None
+    standard_height: bool = False
 
     def latex(self, inherit_color: Optional[str]) -> str:
         return wrap_text(self.text_lines,
                          inherit_color if self.color is None else self.color,
-                         self.wrap_command)
+                         self.wrap_command,
+                         self.size,
+                         self.standard_height)
 
     def latex_options(self) -> Optional[str]:
         if self.align is None and len(self.text_lines) >= 2:
@@ -71,12 +99,14 @@ class NodeLabel:
     text_lines: Sequence[str]
     location: Optional[str] = None
     color: Optional[str] = None
+    size: Optional[TextSize] = None
+    standard_height: bool = False
 
     def latex(self, inherit_color: Optional[str]) -> str:
         text_lines = self.text_lines
 
         color = inherit_color if self.color is None else self.color
-        text = wrap_text(text_lines, color)
+        text = wrap_text(text_lines, color, None, self.size, self.standard_height)
         if self.location:
             text = f'{self.location}:{text}'
         return 'label=' + text
