@@ -1,16 +1,16 @@
 import itertools as it
 from copy import copy
-from typing import Iterable, Sequence, TextIO, Tuple
+from typing import Iterable, List, Sequence, TextIO
 
 from ..foundation.pf import pf
 from .edge import Edge
 
-__all__ = ['default_waypoint_names', 'angles']
+__all__: List[str] = []
 
 
-def angles(around: float, n: int, step: float = 40) -> Iterable[Tuple[int, float]]:
+def angles(around: float, n: int, step: float) -> Iterable[float]:
     for i in range(n):
-        yield i, around + step * (i - ((n - 1) / 2))
+        yield around + step * (i - ((n - 1) / 2))
 
 
 def default_waypoint_names() -> Iterable[str]:

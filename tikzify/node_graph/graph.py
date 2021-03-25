@@ -154,7 +154,7 @@ class NodeGraph:
             if num_anchors == 0:
                 continue
             step = (spacing.vertical if vertical else spacing.horizontal)[num_anchors - 1]
-            for i, j in angles(0, num_anchors, step=step):
+            for i, j in enumerate(angles(0, num_anchors, step=step)):
                 x = 0 if vertical else j
                 y = j if vertical else 0
                 self.create_coordinate(f'{name_prefix}_{node_name}{i}',
