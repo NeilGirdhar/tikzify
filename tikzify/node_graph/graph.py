@@ -9,7 +9,7 @@ import networkx as nx
 from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAnchor
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names
-from .node import NodeContainer, NodeLabel, NodePosition, NodeText, generate_node
+from .node import NodeContainer, NodeLabel, NodePosition, NodeText, TerminalSpacing, generate_node
 
 __all__ = ['NodeGraph']
 
@@ -141,19 +141,20 @@ class NodeGraph:
 
     def create_node_terminals(self,
                               node_name: str,
-                              left: Optional[Tuple[int, float]] = None,
-                              right: Optional[Tuple[int, float]] = None,
-                              above: Optional[Tuple[int, float]] = None,
-                              below: Optional[Tuple[int, float]] = None) -> None:
-        for n_step, cardinal, name_prefix, vertical in zip(
+                              spacing: TerminalSpacing,
+                              left: int = 0,
+                              right: int = 0,
+                              above: int = 0,
+                              below: int = 0) -> None:
+        for num_anchors, cardinal, name_prefix, vertical in zip(
                 [left, right, above, below],
                 ['west', 'east', 'north', 'south'],
                 ['left_of', 'right_of', 'above', 'below'],
                 [True, True, False, False]):
-            if n_step is None:
+            if num_anchors == 0:
                 continue
-            n, step = n_step
-            for i, j in angles(0, n, step=step):
+            step = (spacing.vertical if vertical else spacing.horizontal)[num_anchors - 1]
+            for i, j in angles(0, num_anchors, step=step):
                 x = 0 if vertical else j
                 y = j if vertical else 0
                 self.create_coordinate(f'{name_prefix}_{node_name}{i}',

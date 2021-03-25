@@ -6,7 +6,8 @@ from ..foundation import formatter
 from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
 
-__all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment', 'TextSize']
+__all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment', 'TextSize',
+           'TerminalSpacing']
 
 
 class Alignment(Enum):
@@ -64,6 +65,12 @@ def wrap_text(text_lines: Sequence[str],
     # if '\\' in retval:
     #     retval = '{' + retval + '}'
     return retval
+
+
+@dataclass
+class TerminalSpacing:
+    horizontal: Sequence[int]
+    vertical: Sequence[int]
 
 
 @dataclass
