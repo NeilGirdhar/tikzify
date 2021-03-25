@@ -342,8 +342,11 @@
 % (end)
 
 \tikzset{
-  InvertedDiamond/.tip={InvertedKite[inset'=0pt 0.4]},
-  Semicircle/.tip={AngledSemicircle[length=1.8pt +2.7, width'=0pt 1.0, inset'=0pt 0]},
+  InvertedDiamond/.tip={InvertedKite[inset'=0pt 0.4, sep=0.25pt]},
+  Semicircle/.tip={AngledSemicircle[length=1.8pt +3.0, width'=1pt 1.0, inset'=0pt 0, sep=1pt]},
+  ReverseFlatInverted/.tip={FlatInverted[reversed, sep=1pt]},
+  ProperSquare/.tip={Square[sep=1pt]},
+  ProperCircle/.tip={Circle[sep=1pt]}
 }
 
 \makeatother

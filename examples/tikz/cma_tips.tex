@@ -1,0 +1,37 @@
+\tikzset{
+  /CMA tips/.style={
+    % blue: carries prediction and explanation signals.
+    % orange: carries selection-like signals.
+    % red: carries pooling-like signals.
+    % green: carries the GLN.
+    tip_explanation/.tip={Semicircle[dcolorb]},
+    tip_prediction/.tip={ProperCircle[dcolorb]},
+    tip_gln/.tip={Diamond[dcolorg]},
+    tip_demand/.tip={ReverseFlatInverted[dcoloro]},
+    tip_selection/.tip={InvertedDiamond[dcoloro]},
+    tip_pooling/.tip={ProperSquare[dcolorr]},
+    % Cotangents:
+    tip_cotangent/.tip={Bar[sep=1pt]},
+    tip_co_explanation/.tip={tip_cotangent[dcolorb] tip_explanation},
+    tip_co_prediction/.tip={tip_cotangent[dcolorb] tip_prediction},
+    tip_co_gln/.tip={tip_cotangent[dcolorg] tip_gln},
+    tip_co_demand/.tip={tip_cotangent[dcoloro] tip_demand},
+    tip_co_selection/.tip={tip_cotangent[dcoloro] tip_selection},
+    tip_co_pooling/.tip={tip_cotangent[dcolorr] tip_pooling},
+    % Biological diagrams:
+    tip_pooling_presence/.tip={Arc Barb[sep=0.5pt, dcolorr] tip_pooling},
+    tip_pooling_value/.tip={Arc Barb[sep=0.5pt, reversed, dcolorr] tip_pooling},
+    %
+    % Unused:
+%   /.tip={Bar[sep=1pt]},
+%   /.tip={FlatInverted[dcoloro]},
+%   /.tip={Hooks[arc=240, sep=1pt, dcolorr]},
+%   /.tip={Hooks[arc=240, sep=1pt, reversed, dcolorr]},
+%   /.tip={Parenthesis[sep=1pt]},
+%   /.tip={Stealthy[dcolorb]},
+%   /.tip={Straight Barb[length=+1.8pt +2.7, sep=0.5pt, dcolorg]},
+%   /.tip={Straight Barb[sep=1pt]},
+%   /.tip={Tee Barb[reversed, sep=1pt, dcolorg]},
+%   /.tip={stealth},
+  },
+}
