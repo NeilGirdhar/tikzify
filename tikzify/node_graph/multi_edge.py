@@ -1,11 +1,11 @@
 import itertools as it
 from copy import copy
-from typing import Iterable, Sequence, TextIO, Tuple
+from typing import Iterable, List, Sequence, TextIO
 
 from ..foundation.pf import pf
 from .edge import Edge
 
-__all__ = []
+__all__: List[str] = []
 
 
 def angles(around: float, n: int, step: float) -> Iterable[float]:

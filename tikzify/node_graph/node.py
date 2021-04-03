@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Collection, Mapping, Optional, Sequence, TextIO
+from typing import Any, Collection, Mapping, Optional, Sequence, TextIO, Union
 
 from ..foundation import formatter
 from ..foundation.pf import pf, tikz_option
@@ -8,6 +8,9 @@ from .anchor import Anchor
 
 __all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment', 'TextSize',
            'TerminalSpacing']
+
+
+Real = Union[float, int]
 
 
 class Alignment(Enum):
@@ -29,7 +32,7 @@ class TextSize(Enum):
     Huge = auto()
 
 
-def format_length(length: Optional[float]) -> Optional[str]:
+def format_length(length: Optional[Real]) -> Optional[str]:
     if length is None:
         return None
     if int(length) == length:
@@ -69,8 +72,8 @@ def wrap_text(text_lines: Sequence[str],
 
 @dataclass
 class TerminalSpacing:
-    horizontal: Sequence[int]
-    vertical: Sequence[int]
+    horizontal: Sequence[Real]
+    vertical: Sequence[Real]
 
 
 @dataclass
@@ -78,7 +81,7 @@ class NodeText:
     text_lines: Sequence[str]
     wrap_command: Optional[str] = None
     color: Optional[str] = None
-    width: Optional[float] = None
+    width: Optional[Real] = None
     align: Optional[Alignment] = None
     size: Optional[TextSize] = None
     standard_height: bool = False
@@ -122,10 +125,10 @@ class NodeLabel:
 @dataclass
 class NodePosition:
     anchor: Anchor
-    left: Optional[float] = None
-    right: Optional[float] = None
-    above: Optional[float] = None
-    below: Optional[float] = None
+    left: Optional[Real] = None
+    right: Optional[Real] = None
+    above: Optional[Real] = None
+    below: Optional[Real] = None
 
     def __post_init__(self) -> None:
         assert self.left is None or self.right is None
@@ -173,7 +176,7 @@ class NodeContainer:
 
     def latex_corner(self,
                      parent_name: str,
-                     opacity: Optional[float],
+                     opacity: Optional[Real],
                      inherit_color: Optional[str]) -> str:
         if self.corner_text is None:
             return ""
@@ -191,7 +194,7 @@ class NodeContainer:
 def generate_node(name: Optional[str],
                   node_dict: Mapping[str, Any],
                   *,
-                  opacity: Optional[float] = None,
+                  opacity: Optional[Real] = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
     """
