@@ -50,3 +50,31 @@ exclude = ["__init__.py", "__pycache__", "README.rst"]
 [tool.pytype]
 disable = "ignored-abstractmethod"
 exclude = ["**/*_test.py", "**/test_*.py'"]
+
+[tool.pylint.messages_control]
+disable = [
+    "abstract-method",
+    "arguments-differ",
+    "cyclic-import",  # https://github.com/PyCQA/pylint/issues/3525
+    "invalid-name",
+    "invalid-unary-operand-type",
+    "missing-docstring",
+    "no-member",
+    "no-self-use",
+    "too-few-public-methods",
+    "too-many-ancestors",
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "too-many-public-methods",
+    "too-many-return-statements",
+    "too-many-statements",
+    "unused-argument"]
+
+[tool.pylint.reports]
+output-format = "colorized"
+
+[tool.pylint.similarities]
+min-similarity-lines = 20
+ignore-imports = "yes"

@@ -5,7 +5,7 @@ from .anchor import CoordinateAnchor
 from .constraints import Constraints
 from .edge import Edge
 from .graph import NodeGraph
-from .node import Alignment, NodePosition, NodeText, TerminalSpacing
+from .node import Alignment, NodePosition, NodeText
 
 __all__ = ['EdgeSpecification', 'create_nodes', 'create_links']
 
