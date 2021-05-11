@@ -4,7 +4,7 @@ import numpy as np
 
 from ..foundation.pf import pf
 
-__all__: List[str] = []
+__all__ = ['function_graph_marks', 'function_graph_line', 'draw_curve']
 
 # Drawing constants
 FUNCTION_GRAPH_WIDTH = 8.5
