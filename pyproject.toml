@@ -31,7 +31,13 @@ numpy = "^1.20"
 tjax = ">=0.7.11"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5"
+flake8 = '>=3.9'
+isort = '>=5.8'
+jupyter = '>=1'
+jupyter-client = '<=6.1.12'
+mypy = '>=0.900'
+pylint = '>=2.8'
+pytest = '^6'
 
 [tool.isort]
 line_length = 100
@@ -78,3 +84,15 @@ output-format = "colorized"
 [tool.pylint.similarities]
 min-similarity-lines = 20
 ignore-imports = "yes"
+
+[tool.mypy]
+plugins = 'tjax.mypy_plugin'
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_any_generics = true
+disallow_untyped_decorators = true
+
+[[tool.mypy.overrides]]
+module = ['more_itertools', 'networkx', 'scipy.signal']
+ignore_missing_imports = true
