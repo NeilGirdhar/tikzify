@@ -39,6 +39,6 @@ uml/*.dot
 *.log
 *.md5
 *.out
-*.pdf
 *.run.xml
 *.toc
+examples/figures/*.pdf

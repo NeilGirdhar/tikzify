@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import itertools as it
-from typing import Iterable, List, Optional, Reversible, Sequence, Tuple, Union
+from typing import Any, Iterable, List, Optional, Reversible, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -16,7 +18,7 @@ class Constraints:
         self.labels = labels
         self.a = np.zeros((0, 2 * len(labels)))
         self.b = np.zeros((0,))
-        self.solution: Optional[np.ndarray] = None
+        self.solution: Optional[np.ndarray[Any, Any]] = None
 
     # Properties --------------------------------------------------------------
     @property
@@ -28,11 +30,11 @@ class Constraints:
         return self.b.shape[0]
 
     # New methods -------------------------------------------------------------
-    def add_constraint(self, a: np.ndarray, b: float) -> None:
+    def add_constraint(self, a: np.ndarray[Any, Any], b: float) -> None:
         self.a = np.vstack((self.a, a.reshape((1, 2 * self.num_labels))))
         self.b = np.hstack((self.b, b))
 
-    def blank(self) -> np.ndarray:
+    def blank(self) -> np.ndarray[Any, Any]:
         return np.zeros((2 * self.num_labels,))
 
     def index(self, coord: str, label: str) -> int:
@@ -161,7 +163,7 @@ class Constraints:
             self.add_constraint(a, 0.0)
 
     def solve(self, decimals: int = 6) -> None:
-        solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)
+        solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)  # type: ignore
         # solution = np.linalg.solve(self.a, self.b)
         if rank != 2 * self.num_labels:
             raise Constraints.InsufficientConstraints(
@@ -170,7 +172,7 @@ class Constraints:
         solution = np.around(solution, decimals=decimals)
         self.solution = np.where(np.signbit(solution) & (solution == 0.0), -solution, solution)
 
-    def solved(self, c: str) -> np.ndarray:
+    def solved(self, c: str) -> np.ndarray[Any, Any]:
         if self.solution is None:
             raise ValueError
         return self.solution[[self.index('x', c), self.index('y', c)]]

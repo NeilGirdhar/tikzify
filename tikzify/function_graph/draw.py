@@ -1,4 +1,6 @@
-from typing import Callable, Iterable, List, Optional, TextIO, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable, Iterable, Optional, TextIO, Tuple
 
 import numpy as np
 
@@ -60,7 +62,7 @@ def identity(x: float, y: float) -> Tuple[float, float]:
 def draw_curve(f: TextIO,
                color: str,
                fill_color: str,
-               curve: np.ndarray,
+               curve: np.ndarray[Any, Any],
                fill: bool,
                transform: Callable[[float, float], Tuple[float, float]] = identity,
                options: Optional[str] = None,

@@ -34,7 +34,7 @@ class CoordinateAnchor(Anchor):
     def as_tikz(self) -> str:
         return f"{self.x}, {self.y}"
 
-    def as_array(self) -> np.ndarray:
+    def as_array(self) -> np.ndarray[Any, Any]:
         return np.array([self.x, self.y], dtype='f')
 
     def base_nodes(self) -> Iterable[str]:

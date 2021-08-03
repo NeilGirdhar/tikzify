@@ -1,4 +1,6 @@
-from typing import Iterable
+from __future__ import annotations
+
+from typing import Any, Iterable
 
 import numpy as np
 
@@ -18,5 +20,5 @@ class CurveSource:
         self.end_time = end_time
 
     # Abstract methods -----------------------------------------------------------------------------
-    def times_and_values(self, resolution: int) -> Iterable[np.ndarray]:
+    def times_and_values(self, resolution: int) -> Iterable[np.ndarray[Any, Any]]:
         raise NotImplementedError

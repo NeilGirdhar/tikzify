@@ -33,9 +33,9 @@ Running
         python "$1.py" $2 && pdflatex -shell-escape $1 && open $1.pdf
     }
 
-- The basal ganglia example can be run by doing :bash:`dm basal_ganglia` from the examples folder.  It should produce :bash:`basal_ganglia.pdf`, which shows all of the output, as well as :bash:`figures/basal_ganglia-*.pdf`, which are the individual diagrams to be included.
+- The basal ganglia example can be run by doing :bash:`dm basal_ganglia` from the examples folder.  It should produce :bash:`examples/basal_ganglia.pdf`, which shows all of the output, as well as :bash:`examples/figures/basal_ganglia-*.pdf`, which are the individual diagrams to be included.
 
-- A copy of the `pdf <basal_ganglia.pdf>` is provided at the top level folder.  It shows three programmatically-generated diagrams, with various sections highlighted.
+- A copy of the `pdf <examples/basal_ganglia.pdf>` is provided.  It shows three programmatically-generated diagrams, with various sections highlighted.
 
 Whom do I talk to?
 ==================

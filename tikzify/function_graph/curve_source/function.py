@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from collections import abc
 from itertools import chain
 from math import ceil
-from typing import Callable, Iterable, Sequence
+from typing import Any, Callable, Iterable, Sequence
 
 import numpy as np
 from more_itertools import pairwise
@@ -13,7 +15,7 @@ __all__ = ['FunctionCurveSource', 'FunctionSection']
 
 class FunctionSection:
 
-    def __init__(self, domain_start: float, function: Callable[[np.ndarray], np.ndarray]):
+    def __init__(self, domain_start: float, function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]):
         self.domain_start = domain_start
         self.function = function
 
@@ -36,7 +38,7 @@ class FunctionCurveSource(CurveSource):
         self.sections = sections
 
     # Implemented methods --------------------------------------------------------------------------
-    def times_and_values(self, resolution: int) -> Iterable[np.ndarray]:
+    def times_and_values(self, resolution: int) -> Iterable[np.ndarray[Any, Any]]:
         time_resolution = (self.end_time - self.start_time) / resolution
         for section, next_section in pairwise(chain(self.sections, [None])):
             assert section is not None

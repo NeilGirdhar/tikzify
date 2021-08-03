@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Iterable, Tuple
 
 import numpy as np
@@ -25,7 +27,7 @@ class TrajectoryCurveSource(CurveSource):
         self.index = index
 
     # Implemented methods --------------------------------------------------------------------------
-    def times_and_values(self, resolution: int) -> Iterable[np.ndarray]:
+    def times_and_values(self, resolution: int) -> Iterable[np.ndarray[Any, Any]]:
         data_length = len(self.p_trajectory.times)
         use_resample = data_length > resolution
         return_length = resolution if use_resample else data_length
