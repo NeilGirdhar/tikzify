@@ -1,28 +1,15 @@
 # Local
 examples/*.tex
+examples/figures/*.pdf
 
 # Python distribution / packaging
 build/
 dist/
 .eggs/
 *.egg-info/
-setup.py
-
-# hypothesis
-.hypothesis/
-
-# my[py]
-.mypy_cache/
-
-# pytype
-.pytype/
 
 # Byte-compiled Python
 *.pyc
-
-# uml
-uml/*.png
-uml/*.dot
 
 # vim
 *.orig
@@ -41,4 +28,3 @@ uml/*.dot
 *.out
 *.run.xml
 *.toc
-examples/figures/*.pdf
