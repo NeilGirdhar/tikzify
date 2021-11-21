@@ -19,7 +19,7 @@ def pf(string_to_be_printed: str,
 def tikz_option(name: str, value: Optional[str]) -> Optional[str]:
     if value is None:
         return None
-    return "{}={}".format(name, value)
+    return f"{name}={value}"
 
 
 def tikz_flag(name: str, value: Optional[bool]) -> Optional[str]:

@@ -31,7 +31,10 @@ def _generate_curve(curve_source: CurveSource,
             yield np.array([[curve_source.end_time, 0.0]])
 
 
-def generate_curve(curve_source: CurveSource, *, fill: bool, resolution: int) -> np.ndarray[Any, Any]:
+def generate_curve(curve_source: CurveSource,
+                   *,
+                   fill: bool,
+                   resolution: int) -> np.ndarray[Any, Any]:
     sections_and_jumps = list(_generate_curve(curve_source, fill=fill, resolution=resolution))
     if not sections_and_jumps:
         return np.zeros((0, 2))

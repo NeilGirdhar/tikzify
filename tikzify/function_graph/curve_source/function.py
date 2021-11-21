@@ -15,7 +15,9 @@ __all__ = ['FunctionCurveSource', 'FunctionSection']
 
 class FunctionSection:
 
-    def __init__(self, domain_start: float, function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]):
+    def __init__(self,
+                 domain_start: float,
+                 function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]):
         self.domain_start = domain_start
         self.function = function
 

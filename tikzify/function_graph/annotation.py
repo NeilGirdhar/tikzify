@@ -18,7 +18,6 @@ LOOP_LOOSENESS = 1.5
 
 
 class Annotation:
-
     def __init__(self, text: Optional[NodeText]):
         self.text = text
 
@@ -27,7 +26,6 @@ class Annotation:
 
 
 class RectAnnotation(Annotation):
-
     def __init__(self,
                  left: float,
                  right: float,
@@ -58,7 +56,8 @@ class RectAnnotation(Annotation):
         pf(r"""
            \coordinate (ll) at (“left”, “bottom”);
            \coordinate (ur) at (“right”, “top”);
-           \node [shape=rectangle, thin, draw=“color”, fill=“fill_color”, fill opacity=0.4, fit={(ll) (ur)}] (A) {};
+           \node [shape=rectangle, thin, draw=“color”, fill=“fill_color”, fill opacity=0.4,
+                  fit={(ll) (ur)}] (A) {};
            \node [“color”, “direction”=0mm of A.“coordinate”] {“text”};
            """,
            coordinate=self.coordinate,
@@ -74,7 +73,6 @@ class RectAnnotation(Annotation):
 
 
 class BraceAnnotation(Annotation):
-
     def __init__(self,
                  left: float,
                  right: float,
@@ -99,7 +97,8 @@ class BraceAnnotation(Annotation):
         right = self.right * FUNCTION_GRAPH_WIDTH + MARK_WIDTH * self.widen
         amp = (right - left) * 1.0
         pf(r"""
-           \draw [-, decoration={brace,amplitude=“amp”mm}, decorate, thick, “color”] (“left”, “y”) -- (“right”, “y”)
+           \draw [-, decoration={brace,amplitude=“amp”mm}, decorate, thick, “color”]
+               (“left”, “y”) -- (“right”, “y”)
            node [midway, inner sep=1pt, “color”,
            “direction”=“ampx”mm] {“text_size” “text”};
            """,
@@ -116,7 +115,6 @@ class BraceAnnotation(Annotation):
 
 
 class CircleAnnotation(Annotation):
-
     def __init__(self,
                  x: float,
                  y: float,
@@ -150,7 +148,6 @@ class CircleAnnotation(Annotation):
 
 
 class EdgeAnnotation(Annotation):
-
     def __init__(self,
                  edge: Edge,
                  y_source: float,
@@ -260,7 +257,7 @@ class EdgeAnnotation(Annotation):
                                           self.swipe_right)
             from_, self.edge.from_ = self.edge.from_, None
             if y_targets:
-                self.edge.pf(f, 'swipe node source', 'swipe node {}'.format(len(y_targets) - 1))
+                self.edge.pf(f, 'swipe node source', f'swipe node {len(y_targets) - 1}')
 
             self.edge.in_ = reverse_angle(-(90 + SWIPE_ANGLE) * direction,
                                           self.swipe_right)

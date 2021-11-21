@@ -17,7 +17,6 @@ def edge_text(text: NodeText,
 
 
 class Edge:
-
     def __init__(self,
                  from_: Optional[str] = None,
                  to: Optional[str] = None,
@@ -60,9 +59,9 @@ class Edge:
 
     def bend_string(self, loop: bool) -> Optional[str]:
         if self.bend != 0:
-            return '[bend {}={}]'.format(
-                'left' if self.bend < 0 else 'right',
-                abs(self.bend))
+            direction = 'left' if self.bend < 0 else 'right'
+            angle = abs(self.bend)
+            return f'[bend {direction}={angle}]'
         if loop or self.in_ is not None or self.out is not None:
             return formatter("[“loop, a, b, c”]",
                              loop=(None

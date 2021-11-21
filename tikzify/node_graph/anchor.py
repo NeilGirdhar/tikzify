@@ -17,7 +17,6 @@ def _fix_node(x: Union[str, Anchor]) -> Anchor:
 
 
 class Anchor:
-
     def as_tikz(self) -> str:
         raise NotImplementedError
 
@@ -26,7 +25,6 @@ class Anchor:
 
 
 class CoordinateAnchor(Anchor):
-
     def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
@@ -45,7 +43,6 @@ class CoordinateAnchor(Anchor):
 
 
 class MidpointAnchor(Anchor):
-
     def __init__(self,
                  x: Union[str, Anchor],
                  y: Union[str, Anchor],
@@ -55,9 +52,7 @@ class MidpointAnchor(Anchor):
         self.fraction = fraction
 
     def as_tikz(self) -> str:
-        return "$({})!{}!({})$".format(self.x.as_tikz(),
-                                       self.fraction,
-                                       self.y.as_tikz())
+        return f"$({self.x.as_tikz()})!{self.fraction}!({self.y.as_tikz()})$"
 
     def base_nodes(self) -> Iterable[str]:
         yield from self.x.base_nodes()
@@ -65,7 +60,6 @@ class MidpointAnchor(Anchor):
 
 
 class RelativeAnchor(Anchor):
-
     def __init__(self, node: Union[str, Anchor], anchor: Any):
         self.node = _fix_node(node)
         self.anchor = str(anchor)
@@ -78,7 +72,6 @@ class RelativeAnchor(Anchor):
 
 
 class NodeAnchor(Anchor):
-
     def __init__(self, node: str):
         self.node = node
 
@@ -90,7 +83,6 @@ class NodeAnchor(Anchor):
 
 
 class IntersectionAnchor(Anchor):
-
     def __init__(self, xnode: Union[str, Anchor], ynode: Union[str, Anchor]):
         self.xnode = _fix_node(xnode)
         self.ynode = _fix_node(ynode)

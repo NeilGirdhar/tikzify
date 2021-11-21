@@ -140,7 +140,7 @@ class NodePosition:
     def latex_position(self) -> str:
         if self.is_relative():
             return ""
-        return 'at ({}) '.format(self.anchor.as_tikz())
+        return f'at ({self.anchor.as_tikz()}) '
 
     def latex_relative_position(self) -> str:
         if not self.is_relative():

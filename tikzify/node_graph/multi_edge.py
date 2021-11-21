@@ -15,7 +15,7 @@ def angles(around: float, n: int, step: float) -> Iterable[float]:
 
 def default_waypoint_names() -> Iterable[str]:
     for i in it.count():
-        yield "w{}".format(i)
+        yield f"w{i}"
 
 
 def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str, stop: str, vertical: bool,

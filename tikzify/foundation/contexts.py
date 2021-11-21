@@ -45,7 +45,7 @@ def tex_file(filename: str,
     input_string = "\n".join(rf"\input{{{i}.tex}}" for i in inputs)
     if preamble is not None:
         input_string += "\n" + preamble
-    with open(filename, 'wt') as f:
+    with open(filename, 'wt', encoding='utf-8') as f:
         pf(r"""
            \documentclass{memoir}
            \setlrmarginsandblock{25mm}{25mm}{*}
