@@ -1,5 +1,5 @@
 from functools import reduce
-from typing import Any, Dict, Mapping, Optional, TextIO
+from typing import Any, Mapping, TextIO
 
 from ..foundation.pf import formatter, pf, tikz_option
 from .node import NodeText, generate_node
@@ -8,8 +8,8 @@ __all__ = ['Edge', 'edge_text']
 
 
 def edge_text(text: NodeText,
-              arm: Optional[int] = None) -> Mapping[str, Any]:
-    d: Dict[str, Any] = {}
+              arm: None | int = None) -> Mapping[str, Any]:
+    d: dict[str, Any] = {}
     d['text'] = text
     if arm is not None:
         d['arm'] = arm
@@ -18,23 +18,23 @@ def edge_text(text: NodeText,
 
 class Edge:
     def __init__(self,
-                 from_: Optional[str] = None,
-                 to: Optional[str] = None,
+                 from_: None | str = None,
+                 to: None | str = None,
                  bend: float = 0,
-                 in_: Optional[float] = None,
-                 out: Optional[float] = None,
-                 looseness: Optional[float] = None,
-                 loop: Optional[str] = None,
+                 in_: None | float = None,
+                 out: None | float = None,
+                 looseness: None | float = None,
+                 loop: None | str = None,
                  opacity: float = 1,
-                 dash: Optional[str] = None,
-                 color: Optional[str] = None,
-                 thickness: Optional[str] = None,
-                 text_node: Mapping[str, Any] = None,
+                 dash: None | str = None,
+                 color: None | str = None,
+                 thickness: None | str = None,
+                 text_node: None | Mapping[str, Any] = None,
                  **kwargs: Any):
         """
         * loop can be "left", "right", "above", "below", etc.
         """
-        super().__init__(**kwargs)  # type: ignore
+        super().__init__(**kwargs)
         self.from_ = from_
         self.to = to
         self.bend = bend
@@ -49,7 +49,7 @@ class Edge:
         self.text_node = text_node
 
     def tip_string(self) -> str:
-        def tip_convert(x: Optional[str]) -> str:
+        def tip_convert(x: None | str) -> str:
             if not x:
                 return ''
             if x in ['>', 'stealth', '|']:
@@ -57,7 +57,7 @@ class Edge:
             return 'tip_' + x
         return tip_convert(self.from_) + '-' + tip_convert(self.to)
 
-    def bend_string(self, loop: bool) -> Optional[str]:
+    def bend_string(self, loop: bool) -> None | str:
         if self.bend != 0:
             direction = 'left' if self.bend < 0 else 'right'
             angle = abs(self.bend)
@@ -75,17 +75,21 @@ class Edge:
 
         return None
 
-    def opacity_string(self) -> Optional[str]:
+    def opacity_string(self) -> None | str:
         if self.opacity == 1 or self.opacity is None:
             return None
         return tikz_option('opacity', str(self.opacity))
 
-    def solve_for_color(self, edge_colors: Optional[Mapping[str, str]] = None) -> str:
+    def solve_for_color(self, edge_colors: None | Mapping[str, str] = None) -> str:
         if self.color is not None:
             return self.color
         if edge_colors is None:
             raise ValueError
-        retval = reduce(lambda x, y: min(x, y) if x and y else x or y,
+
+        def choose_color(x: None | str, y: None | str) -> None | str:
+            return min(x, y) if x and y else x or y
+
+        retval = reduce(choose_color,
                         [edge_colors.get(x, None)
                          for x in [self.from_, self.to]
                          if x is not None],
@@ -98,9 +102,9 @@ class Edge:
            f: TextIO,
            source: str,
            target: str,
-           color: Optional[str] = None,
-           text_node: Optional[Mapping[str, Any]] = None,
-           more_options: Optional[str] = None,
+           color: None | str = None,
+           text_node: None | Mapping[str, Any] = None,
+           more_options: None | str = None,
            to_command: str = 'to') -> None:
         if color is None:
             color = self.color

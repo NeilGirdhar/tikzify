@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Tuple
+from typing import Any, Iterable
 
 import numpy as np
 from scipy.signal import resample
@@ -16,7 +16,7 @@ class TrajectoryCurveSource(CurveSource):
     def __init__(self,
                  p_trajectory: PlottableTrajectory[Any],
                  name: str,
-                 index: Tuple[int, ...]):
+                 index: tuple[int, ...]):
         super().__init__(p_trajectory.times[0], p_trajectory.times[-1])
 
         if not isinstance(p_trajectory, PlottableTrajectory):

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Union
+from typing import Any, Iterable
 
 import numpy as np
 
@@ -8,7 +8,7 @@ __all__ = ['Anchor', 'CoordinateAnchor', 'MidpointAnchor', 'RelativeAnchor', 'No
            'IntersectionAnchor']
 
 
-def _fix_node(x: Union[str, Anchor]) -> Anchor:
+def _fix_node(x: str | Anchor) -> Anchor:
     if isinstance(x, Anchor):
         return x
     if not isinstance(x, str):
@@ -44,8 +44,8 @@ class CoordinateAnchor(Anchor):
 
 class MidpointAnchor(Anchor):
     def __init__(self,
-                 x: Union[str, Anchor],
-                 y: Union[str, Anchor],
+                 x: str | Anchor,
+                 y: str | Anchor,
                  fraction: float = 0.5):
         self.x = _fix_node(x)
         self.y = _fix_node(y)
@@ -60,7 +60,7 @@ class MidpointAnchor(Anchor):
 
 
 class RelativeAnchor(Anchor):
-    def __init__(self, node: Union[str, Anchor], anchor: Any):
+    def __init__(self, node: str | Anchor, anchor: Any):
         self.node = _fix_node(node)
         self.anchor = str(anchor)
 
@@ -83,7 +83,7 @@ class NodeAnchor(Anchor):
 
 
 class IntersectionAnchor(Anchor):
-    def __init__(self, xnode: Union[str, Anchor], ynode: Union[str, Anchor]):
+    def __init__(self, xnode: str | Anchor, ynode: str | Anchor):
         self.xnode = _fix_node(xnode)
         self.ynode = _fix_node(ynode)
 
