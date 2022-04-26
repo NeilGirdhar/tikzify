@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from typing import Generator, Iterable, Mapping, Optional, TextIO
+from typing import Generator, Iterable, Mapping, TextIO
 
 from .pf import pf
 
@@ -10,7 +10,7 @@ __all__ = ['tex_pic', 'tex_file']
 def tex_pic(f: TextIO,
             filename: str,
             pic_type: str,
-            options: Mapping[str, str] = None) -> Generator[None, None, None]:
+            options: None | Mapping[str, str] = None) -> Generator[None, None, None]:
     """
     A context manager that creates a tikzpicture environment in the given file.  filename is the
     name of the generated pdf for the tikz code.
@@ -38,8 +38,8 @@ def tex_pic(f: TextIO,
 
 @contextmanager
 def tex_file(filename: str,
-             inputs: Optional[Iterable[str]] = None,
-             preamble: Optional[str] = None) -> Generator[TextIO, None, None]:
+             inputs: None | Iterable[str] = None,
+             preamble: None | str = None) -> Generator[TextIO, None, None]:
     if inputs is None:
         inputs = []
     input_string = "\n".join(rf"\input{{{i}.tex}}" for i in inputs)

@@ -1,5 +1,5 @@
 import sys
-from typing import IO, Any, Optional
+from typing import IO, Any
 
 from .formatter import formatter
 
@@ -16,13 +16,13 @@ def pf(string_to_be_printed: str,
     print(formatter(string_to_be_printed, **kwargs), end=end, file=file)
 
 
-def tikz_option(name: str, value: Optional[str]) -> Optional[str]:
+def tikz_option(name: str, value: None | str) -> None | str:
     if value is None:
         return None
     return f"{name}={value}"
 
 
-def tikz_flag(name: str, value: Optional[bool]) -> Optional[str]:
+def tikz_flag(name: str, value: None | bool) -> None | str:
     if value is None or not value:
         return None
     return name

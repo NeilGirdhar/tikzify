@@ -1,4 +1,4 @@
-from typing import Optional, Sequence, TextIO
+from typing import Sequence, TextIO
 
 from ..foundation.pf import pf, tikz_option
 from ..node_graph import Edge, NodeText
@@ -18,7 +18,7 @@ LOOP_LOOSENESS = 1.5
 
 
 class Annotation:
-    def __init__(self, text: Optional[NodeText]):
+    def __init__(self, text: None | NodeText):
         self.text = text
 
     def generate(self, f: TextIO) -> None:
@@ -33,7 +33,7 @@ class RectAnnotation(Annotation):
                  bottom: float,
                  color: str,
                  fill_color: str,
-                 text: Optional[NodeText] = None,
+                 text: None | NodeText = None,
                  direction: str = 'above',
                  coordinate: str = 'top',
                  widen: bool = True):
@@ -79,7 +79,7 @@ class BraceAnnotation(Annotation):
                  y: float,
                  color: str,
                  *,
-                 text: Optional[NodeText] = None,
+                 text: None | NodeText = None,
                  direction: str = 'above',
                  text_size: str = r'\footnotesize',
                  widen: bool = True):
@@ -119,7 +119,7 @@ class CircleAnnotation(Annotation):
                  x: float,
                  y: float,
                  color: str,
-                 text: Optional[NodeText] = None,
+                 text: None | NodeText = None,
                  direction: str = 'above',
                  draw_circle: bool = True):
         super().__init__(text=text)
@@ -154,15 +154,15 @@ class EdgeAnnotation(Annotation):
                  y_targets: Sequence[float],
                  x_source: float,
                  *,
-                 x_target: Optional[float] = None,
-                 swipe: Optional[bool] = None,
+                 x_target: None | float = None,
+                 swipe: None | bool = None,
                  # edge options
-                 loop: Optional[str] = None,
+                 loop: None | str = None,
                  swipe_right: bool = False,
                  # edge label options
-                 text: Optional[NodeText] = None,
+                 text: None | NodeText = None,
                  swap: bool = False,
-                 pos: Optional[float] = None):
+                 pos: None | float = None):
         super().__init__(text=text)
         self.swipe = swipe
         self.y_source = y_source
@@ -210,6 +210,7 @@ class EdgeAnnotation(Annotation):
         swipe = len(y_targets) > 1 or self.swipe or self.loop
 
         # text
+        direction: None | int
         if swipe:
             below = y_targets and y_source > y_targets[0]
             if below:
@@ -218,6 +219,8 @@ class EdgeAnnotation(Annotation):
             else:
                 swap = not swap
                 direction = 1
+        else:
+            direction = None
 
         text_node = (dict(col=self.edge.color,
                           pos=tikz_option('pos', self.pos),
@@ -235,6 +238,7 @@ class EdgeAnnotation(Annotation):
 
         # create swipe nodes
         if swipe:
+            assert direction is not None
             # self.edge.col = self.edge.color()
             dy = 0.7
             x = (min(x_source, x_target)

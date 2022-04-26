@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterable, Optional, TextIO, Tuple
+from typing import Any, Callable, Iterable, TextIO
 
 import numpy as np
 
@@ -16,7 +16,7 @@ MARK_WIDTH = 0.06
 MARK_HEIGHT = 0.3
 
 
-def function_graph_mark(f: TextIO, x: float, y: float, col: Optional[str],
+def function_graph_mark(f: TextIO, x: float, y: float, col: None | str,
                         scale: float = 1.0) -> None:
     h = scale * MARK_HEIGHT * 0.5
     w = scale * MARK_WIDTH
@@ -35,7 +35,7 @@ def function_graph_mark(f: TextIO, x: float, y: float, col: Optional[str],
 def function_graph_marks(f: TextIO,
                          y: float,
                          marks: Iterable[float],
-                         mark_color: Optional[str] = None) -> None:
+                         mark_color: None | str = None) -> None:
     for x in marks:
         function_graph_mark(f, x * FUNCTION_GRAPH_WIDTH, y, mark_color)
 
@@ -55,7 +55,7 @@ def function_graph_line(f: TextIO, label: str, y: float, arrow: bool = False) ->
        file=f)
 
 
-def identity(x: float, y: float) -> Tuple[float, float]:
+def identity(x: float, y: float) -> tuple[float, float]:
     return x, y
 
 
@@ -64,9 +64,9 @@ def draw_curve(f: TextIO,
                fill_color: str,
                curve: np.ndarray[Any, Any],
                fill: bool,
-               transform: Callable[[float, float], Tuple[float, float]] = identity,
-               options: Optional[str] = None,
-               clip: Tuple[float, float] = (-10.0, 10.0)) -> None:
+               transform: Callable[[float, float], tuple[float, float]] = identity,
+               options: None | str = None,
+               clip: tuple[float, float] = (-10.0, 10.0)) -> None:
     pf(r"""\“drawcmd” [-, thin, draw=“color”“,fill,options”]
        plot coordinates {
        """,

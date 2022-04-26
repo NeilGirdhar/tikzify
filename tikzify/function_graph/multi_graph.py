@@ -1,5 +1,5 @@
 import string
-from typing import Callable, Iterable, Sequence, TextIO, Tuple
+from typing import Callable, Iterable, Sequence, TextIO
 
 from ..node_graph import NodeText
 from .annotation import Annotation
@@ -19,7 +19,7 @@ class FunctionMultiGraph:
     def __init__(self,
                  graphs: Sequence[FunctionGraph],
                  traits: Sequence[GraphedTrait],
-                 palette: Sequence[Tuple[str, str]],
+                 palette: Sequence[tuple[str, str]],
                  *,
                  graph_spacing: float = 1.4,
                  resolution: int = 200):
@@ -38,8 +38,8 @@ class FunctionMultiGraph:
             altitude -= graph_spacing
 
     def get_curve_transform(self, altitude: float, scale: float) -> (
-            Callable[[float, float], Tuple[float, float]]):
-        def curve_transform(x: float, y: float) -> Tuple[float, float]:
+            Callable[[float, float], tuple[float, float]]):
+        def curve_transform(x: float, y: float) -> tuple[float, float]:
             return (x * FUNCTION_GRAPH_WIDTH,
                     y * scale + altitude)
         return curve_transform

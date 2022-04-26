@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Collection, Iterable, List, Mapping, Optional, Sequence, Tuple, Union, cast
+from typing import Any, Collection, Iterable, Mapping, Sequence, cast
 
 from .anchor import CoordinateAnchor
 from .constraints import Constraints
@@ -10,7 +10,7 @@ from .node import Alignment, NodePosition, NodeText
 __all__ = ['EdgeSpecification', 'create_nodes', 'create_links']
 
 
-Real = Union[int, float]
+Real = int | float
 
 
 @dataclass
@@ -18,11 +18,11 @@ class EdgeSpecification:
     source: str
     target: str
     to: str
-    present: List[str]
-    opaque: List[str]
-    via: Optional[Tuple[bool, Sequence[str]]] = None
-    text_node: Optional[Mapping[str, Any]] = None
-    dash: Optional[str] = None
+    present: list[str]
+    opaque: list[str]
+    via: None | tuple[bool, Sequence[str]] = None
+    text_node: None | Mapping[str, Any] = None
+    dash: None | str = None
 
     def is_present(self, diagram_keywords: Iterable[str]) -> bool:
         present_keywords = self.present + self.opaque
@@ -38,9 +38,9 @@ class EdgeSpecification:
 def create_nodes(node_graph: NodeGraph,
                  constraints: Constraints,
                  node_name_to_text: Mapping[str, Sequence[str]],
-                 node_size: Tuple[Real, Real]) -> None:
+                 node_size: tuple[Real, Real]) -> None:
     for node_name in constraints.labels:
-        position = cast(Tuple[float, float], tuple(constraints.solved(node_name)))
+        position = cast(tuple[float, float], tuple(constraints.solved(node_name)))
         if node_name in node_name_to_text:
             text_lines = node_name_to_text[node_name]
             text = NodeText(text_lines=text_lines,
@@ -59,7 +59,7 @@ def create_nodes(node_graph: NodeGraph,
 def create_links(node_graph: NodeGraph,
                  links: Sequence[EdgeSpecification],
                  dimmed_opacity: Real = 1.0,
-                 diagram_keywords: Optional[Collection[str]] = None) -> None:
+                 diagram_keywords: None | Collection[str] = None) -> None:
     if diagram_keywords is None:
         diagram_keywords = []
     diagram_keywords = list(diagram_keywords) + ['all']

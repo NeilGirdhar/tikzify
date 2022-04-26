@@ -38,4 +38,4 @@ def generate_curve(curve_source: CurveSource,
     sections_and_jumps = list(_generate_curve(curve_source, fill=fill, resolution=resolution))
     if not sections_and_jumps:
         return np.zeros((0, 2))
-    return np.concatenate(sections_and_jumps, axis=0)  # type: ignore
+    return np.concatenate(sections_and_jumps, axis=0)

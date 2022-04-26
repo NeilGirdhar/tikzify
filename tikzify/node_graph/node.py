@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Collection, Mapping, Optional, Sequence, TextIO, Union
+from typing import Any, Collection, Mapping, Sequence, TextIO
 
 from ..foundation import formatter
 from ..foundation.pf import pf, tikz_option
@@ -10,7 +10,7 @@ __all__ = ['NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment'
            'TerminalSpacing']
 
 
-Real = Union[float, int]
+Real = float | int
 
 
 class Alignment(Enum):
@@ -32,7 +32,7 @@ class TextSize(Enum):
     Huge = auto()
 
 
-def format_length(length: Optional[Real]) -> Optional[str]:
+def format_length(length: None | Real) -> None | str:
     if length is None:
         return None
     if int(length) == length:
@@ -43,9 +43,9 @@ def format_length(length: Optional[Real]) -> Optional[str]:
 
 
 def wrap_text(text_lines: Sequence[str],
-              color: Optional[str],
-              wrap_command: Optional[str],
-              size: Optional[TextSize],
+              color: None | str,
+              wrap_command: None | str,
+              size: None | TextSize,
               standard_height: bool) -> str:
     def wrap(line: str) -> str:
         if standard_height:
@@ -79,21 +79,21 @@ class TerminalSpacing:
 @dataclass
 class NodeText:
     text_lines: Sequence[str]
-    wrap_command: Optional[str] = None
-    color: Optional[str] = None
-    width: Optional[Real] = None
-    align: Optional[Alignment] = None
-    size: Optional[TextSize] = None
+    wrap_command: None | str = None
+    color: None | str = None
+    width: None | Real = None
+    align: None | Alignment = None
+    size: None | TextSize = None
     standard_height: bool = False
 
-    def latex(self, inherit_color: Optional[str]) -> str:
+    def latex(self, inherit_color: None | str) -> str:
         return wrap_text(self.text_lines,
                          inherit_color if self.color is None else self.color,
                          self.wrap_command,
                          self.size,
                          self.standard_height)
 
-    def latex_options(self) -> Optional[str]:
+    def latex_options(self) -> None | str:
         if self.align is None and len(self.text_lines) >= 2:
             raise ValueError("No alignment specified")
         retval = formatter("“text_width,align”",
@@ -107,12 +107,12 @@ class NodeText:
 @dataclass
 class NodeLabel:
     text_lines: Sequence[str]
-    location: Optional[str] = None
-    color: Optional[str] = None
-    size: Optional[TextSize] = None
+    location: None | str = None
+    color: None | str = None
+    size: None | TextSize = None
     standard_height: bool = False
 
-    def latex(self, inherit_color: Optional[str]) -> str:
+    def latex(self, inherit_color: None | str) -> str:
         text_lines = self.text_lines
 
         color = inherit_color if self.color is None else self.color
@@ -125,10 +125,10 @@ class NodeLabel:
 @dataclass
 class NodePosition:
     anchor: Anchor
-    left: Optional[Real] = None
-    right: Optional[Real] = None
-    above: Optional[Real] = None
-    below: Optional[Real] = None
+    left: None | Real = None
+    right: None | Real = None
+    above: None | Real = None
+    below: None | Real = None
 
     def __post_init__(self) -> None:
         assert self.left is None or self.right is None
@@ -167,8 +167,8 @@ class NodePosition:
 @dataclass
 class NodeContainer:
     nodes: Collection[str]
-    corner_text: Optional[NodeText] = None
-    corner_color: Optional[str] = None
+    corner_text: None | NodeText = None
+    corner_color: None | str = None
 
     def latex_fit(self) -> str:
         nodes = sorted('(' + node + ')' for node in self.nodes)
@@ -176,8 +176,8 @@ class NodeContainer:
 
     def latex_corner(self,
                      parent_name: str,
-                     opacity: Optional[Real],
-                     inherit_color: Optional[str]) -> str:
+                     opacity: None | Real,
+                     inherit_color: None | str) -> str:
         if self.corner_text is None:
             return ""
         color = self.corner_color if self.corner_color is not None else inherit_color
@@ -191,10 +191,10 @@ class NodeContainer:
             opacity=None if opacity is None else tikz_option('opacity', str(opacity)))
 
 
-def generate_node(name: Optional[str],
+def generate_node(name: None | str,
                   node_dict: Mapping[str, Any],
                   *,
-                  opacity: Optional[Real] = None,
+                  opacity: None | Real = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
     """

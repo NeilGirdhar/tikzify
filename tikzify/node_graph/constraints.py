@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import itertools as it
-from typing import Any, Iterable, List, Optional, Reversible, Sequence, Tuple, Union
+from typing import Any, Iterable, Reversible, Sequence
 
 import numpy as np
 
@@ -18,7 +18,7 @@ class Constraints:
         self.labels = labels
         self.a = np.zeros((0, 2 * len(labels)))
         self.b = np.zeros((0,))
-        self.solution: Optional[np.ndarray[Any, Any]] = None
+        self.solution: None | np.ndarray[Any, Any] = None
 
     # Properties --------------------------------------------------------------
     @property
@@ -45,7 +45,7 @@ class Constraints:
         a[self.index(coord, c)] = 1.0
         self.add_constraint(a, value)
 
-    def set_delta(self, coord: str, *args: str, delta: Union[float, Iterable[float]] = 0.0) -> None:
+    def set_delta(self, coord: str, *args: str, delta: float | Iterable[float] = 0.0) -> None:
         if len(args) <= 1:
             raise ValueError
         deltas: Iterable[float]
@@ -61,9 +61,9 @@ class Constraints:
 
     def set_deltas(self,
                    *args: str,
-                   delta: Union[Tuple[float, float],
-                                List[Tuple[float, float]]] = (0.0, 0.0)) -> None:
-        deltas: Sequence[Tuple[float, float]]
+                   delta: tuple[float, float] | list[tuple[float, float]] = (0.0, 0.0)
+                   ) -> None:
+        deltas: Sequence[tuple[float, float]]
         if isinstance(delta, tuple):
             deltas = [delta for _ in range(len(args))]
         else:
@@ -77,7 +77,7 @@ class Constraints:
     def set_y(self, c: str, y: float) -> None:
         self.set_value('y', c, y)
 
-    def set_delta_x(self, *args: str, delta_x: Union[Reversible[float], float] = 0.0) -> None:
+    def set_delta_x(self, *args: str, delta_x: Reversible[float] | float = 0.0) -> None:
         """
         Stack each of the args horizontally, spaced by delta_x, from left to
         right.
@@ -86,14 +86,14 @@ class Constraints:
             delta_x = list(reversed(delta_x))
         self.set_delta('x', *reversed(args), delta=delta_x)
 
-    def set_delta_y(self, *args: str, delta_y: Union[Sequence[float], float] = 0.0) -> None:
+    def set_delta_y(self, *args: str, delta_y: Sequence[float] | float = 0.0) -> None:
         """
         Stack each of the args vertically, spaced by delta_y, from top to
         bottom.
         """
         self.set_delta('y', *args, delta=delta_y)
 
-    def set_location(self, c: str, location: Tuple[float, float]) -> None:
+    def set_location(self, c: str, location: tuple[float, float]) -> None:
         "Set c.x, c.y = location."
         if len(location) != 2:
             raise ValueError
@@ -103,7 +103,7 @@ class Constraints:
     def set_between(self,
                     coord: str,
                     *items: str,
-                    ratios: Optional[Sequence[float]] = None) -> None:
+                    ratios: None | Sequence[float] = None) -> None:
         """
         Space n items with spacing according to (n-1) ratios.
         E.g., ratios=[0, 1] puts item[1] at item[0]
@@ -122,10 +122,10 @@ class Constraints:
                 a[self.index(coord, e)] -= fraction
             self.add_constraint(a, 0.0)
 
-    def set_x_between(self, *items: str, ratios: Optional[Sequence[float]] = None) -> None:
+    def set_x_between(self, *items: str, ratios: None | Sequence[float] = None) -> None:
         self.set_between('x', *items, ratios=ratios)
 
-    def set_y_between(self, *items: str, ratios: Optional[Sequence[float]] = None) -> None:
+    def set_y_between(self, *items: str, ratios: None | Sequence[float] = None) -> None:
         self.set_between('y', *items, ratios=ratios)
 
     def set_deltas_equal(self, c: str, d: str, e: str, f: str) -> None:
@@ -163,7 +163,7 @@ class Constraints:
             self.add_constraint(a, 0.0)
 
     def solve(self, decimals: int = 6) -> None:
-        solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)  # type: ignore
+        solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)
         # solution = np.linalg.solve(self.a, self.b)
         if rank != 2 * self.num_labels:
             raise Constraints.InsufficientConstraints(

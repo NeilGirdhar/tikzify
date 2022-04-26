@@ -1,11 +1,11 @@
 import itertools as it
 from copy import copy
-from typing import Iterable, List, Sequence, TextIO
+from typing import Iterable, Sequence, TextIO
 
 from ..foundation.pf import pf
 from .edge import Edge
 
-__all__: List[str] = []
+__all__: list[str] = []
 
 
 def angles(around: float, n: int, step: float) -> Iterable[float]:
@@ -51,6 +51,7 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str], v
                      waypoint_names: Iterable[str],
                      color: str) -> None:
     drawn = False
+    from_: None | str = None
     for arm, (turn, next_turn, create) in enumerate(zip(turns, turns[1:], waypoint_names)):
         create_waypoint(f, edge, source, turn, next_turn, vertical, create, arm, color)
         if not drawn:
@@ -70,4 +71,5 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str], v
                  to_command=to_command,
                  color=color)
     if drawn:
+        assert from_ is not None
         edge.from_ = from_

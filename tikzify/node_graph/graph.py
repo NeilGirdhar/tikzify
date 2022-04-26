@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools as it
 from copy import copy
-from typing import Mapping, Optional, Sequence, TextIO, Tuple, Union
+from typing import Mapping, Sequence, TextIO
 
 import networkx as nx
 
@@ -16,7 +16,7 @@ __all__ = ['NodeGraph']
 
 class NodeGraph:
 
-    def __init__(self, edge_colors: Optional[Mapping[str, str]] = None):
+    def __init__(self, edge_colors: None | Mapping[str, str] = None):
         self.digraph = nx.MultiDiGraph()
         self.edge_colors = {} if edge_colors is None else edge_colors
 
@@ -56,7 +56,7 @@ class NodeGraph:
     # Graph creation methods -----------------------------------------------------------------------
     def create_coordinate(self,
                           name: str,
-                          position: Union[Tuple[float, float], NodePosition]) -> None:
+                          position: tuple[float, float] | NodePosition) -> None:
         if isinstance(position, tuple):
             position = NodePosition(CoordinateAnchor(*position))
         self.digraph.add_node(name,
@@ -65,19 +65,19 @@ class NodeGraph:
 
     def create_node(self,
                     name: str,
-                    position: Optional[NodePosition],
-                    container: Optional[NodeContainer] = None,
+                    position: None | NodePosition,
+                    container: None | NodeContainer = None,
                     *,
                     # Text
-                    text: Optional[Union[str, NodeText]] = None,
-                    label: Optional[NodeLabel] = None,
+                    text: None | str | NodeText = None,
+                    label: None | NodeLabel = None,
                     # Appearance
-                    size: Optional[Tuple[float, float]] = None,
-                    shape: Optional[str] = None,
-                    color: Optional[str] = None,
-                    dash: Optional[str] = None,
-                    opacity: Optional[float] = None,
-                    inner_sep: Optional[float] = None) -> None:
+                    size: None | tuple[float, float] = None,
+                    shape: None | str = None,
+                    color: None | str = None,
+                    dash: None | str = None,
+                    opacity: None | float = None,
+                    inner_sep: None | float = None) -> None:
         if position is None and container is None:
             raise ValueError
         if position is not None and container is not None:
@@ -103,7 +103,7 @@ class NodeGraph:
                     target: str,
                     edge: Edge,
                     *,
-                    via: Optional[Tuple[bool, Sequence[str]]] = None) -> None:
+                    via: None | tuple[bool, Sequence[str]] = None) -> None:
         if source not in self.digraph:
             raise ValueError(f"{source} not in graph.")
         if target not in self.digraph:
@@ -117,7 +117,7 @@ class NodeGraph:
                      margin_top: bool = True,
                      margin_bottom: bool = True,
                      *,
-                     margin: Optional[float] = None) -> None:
+                     margin: None | float = None) -> None:
         if left not in self.digraph:
             raise ValueError(f"{left} not in graph.")
         if right not in self.digraph:
@@ -167,7 +167,7 @@ class NodeGraph:
                   text: NodeText,
                   edge: str,
                   terminal: str,
-                  relative: Optional[float] = None) -> None:
+                  relative: None | float = None) -> None:
         """
         Places an input/output on the edge, perpendicular to the terminal.
         """
@@ -229,7 +229,7 @@ class NodeGraph:
                         edge.pf(f, source, target, color=color)
 
     # Private methods ------------------------------------------------------------------------------
-    def _dependencies(self) -> Tuple[Sequence[str], nx.DiGraph]:
+    def _dependencies(self) -> tuple[Sequence[str], nx.DiGraph]:
         """
         Returns:
             dependency_graph: The graph of dependencies.
