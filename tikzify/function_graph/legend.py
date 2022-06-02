@@ -34,9 +34,10 @@ def generate_legend(f: TextIO,
             elif element is None:
                 pass
             else:
+                assert isinstance(element, LegendItem)
                 with tex_pic(
                         f,
-                        'legend_' + element.id_ if element.id_ else None,
+                        'legend_' + element.id_,
                         'Flow diagram, '
                         'baseline={([yshift=-3pt]mainnode.base)}'):
                     element.generate(f, 0.0, 0.0, width)
