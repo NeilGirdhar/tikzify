@@ -1,6 +1,7 @@
 import itertools as it
+from collections.abc import Iterable, Sequence
 from copy import copy
-from typing import Iterable, Sequence, TextIO
+from typing import TextIO
 
 from ..foundation.pf import pf
 from .edge import Edge

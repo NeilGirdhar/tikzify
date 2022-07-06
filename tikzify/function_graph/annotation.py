@@ -1,4 +1,5 @@
-from typing import Sequence, TextIO
+from collections.abc import Sequence
+from typing import TextIO
 
 from ..foundation.pf import pf, tikz_option
 from ..node_graph import Edge, NodeText

@@ -1,5 +1,6 @@
+from collections.abc import Generator, Iterable, Mapping
 from contextlib import contextmanager
-from typing import Generator, Iterable, Mapping, TextIO
+from typing import TextIO
 
 from .pf import pf
 

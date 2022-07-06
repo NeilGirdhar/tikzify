@@ -1,5 +1,6 @@
 import string
-from typing import Callable, Iterable, Sequence, TextIO
+from collections.abc import Callable, Iterable, Sequence
+from typing import TextIO
 
 from ..node_graph import NodeText
 from .annotation import Annotation

@@ -1,5 +1,6 @@
+from collections.abc import Mapping
 from functools import reduce
-from typing import Any, Mapping, TextIO
+from typing import Any, TextIO
 
 from ..foundation.pf import formatter, pf, tikz_option
 from .node import NodeText, generate_node

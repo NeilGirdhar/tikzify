@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from collections import abc
+from collections.abc import Callable, Iterable, Sequence
 from itertools import chain
 from math import ceil
-from typing import Any, Callable, Iterable, Sequence
+from typing import Any
 
 import numpy as np
 from more_itertools import pairwise

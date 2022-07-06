@@ -1,6 +1,7 @@
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, Collection, Mapping, Sequence, TextIO
+from typing import Any, TextIO
 
 from ..foundation import formatter
 from ..foundation.pf import pf, tikz_option

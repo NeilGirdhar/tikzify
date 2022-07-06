@@ -1,6 +1,7 @@
 import re
+from re import Match
 from textwrap import dedent
-from typing import Any, Match
+from typing import Any
 
 __all__ = ['formatter']
 

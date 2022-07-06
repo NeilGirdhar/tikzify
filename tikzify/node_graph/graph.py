@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import itertools as it
+from collections.abc import Mapping, Sequence
 from copy import copy
-from typing import Mapping, Sequence, TextIO
+from typing import TextIO
 
 import networkx as nx
 

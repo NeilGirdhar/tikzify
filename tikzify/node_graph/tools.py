@@ -1,5 +1,6 @@
+from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, Collection, Iterable, Mapping, Sequence, cast
+from typing import Any, cast
 
 from .anchor import CoordinateAnchor
 from .constraints import Constraints

@@ -1,4 +1,5 @@
-from typing import Any, Mapping, Sequence, TextIO
+from collections.abc import Mapping, Sequence
+from typing import Any, TextIO
 
 from ..foundation import tex_pic
 from ..foundation.pf import pf
