@@ -28,6 +28,7 @@ python = '>=3.10,<3.11'
 more_itertools = '>=8'
 networkx = '>=2.5'
 numpy = '>=1.21'
+scipy = '>=1.9'
 
 [tool.poetry.dev-dependencies]
 flake8 = '>=3.9'
