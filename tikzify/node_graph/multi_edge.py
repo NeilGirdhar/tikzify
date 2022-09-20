@@ -72,5 +72,4 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str], v
                  to_command=to_command,
                  color=color)
     if drawn:
-        assert from_ is not None
         edge.from_ = from_
