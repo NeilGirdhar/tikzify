@@ -30,9 +30,10 @@ class NodeGraph:
         return sorted(self.digraph)
 
     def node_opacity(self, name: str, dependency_graph: nx.DiGraph) -> float:
-        """
-        Calculate the maximum opacity of the node, its afferent edges, its fit group (if it has
-        one), and set the node's opacity accordingly.
+        """Calcule the node opacity.
+
+        This is based on the maximum opacity of the node, its afferent edges, its fit group (if it
+        has one).
         """
         g = self.digraph
         node_dict = g.nodes[name]
@@ -85,15 +86,15 @@ class NodeGraph:
             raise ValueError
         if isinstance(text, str):
             text = NodeText([text])
-        d = dict(text=text,
-                 label=label,
-                 size=size,
-                 shape=shape,
-                 color=color,
-                 dash=dash,
-                 opacity=opacity,
-                 inner_sep=inner_sep,
-                 container=container)
+        d = {"text": text,
+                 "label": label,
+                 "size": size,
+                 "shape": shape,
+                 "color": color,
+                 "dash": dash,
+                 "opacity": opacity,
+                 "inner_sep": inner_sep,
+                 "container": container}
         d = {key: value
              for key, value in d.items()
              if value is not None}
@@ -106,27 +107,33 @@ class NodeGraph:
                     *,
                     via: None | tuple[bool, Sequence[str]] = None) -> None:
         if source not in self.digraph:
-            raise ValueError(f"{source} not in graph.")
+            msg = f"{source} not in graph."
+            raise ValueError(msg)
         if target not in self.digraph:
-            raise ValueError(f"{target} not in graph.")
+            msg = f"{target} not in graph."
+            raise ValueError(msg)
         self.digraph.add_edge(source, target, edge=edge, via=via)
 
     def create_edges(self,
                      left: str, right: str, top: str, bottom: str,
+                     *,
                      margin_left: bool = True,
                      margin_right: bool = True,
                      margin_top: bool = True,
                      margin_bottom: bool = True,
-                     *,
                      margin: None | float = None) -> None:
         if left not in self.digraph:
-            raise ValueError(f"{left} not in graph.")
+            msg = f"{left} not in graph."
+            raise ValueError(msg)
         if right not in self.digraph:
-            raise ValueError(f"{right} not in graph.")
+            msg = f"{right} not in graph."
+            raise ValueError(msg)
         if top not in self.digraph:
-            raise ValueError(f"{top} not in graph.")
+            msg = f"{top} not in graph."
+            raise ValueError(msg)
         if bottom not in self.digraph:
-            raise ValueError(f"{bottom} not in graph.")
+            msg = f"{bottom} not in graph."
+            raise ValueError(msg)
         self.create_coordinate('left_edge',
                                NodePosition(RelativeAnchor(left, 'west'),
                                             left=margin if margin_left else None))
@@ -151,7 +158,8 @@ class NodeGraph:
                 [left, right, above, below],
                 ['west', 'east', 'north', 'south'],
                 ['left_of', 'right_of', 'above', 'below'],
-                [True, True, False, False]):
+                [True, True, False, False],
+                strict=True):
             if num_anchors == 0:
                 continue
             step = (spacing.vertical if vertical else spacing.horizontal)[num_anchors - 1]
@@ -169,9 +177,7 @@ class NodeGraph:
                   edge: str,
                   terminal: str,
                   relative: None | float = None) -> None:
-        """
-        Places an input/output on the edge, perpendicular to the terminal.
-        """
+        """Places an input/output on the edge, perpendicular to the terminal."""
         if edge in ['bottom_edge', 'top_edge']:
             intersection = IntersectionAnchor(NodeAnchor(terminal), NodeAnchor(edge))
             key = 'above' if edge == 'top_edge' else 'below'
@@ -188,7 +194,7 @@ class NodeGraph:
     def generate(self, f: TextIO) -> None:
         g = self.digraph
         dependency_graph, topo_sorted = self._dependencies()
-        D = default_waypoint_names()
+        waypoint_names = default_waypoint_names()
 
         # Draw nodes.
         for name in topo_sorted:
@@ -209,9 +215,9 @@ class NodeGraph:
                         bend += (0
                                  if len_ed == 1 else
                                  (2 * i - 1) * 14
-                                 if len_ed == 2 else
+                                 if len_ed == 2 else  # noqa: PLR2004
                                  (i - 1) * 20
-                                 if len_ed == 3 else
+                                 if len_ed == 3 else  # noqa: PLR2004
                                  0)
                         edge.bend = bend
 
@@ -222,19 +228,20 @@ class NodeGraph:
                         create_waypoints(f,
                                          edge,
                                          source,
-                                         list(turns) + [target],
-                                         vertical,
-                                         D,
-                                         color)
+                                         [*list(turns), target],
+                                         waypoint_names,
+                                         color,
+                                         vertical=vertical)
                     else:
                         edge.pf(f, source, target, color=color)
 
     # Private methods ------------------------------------------------------------------------------
     def _dependencies(self) -> tuple[Sequence[str], nx.DiGraph]:
-        """
+        """The dependencies of nodes in the graph.
+
         Returns:
+            topo_sorted: A topological sort of the dependency graph.
             dependency_graph: The graph of dependencies.
-            topo_sorted: A topological sort of the dependency graph
         """
         g = self.digraph
         g2 = nx.DiGraph()  # A graph with all dependencies.

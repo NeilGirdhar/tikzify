@@ -1,5 +1,6 @@
 from collections.abc import Generator, Iterable, Mapping
 from contextlib import contextmanager
+from pathlib import Path
 from typing import TextIO
 
 from .pf import pf
@@ -12,9 +13,9 @@ def tex_pic(f: TextIO,
             filename: str,
             pic_type: str,
             options: None | Mapping[str, str] = None) -> Generator[None, None, None]:
-    """
-    A context manager that creates a tikzpicture environment in the given file.  filename is the
-    name of the generated pdf for the tikz code.
+    """A context manager that creates a tikzpicture environment in the given file.
+
+    filename is the name of the generated pdf for the tikz code.
     """
     if options is None:
         options = {}
@@ -46,7 +47,7 @@ def tex_file(filename: str,
     input_string = "\n".join(rf"\input{{{i}.tex}}" for i in inputs)
     if preamble is not None:
         input_string += "\n" + preamble
-    with open(filename, 'wt', encoding='utf-8') as f:
+    with Path(filename).open("w", encoding='utf-8') as f:
         pf(r"""
            \documentclass{memoir}
            \setlrmarginsandblock{25mm}{25mm}{*}

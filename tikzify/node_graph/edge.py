@@ -18,7 +18,7 @@ def edge_text(text: NodeText,
 
 
 class Edge:
-    def __init__(self,
+    def __init__(self,  # noqa: PLR0913
                  from_: None | str = None,
                  to: None | str = None,
                  bend: float = 0,
@@ -32,9 +32,7 @@ class Edge:
                  thickness: None | str = None,
                  text_node: None | Mapping[str, Any] = None,
                  **kwargs: Any):
-        """
-        * loop can be "left", "right", "above", "below", etc.
-        """
+        """* loop can be "left", "right", "above", "below", etc."""
         super().__init__(**kwargs)
         self.from_ = from_
         self.to = to
@@ -58,7 +56,7 @@ class Edge:
             return 'tip_' + x
         return tip_convert(self.from_) + '-' + tip_convert(self.to)
 
-    def bend_string(self, loop: bool) -> None | str:
+    def bend_string(self, *, loop: bool) -> None | str:
         if self.bend != 0:
             direction = 'left' if self.bend < 0 else 'right'
             angle = abs(self.bend)
@@ -96,7 +94,8 @@ class Edge:
                          if x is not None],
                         None)
         if retval is None:
-            raise ValueError(f"No color found for tips {self.from_} and {self.to}")
+            msg = f"No color found for tips {self.from_} and {self.to}"
+            raise ValueError(msg)
         return retval
 
     def pf(self,
@@ -111,15 +110,15 @@ class Edge:
             color = self.color
 
         text_node = text_node if text_node is not None else self.text_node
-        pf(r"\draw [“tip, color, opacity, dash, thickness, more_options”] "
-           + r"(“s”) “to_command” “bend ”",
+        pf((r"\draw [“tip, color, opacity, dash, thickness, more_options”] "
+            r"(“s”) “to_command” “bend ”"),
            more_options=more_options,
            thickness=self.thickness,
            dash=self.dash,
            opacity=self.opacity_string(),
            tip=self.tip_string(),
            color=color,
-           bend=self.bend_string(source == target),
+           bend=self.bend_string(loop=source == target),
            to_command=to_command,
            s=source,
            end='',

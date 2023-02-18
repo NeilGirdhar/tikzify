@@ -63,7 +63,7 @@ def create_links(node_graph: NodeGraph,
                  diagram_keywords: None | Collection[str] = None) -> None:
     if diagram_keywords is None:
         diagram_keywords = []
-    diagram_keywords = list(diagram_keywords) + ['all']
+    diagram_keywords = [*list(diagram_keywords), 'all']
     for edge_spec in links:
         if not edge_spec.is_present(diagram_keywords):
             continue

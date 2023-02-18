@@ -27,7 +27,7 @@ class Annotation:
 
 
 class RectAnnotation(Annotation):
-    def __init__(self,
+    def __init__(self,  # noqa: PLR0913
                  left: float,
                  right: float,
                  top: float,
@@ -37,6 +37,7 @@ class RectAnnotation(Annotation):
                  text: None | NodeText = None,
                  direction: str = 'above',
                  coordinate: str = 'top',
+                 *,
                  widen: bool = True):
         super().__init__(text=text)
         self.left = left
@@ -122,6 +123,7 @@ class CircleAnnotation(Annotation):
                  color: str,
                  text: None | NodeText = None,
                  direction: str = 'above',
+                 *,
                  draw_circle: bool = True):
         super().__init__(text=text)
         self.x = x
@@ -164,6 +166,7 @@ class EdgeAnnotation(Annotation):
                  text: None | NodeText = None,
                  swap: bool = False,
                  pos: None | float = None):
+        assert pos is None or isinstance(pos, float)
         super().__init__(text=text)
         self.swipe = swipe
         self.y_source = y_source
@@ -173,26 +176,23 @@ class EdgeAnnotation(Annotation):
                          if x_target is None
                          else x_target)
         self.swap = swap
-        if pos is not None:
-            print(pos)
-            assert isinstance(pos, float)
         self.pos = str(pos) if pos is not None else None
         self.loop = loop
         self.edge = edge
         self.swipe_right = swipe_right
 
-    def generate(self, f: TextIO) -> None:
+    def generate(self, f: TextIO) -> None:  # noqa: PLR0915
         x_source = self.x_source
         x_target = self.x_target
 
-        def reverse_angle(angle: float, do_it: bool) -> float:
-            return 180 - angle if do_it else angle
+        def possibly_reverse_angle(angle: float, *, reverse_angle: bool) -> float:
+            return 180 - angle if reverse_angle else angle
 
-        def create_node(name: str, x: float, y: float, space: bool) -> None:
+        def create_node(name: str, x: float, y: float, *, space: bool) -> None:
             if space:
-                pf(r"\node (“name”) at (“x”, “y”) "
-                   + r"[shape=rectangle, minimum width=“width”cm, "
-                   + r"minimum height=“height”cm] {};",
+                pf((r"\node (“name”) at (“x”, “y”) "
+                    r"[shape=rectangle, minimum width=“width”cm, "
+                    r"minimum height=“height”cm] {};"),
                    name=name,
                    width=MARK_WIDTH,
                    height=MARK_HEIGHT,
@@ -223,19 +223,19 @@ class EdgeAnnotation(Annotation):
         else:
             direction = None
 
-        text_node = (dict(col=self.edge.color,
-                          pos=tikz_option('pos', self.pos),
-                          swap='swap' if swap else None,
-                          text=self.text)
+        text_node = ({"col": self.edge.color,
+                          "pos": tikz_option('pos', self.pos),
+                          "swap": 'swap' if swap else None,
+                          "text": self.text}
                      if self.text is not None
                      else None)
 
         # create source node
-        create_node('source node', x_source, y_source, True)
+        create_node('source node', x_source, y_source, space=True)
 
         # create target nodes
         for i, y_target in enumerate(y_targets):
-            create_node(f'node {i}', x_target, y_target, True)
+            create_node(f'node {i}', x_target, y_target, space=True)
 
         # create swipe nodes
         if swipe:
@@ -244,31 +244,29 @@ class EdgeAnnotation(Annotation):
             dy = 0.7
             x = (min(x_source, x_target)
                  + (-1.0 if self.swipe_right else 1.0) * SWIPE_OFFSET / FUNCTION_GRAPH_WIDTH)
-            create_node('swipe node source', x, y_source + direction * dy,
-                        False)
+            create_node('swipe node source', x, y_source + direction * dy, space=False)
             for i, y in enumerate(y_targets):
-                create_node(f'swipe node {i}', x, y - direction * dy,
-                            False)
+                create_node(f'swipe node {i}', x, y - direction * dy, space=False)
 
-            self.edge.out = reverse_angle((90 + SWIPE_ANGLE) * direction,
-                                          self.swipe_right)
-            self.edge.in_ = reverse_angle(-90 * direction,
-                                          self.swipe_right)
+            self.edge.out = possibly_reverse_angle((90 + SWIPE_ANGLE) * direction,
+                                                   reverse_angle=self.swipe_right)
+            self.edge.in_ = possibly_reverse_angle(-90 * direction,
+                                                   reverse_angle=self.swipe_right)
             to, self.edge.to = self.edge.to, None
             self.edge.pf(f, 'source node', 'swipe node source',
                          text_node=text_node)
 
-            self.edge.out = reverse_angle(90 * direction,
-                                          self.swipe_right)
+            self.edge.out = possibly_reverse_angle(90 * direction,
+                                                   reverse_angle=self.swipe_right)
             from_, self.edge.from_ = self.edge.from_, None
             if y_targets:
                 self.edge.pf(f, 'swipe node source', f'swipe node {len(y_targets) - 1}')
 
-            self.edge.in_ = reverse_angle(-(90 + SWIPE_ANGLE) * direction,
-                                          self.swipe_right)
+            self.edge.in_ = possibly_reverse_angle(-(90 + SWIPE_ANGLE) * direction,
+                                                   reverse_angle=self.swipe_right)
             self.edge.from_ = from_
             self.edge.to = to
-            for i, y_target in enumerate(y_targets):
+            for i, _ in enumerate(y_targets):
                 self.edge.pf(f,
                              f'swipe node {i}',
                              f'node {i}')

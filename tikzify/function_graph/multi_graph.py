@@ -48,8 +48,8 @@ class FunctionMultiGraph:
     def generate_curves(self, f: TextIO) -> None:
         clip = (-self.graph_spacing * 0.95,
                 self.graph_spacing * 0.95)
-        for trait, (color, fill_color) in zip(self.traits, self.palette):
-            for altitude, graphed_element in zip(self.altitudes, self.graphs):
+        for trait, (color, fill_color) in zip(self.traits, self.palette, strict=False):
+            for altitude, graphed_element in zip(self.altitudes, self.graphs, strict=True):
                 if trait in graphed_element.trait_to_curve:
                     curve_source = graphed_element.trait_to_curve[trait]
                     if not isinstance(curve_source, CurveSource):
@@ -72,8 +72,8 @@ class FunctionMultiGraph:
         self.generate_legend(f)
 
     def generate_graph_lines(self, f: TextIO) -> None:
-        for altitude, graphed_element in zip(self.altitudes, self.graphs):
-            function_graph_line(f, graphed_element.label, altitude, True)
+        for altitude, graphed_element in zip(self.altitudes, self.graphs, strict=True):
+            function_graph_line(f, graphed_element.label, altitude, arrow=True)
 
     def generate_annotations(self, f: TextIO, annotations: Iterable[Annotation]) -> None:
         annotation_letter = 0
@@ -86,7 +86,7 @@ class FunctionMultiGraph:
     def generate_legend(self, f: TextIO) -> None:
         legend = []
         for i, (trait, (color, fill_color)) in enumerate(
-                zip(self.traits, self.palette)):
+                zip(self.traits, self.palette, strict=False)):
             legend_text = trait.legend_text
             dimmed_fill_color = f"{fill_color}!{FILL_OPACITY * 100}!white"
             legend.append((legend_text,

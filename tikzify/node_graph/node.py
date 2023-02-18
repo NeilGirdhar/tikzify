@@ -47,6 +47,7 @@ def wrap_text(text_lines: Sequence[str],
               color: None | str,
               wrap_command: None | str,
               size: None | TextSize,
+              *,
               standard_height: bool) -> str:
     def wrap(line: str) -> str:
         if standard_height:
@@ -64,11 +65,11 @@ def wrap_text(text_lines: Sequence[str],
             line = '{' + line + '}'
         if wrap_command is not None:
             line = rf"\{wrap_command}{{{line}}}"
-        return line
+        return line  # noqa: RET504
     retval = r' \\ '.join(wrap(line) for line in text_lines)
     # if '\\' in retval:
     #     retval = '{' + retval + '}'
-    return retval
+    return retval  # noqa: RET504
 
 
 @dataclass
@@ -92,11 +93,12 @@ class NodeText:
                          inherit_color if self.color is None else self.color,
                          self.wrap_command,
                          self.size,
-                         self.standard_height)
+                         standard_height=self.standard_height)
 
     def latex_options(self) -> None | str:
-        if self.align is None and len(self.text_lines) >= 2:
-            raise ValueError("No alignment specified")
+        if self.align is None and len(self.text_lines) >= 2:  # noqa: PLR2004
+            msg = "No alignment specified"
+            raise ValueError(msg)
         retval = formatter("“text_width,align”",
                            text_width=tikz_option('text width', format_length(self.width)),
                            align=(None
@@ -117,7 +119,7 @@ class NodeLabel:
         text_lines = self.text_lines
 
         color = inherit_color if self.color is None else self.color
-        text = wrap_text(text_lines, color, None, self.size, self.standard_height)
+        text = wrap_text(text_lines, color, None, self.size, standard_height=self.standard_height)
         if self.location:
             text = f'{self.location}:{text}'
         return 'label=' + text
@@ -198,9 +200,7 @@ def generate_node(name: None | str,
                   opacity: None | Real = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
-    """
-    Generate text for a node.
-    """
+    """Generate text for a node."""
     # Arguments.
     position = node_dict.get('position', None)
     coordinate = node_dict.get('is_coordinate', False)
@@ -218,19 +218,19 @@ def generate_node(name: None | str,
                   else (f'minimum width={format_length(size[0])}, '
                         f'minimum height={format_length(size[1])}'))
 
-    d = dict(name=name,
-             position=None if position is None else position.latex_position(),
-             relative_position=None if position is None else position.latex_relative_position(),
-             text=None if text is None else text.latex(color),
-             text_options=None if text is None else text.latex_options(),
-             label=None if label is None else label.latex(color),
-             size=size_latex,
-             shape=shape,
-             color=color,
-             dash=dash,
-             opacity=None if opacity is None else tikz_option('opacity', str(opacity)),
-             inner_sep=tikz_option('inner sep', format_length(inner_sep)),
-             fit=None if container is None else container.latex_fit())
+    d = {"name": name,
+             "position": None if position is None else position.latex_position(),
+             "relative_position": None if position is None else position.latex_relative_position(),
+             "text": None if text is None else text.latex(color),
+             "text_options": None if text is None else text.latex_options(),
+             "label": None if label is None else label.latex(color),
+             "size": size_latex,
+             "shape": shape,
+             "color": color,
+             "dash": dash,
+             "opacity": None if opacity is None else tikz_option('opacity', str(opacity)),
+             "inner_sep": tikz_option('inner sep', format_length(inner_sep)),
+             "fit": None if container is None else container.latex_fit()}
     if coordinate:
         pf(r"\coordinate “relative_position” (“name”) “position”",
            **d,

@@ -10,7 +10,8 @@ __all__ = ['Constraints']
 
 
 class Constraints:
-    """
+    """Constraint-solver.
+
     This class transforms a set of constraints into two-dimensional positions
     that best satisfy those constraints.
     """
@@ -50,11 +51,8 @@ class Constraints:
         if len(args) <= 1:
             raise ValueError
         deltas: Iterable[float]
-        if isinstance(delta, float):
-            deltas = it.repeat(delta)
-        else:
-            deltas = delta
-        for x, y, this_delta in zip(args, args[1:], deltas):
+        deltas = it.repeat(delta) if isinstance(delta, float) else delta
+        for x, y, this_delta in zip(args, args[1:], deltas, strict=False):
             a = self.blank()
             a[self.index(coord, x)] = 1.0
             a[self.index(coord, y)] = -1.0
@@ -65,10 +63,7 @@ class Constraints:
                    delta: tuple[float, float] | list[tuple[float, float]] = (0.0, 0.0)
                    ) -> None:
         deltas: Sequence[tuple[float, float]]
-        if isinstance(delta, tuple):
-            deltas = [delta for _ in range(len(args))]
-        else:
-            deltas = delta
+        deltas = [delta for _ in range(len(args))] if isinstance(delta, tuple) else delta
         self.set_delta_x(*args, delta_x=[x for x, y in deltas])
         self.set_delta_y(*args, delta_y=[y for x, y in deltas])
 
@@ -79,24 +74,18 @@ class Constraints:
         self.set_value('y', c, y)
 
     def set_delta_x(self, *args: str, delta_x: Reversible[float] | float = 0.0) -> None:
-        """
-        Stack each of the args horizontally, spaced by delta_x, from left to
-        right.
-        """
+        """Stack each of the args horizontally, spaced by delta_x, from left to right."""
         if not isinstance(delta_x, float):
             delta_x = list(reversed(delta_x))
         self.set_delta('x', *reversed(args), delta=delta_x)
 
     def set_delta_y(self, *args: str, delta_y: Sequence[float] | float = 0.0) -> None:
-        """
-        Stack each of the args vertically, spaced by delta_y, from top to
-        bottom.
-        """
+        """Stack each of the args vertically, spaced by delta_y, from top to bottom."""
         self.set_delta('y', *args, delta=delta_y)
 
     def set_location(self, c: str, location: tuple[float, float]) -> None:
-        "Set c.x, c.y = location."
-        if len(location) != 2:
+        """Set c.x, c.y = location."""
+        if len(location) != 2:  # noqa: PLR2004
             raise ValueError
         self.set_x(c, location[0])
         self.set_y(c, location[1])
@@ -105,14 +94,15 @@ class Constraints:
                     coord: str,
                     *items: str,
                     ratios: None | Sequence[float] = None) -> None:
-        """
-        Space n items with spacing according to (n-1) ratios.
+        """Space n items with spacing according to (n-1) ratios.
+
         E.g., ratios=[0, 1] puts item[1] at item[0]
-        fraction = (d-c)/(d-c + (e-d)) => (d-c) = (e-c) * fraction
+        fraction = (d-c)/(d-c + (e-d)) => (d-c) = (e-c) * fraction.
         """
         if ratios is None:
             ratios = [1] * (len(items) - 1)
-        for c, d, e, r1, r2 in zip(items, items[1:], items[2:], ratios, ratios[1:]):
+        for c, d, e, r1, r2 in zip(items, items[1:], items[2:], ratios, ratios[1:],
+                                   strict=False):
             fraction = r1 / (r1 + r2)
             a = self.blank()
             if c is not None:
@@ -134,7 +124,7 @@ class Constraints:
         self.set_delta_y_equal(c, d, e, f)
 
     def set_delta_equal(self, coord: str, c: str, d: str, e: str, f: str) -> None:
-        "Set c - d = e - f."
+        """Set c - d = e - f."""
         a = self.blank()
         if c is not None:
             a[self.index(coord, c)] += 1.0
@@ -153,9 +143,9 @@ class Constraints:
         self.set_delta_equal('y', c, d, e, f)
 
     def set_slope(self, slope: float, *args: str) -> None:
-        if len(args) < 2:
+        if len(args) < 2:  # noqa: PLR2004
             raise ValueError
-        for c, d in zip(args, args[1:]):
+        for c, d in zip(args, args[1:], strict=True):
             a = self.blank()
             a[self.index('x', c)] += slope
             a[self.index('x', d)] -= slope
@@ -167,11 +157,11 @@ class Constraints:
         solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)
         # solution = np.linalg.solve(self.a, self.b)
         if rank != 2 * self.num_labels:
-            raise Constraints.InsufficientConstraints(
-                f"Only {rank} constraints provided for a problem that needs "
-                + f"{2 * self.num_labels}")
+            msg = f"Only {rank} constraints provided for a problem that needs {2 * self.num_labels}"
+            raise Constraints.InsufficientConstraintsError(msg)
         solution = np.around(solution, decimals=decimals)
-        self.solution = np.where(np.signbit(solution) & (solution == 0.0), -solution, solution)
+        solution_is_zero = (solution == 0.0)  # noqa: PLR2004
+        self.solution = np.where(np.signbit(solution) & solution_is_zero, -solution, solution)
 
     def solved(self, c: str) -> np.ndarray[Any, Any]:
         if self.solution is None:
@@ -179,5 +169,5 @@ class Constraints:
         return self.solution[[self.index('x', c), self.index('y', c)]]
 
     # Exceptions --------------------------------------------------------------
-    class InsufficientConstraints(Exception):
+    class InsufficientConstraintsError(Exception):  # noqa: D106
         pass

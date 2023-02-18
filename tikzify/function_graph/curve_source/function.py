@@ -26,11 +26,8 @@ class FunctionSection:
 class FunctionCurveSource(CurveSource):
 
     def __init__(self, sections: Sequence[FunctionSection], end_time: float):
-        """
-        sections is a sequence.
-        """
         if not isinstance(sections, abc.Sequence):
-            raise ValueError
+            raise TypeError
         for a, b in pairwise(sections):
             if a.domain_start > b.domain_start:
                 raise ValueError

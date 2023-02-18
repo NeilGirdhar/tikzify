@@ -17,6 +17,7 @@ classifiers = [
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     'Topic :: Scientific/Engineering :: Visualization',
     'Topic :: Software Development :: Libraries :: Python Modules',
     'License :: OSI Approved :: MIT License']
@@ -29,22 +30,14 @@ numpy = '>=1.21'
 scipy = '>=1.9'
 
 [tool.poetry.group.dev.dependencies]
-flake8 = '>=3.9'
 isort = '>=5.8'
 jupyter = '>=1'
 jupyter-client = '>=7'
 mypy = '>=0.900'
 pylint = '>=2.8'
-pyproject-flake8 = ">=0.0.1a2"
 pyright = ">=0.0.13"
 pytest = '>=7'
-
-[tool.flake8]
-max-line-length = 100
-extend-ignore = "E741"
-per-file-ignores = """
-    __init__.py: F401, F403, F821
-"""
+ruff = '>=0'
 
 [tool.isort]
 line_length = 100
@@ -118,3 +111,30 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = ['more_itertools', 'networkx', 'scipy.signal']
 ignore_missing_imports = true
+
+[tool.ruff]
+select = ["F", "E", "W", "I", "N", "D", "UP", "YTT", "ANN", "S", "BLE", "FBT", "B", "A", "C4",
+    "EM", "EXE", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "RSE", "RET", "SLF", "SIM",
+    "TID", "PTH", "PGH", "PL", "TRY", "NPY", "RUF"]
+ignore = ["B008", "B011", "D100", "D101", "D102", "D107", "S101", "D103", "D105",
+    "SIM117", "ANN101", "ANN102", "ANN401", "TID252", "FBT003", "I001", "G004",
+    "PT015", "PGH003"]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["__init__.py"]
+
+[tool.ruff.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.flake8-errmsg]
+max-string-length = 40
+
+[tool.ruff.isort]
+combine-as-imports = true
+
+[tool.ruff.pydocstyle]
+# Use Google-style docstrings.
+convention = "google"
+
+[tool.ruff.pylint]
+max-args = 8

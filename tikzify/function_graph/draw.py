@@ -41,7 +41,7 @@ def function_graph_marks(f: TextIO,
         function_graph_mark(f, x * FUNCTION_GRAPH_WIDTH, y, mark_color)
 
 
-def function_graph_line(f: TextIO, label: str, y: float, arrow: bool = False) -> None:
+def function_graph_line(f: TextIO, label: str, y: float, *, arrow: bool = False) -> None:
     left = 0.0
     right = 1.0
     pf(r"""
@@ -64,10 +64,11 @@ def draw_curve(f: TextIO,
                color: str,
                fill_color: str,
                curve: np.ndarray[Any, Any],
-               fill: bool,
                transform: Callable[[float, float], tuple[float, float]] = identity,
                options: None | str = None,
-               clip: tuple[float, float] = (-10.0, 10.0)) -> None:
+               clip: tuple[float, float] = (-10.0, 10.0),
+               *,
+               fill: bool) -> None:
     pf(r"""\“drawcmd” [-, thin, draw=“color”“,fill,options”]
        plot coordinates {
        """,

@@ -13,19 +13,22 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
     into the function with a few details:
     * The formatter is applied recursively to the expanded string.  E.g.,
       formatter("“a”", a="expanded “b”", b="expanded c")
-      returns
+
+    Returns:
       'expanded expanded c'.
     * If a keyword is a comma-separated list like “a, b, c”, then each of the keywords "a", "b", and
       "c" are expanded and the results of joined with intervening commas.  If any expansion results
       in the None object, the formatter acts as if that term were not there.  E.g.,
       formatter("“a, b, c”", a="expanded a", b=None, c="expanded c")
-      returns
+
+    Returns:
       'expanded a, expanded c'.
     * Any keyword can contain a ':' in which case the Python string formatting applies, e.g.,
       “a:.6f” would look for 'a' in the keyword arguments and expanded the floating point number to
       six decimal places.
       formatter("“a:.3f, b:3d”", a=1.23456, b=7)
-      returns
+
+    Returns:
       '1.235, 007'
     Finally, the returned string is unindented, stripped of whitespace at either end, and line
     continuations (using backslash) are applied.
@@ -50,10 +53,11 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
         expanded_macros = re.sub(r"“(.+?)”", repl, string_to_be_printed)
         dedented = dedent(expanded_macros)
         stripped = dedented.strip('\n')
-        retval = re.sub("\\\\\n\s*", "", stripped)
+        retval = re.sub("\\\\\n\\s*", "", stripped)
     except KeyError as e:
-        raise Exception(f"No key \"{e.args[0]}\" found in {kwargs} for formatted string "
-                        f"{string_to_be_printed}.") from None
+        msg = (f"No key \"{e.args[0]}\" found in {kwargs} for formatted string "
+               f"{string_to_be_printed}.")
+        raise ValueError(msg) from None
     if '“' in retval:
         return formatter(retval, **kwargs)
     return retval
