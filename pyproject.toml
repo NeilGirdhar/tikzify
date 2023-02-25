@@ -87,10 +87,12 @@ ignore-imports = 'yes'
 
 [tool.pyright]
 stubPath = ""
+include = ["tikzify"]
 reportPrivateImportUsage = false
 # reportUnnecessaryTypeIgnoreComment = true
 
 [tool.mypy]
+files = ["tikzify"]
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true

@@ -18,9 +18,11 @@ Contribution guidelines
 
 - How to clean the source:
 
+  - :bash:`ruff .`
+  - :bash:`pyright`
+  - :bash:`mypy`
   - :bash:`isort .`
   - :bash:`pylint tikzify`
-  - :bash:`flake8 tikzify`
 
 Running
 =======
