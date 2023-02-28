@@ -38,12 +38,12 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
         retval = []
         for x in keyword.split(','):
             add_space = x and x[-1] == ' '
-            x = x.strip()
-            if x == '':
+            stripped_x = x.strip()
+            if stripped_x == '':
                 retval.append('')
                 continue
-            if kwargs[x.split(':')[0]] is not None:
-                y = str(('{' + x + '}').format(**kwargs))
+            if kwargs[stripped_x.split(':')[0]] is not None:
+                y = str(('{' + stripped_x + '}').format(**kwargs))
                 if add_space:
                     y += ' '
                 retval.append(y)

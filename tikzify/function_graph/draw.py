@@ -82,8 +82,8 @@ def draw_curve(f: TextIO,
        file=f)
 
     for time, value in curve:
-        time, value = transform(time, value)
-        value = clip[0] if np.isnan(value) else float(np.clip(value, *clip))
-        pf(r'(“x:.6f”, “y:.6f”)', x=time, y=value, end=' ', file=f)
+        transformed_time, transformed_value = transform(time, value)
+        transformed_value = clip[0] if np.isnan(value) else float(np.clip(transformed_value, *clip))
+        pf(r'(“x:.6f”, “y:.6f”)', x=transformed_time, y=transformed_value, end=' ', file=f)
 
     pf('};', file=f)
