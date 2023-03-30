@@ -24,6 +24,7 @@ class FunctionMultiGraph:
                  *,
                  graph_spacing: float = 1.4,
                  resolution: int = 200):
+        super().__init__()
         # Store parameters.
         self.graphs = graphs
         self.traits = traits

@@ -17,6 +17,7 @@ class Constraints:
     """
 
     def __init__(self, labels: Sequence[str]):
+        super().__init__()
         self.labels = labels
         self.a = np.zeros((0, 2 * len(labels)))
         self.b = np.zeros((0,))
@@ -105,12 +106,9 @@ class Constraints:
                                    strict=False):
             fraction = r1 / (r1 + r2)
             a = self.blank()
-            if c is not None:
-                a[self.index(coord, c)] += fraction - 1.0
-            if d is not None:
-                a[self.index(coord, d)] += 1.0
-            if e is not None:
-                a[self.index(coord, e)] -= fraction
+            a[self.index(coord, c)] += fraction - 1.0
+            a[self.index(coord, d)] += 1.0
+            a[self.index(coord, e)] -= fraction
             self.add_constraint(a, 0.0)
 
     def set_x_between(self, *items: str, ratios: None | Sequence[float] = None) -> None:
@@ -126,14 +124,10 @@ class Constraints:
     def set_delta_equal(self, coord: str, c: str, d: str, e: str, f: str) -> None:
         """Set c - d = e - f."""
         a = self.blank()
-        if c is not None:
-            a[self.index(coord, c)] += 1.0
-        if d is not None:
-            a[self.index(coord, d)] -= 1.0
-        if e is not None:
-            a[self.index(coord, e)] -= 1.0
-        if f is not None:
-            a[self.index(coord, f)] += 1.0
+        a[self.index(coord, c)] += 1.0
+        a[self.index(coord, d)] -= 1.0
+        a[self.index(coord, e)] -= 1.0
+        a[self.index(coord, f)] += 1.0
         self.add_constraint(a, 0.0)
 
     def set_delta_x_equal(self, c: str, d: str, e: str, f: str) -> None:
@@ -145,7 +139,7 @@ class Constraints:
     def set_slope(self, slope: float, *args: str) -> None:
         if len(args) < 2:  # noqa: PLR2004
             raise ValueError
-        for c, d in zip(args, args[1:], strict=True):
+        for c, d in it.pairwise(args):
             a = self.blank()
             a[self.index('x', c)] += slope
             a[self.index('x', d)] -= slope

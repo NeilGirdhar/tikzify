@@ -12,8 +12,6 @@ __all__ = ['Anchor', 'CoordinateAnchor', 'MidpointAnchor', 'RelativeAnchor', 'No
 def _fix_node(x: str | Anchor) -> Anchor:
     if isinstance(x, Anchor):
         return x
-    if not isinstance(x, str):
-        raise TypeError
     return NodeAnchor(x)
 
 
@@ -27,6 +25,7 @@ class Anchor:
 
 class CoordinateAnchor(Anchor):
     def __init__(self, x: float, y: float):
+        super().__init__()
         self.x = x
         self.y = y
 
@@ -48,6 +47,7 @@ class MidpointAnchor(Anchor):
                  x: str | Anchor,
                  y: str | Anchor,
                  fraction: float = 0.5):
+        super().__init__()
         self.x = _fix_node(x)
         self.y = _fix_node(y)
         self.fraction = fraction
@@ -62,6 +62,7 @@ class MidpointAnchor(Anchor):
 
 class RelativeAnchor(Anchor):
     def __init__(self, node: str | Anchor, anchor: Any):
+        super().__init__()
         self.node = _fix_node(node)
         self.anchor = str(anchor)
 
@@ -74,6 +75,7 @@ class RelativeAnchor(Anchor):
 
 class NodeAnchor(Anchor):
     def __init__(self, node: str):
+        super().__init__()
         self.node = node
 
     def as_tikz(self) -> str:
@@ -85,6 +87,7 @@ class NodeAnchor(Anchor):
 
 class IntersectionAnchor(Anchor):
     def __init__(self, xnode: str | Anchor, ynode: str | Anchor):
+        super().__init__()
         self.xnode = _fix_node(xnode)
         self.ynode = _fix_node(ynode)
 

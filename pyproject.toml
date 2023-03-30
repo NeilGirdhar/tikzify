@@ -32,11 +32,9 @@ scipy = '>=1.9'
 [tool.poetry.group.dev.dependencies]
 isort = '>=5.8'
 jupyter = '>=1'
-jupyter-client = '>=7'
-mypy = '>=0.900'
+mypy = '>=1.0'
 pylint = '>=2.8'
 pyright = ">=0.0.13"
-pytest = '>=7'
 ruff = '>=0'
 
 [tool.isort]
@@ -44,14 +42,7 @@ line_length = 100
 multi_line_output = 0
 skip_glob = ['.pytype/*.py']
 
-[tool.pycodestyle]
-max-line-length = 100
-exclude = ['__init__.py', '__pycache__', 'README.rst']
-
 [tool.pytest]
-
-[tool.pytype]
-disable = 'ignored-abstractmethod'
 
 [tool.pylint.master]
 jobs = 0
@@ -64,6 +55,7 @@ disable = [
     'invalid-unary-operand-type',
     'missing-docstring',
     'no-member',
+    'self-cls-assignment',
     'too-few-public-methods',
     'too-many-ancestors',
     'too-many-arguments',
@@ -86,13 +78,40 @@ min-similarity-lines = 20
 ignore-imports = 'yes'
 
 [tool.pyright]
+include = ["tikzify", "examples"]
 stubPath = ""
-include = ["tikzify"]
-reportPrivateImportUsage = false
-# reportUnnecessaryTypeIgnoreComment = true
+enableTypeIgnoreComments = false
+reportImportCycles = false
+reportCallInDefaultInitializer = true
+reportImplicitOverride = false
+reportIncompatibleMethodOverride = true
+reportIncompatibleVariableOverride = true
+reportInconsistentConstructor = true
+reportMatchNotExhaustive = true
+reportMissingParameterType = true
+reportMissingSuperCall = true
+reportMissingTypeArgument = true
+reportOverlappingOverload = true
+reportPrivateImportUsage = true
+reportShadowedImports = true
+reportUninitializedInstanceVariable = true
+reportUnknownArgumentType = false
+reportUnknownLambdaType = false
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownVariableType = false
+reportUnnecessaryCast = true
+reportUnnecessaryComparison = true
+reportUnnecessaryContains = true
+reportUnnecessaryIsInstance = true
+reportUnnecessaryTypeIgnoreComment = true
+reportUntypedBaseClass = true
+reportUntypedClassDecorator = true
+reportUntypedFunctionDecorator = true
+reportUntypedNamedTuple = true
 
 [tool.mypy]
-files = ["tikzify"]
+files = ["tikzify", "examples"]
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
@@ -102,8 +121,9 @@ disallow_untyped_defs = true
 no_implicit_optional = true
 pretty = true
 show_error_codes = true
-show_error_context = true
+show_error_context = false
 strict_equality = true
+warn_no_return = true
 warn_redundant_casts = true
 # warn_return_any = true
 warn_unreachable = true
@@ -115,12 +135,12 @@ module = ['more_itertools', 'networkx', 'scipy.signal']
 ignore_missing_imports = true
 
 [tool.ruff]
-select = ["F", "E", "W", "I", "N", "D", "UP", "YTT", "ANN", "S", "BLE", "FBT", "B", "A", "C4",
+select = ["F", "E", "W", "I", "N", "D", "UP", "YTT", "ANN", "S", "BLE", "FBT", "B", "A", "C40",
     "EM", "EXE", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "RSE", "RET", "SLF", "SIM",
-    "TID", "PTH", "PGH", "PL", "TRY", "NPY", "RUF"]
+    "TID", "PTH", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
 ignore = ["B008", "B011", "D100", "D101", "D102", "D107", "S101", "D103", "D105",
     "SIM117", "ANN101", "ANN102", "ANN401", "TID252", "FBT003", "I001", "G004",
-    "PT015", "PGH003"]
+    "PT015", "PGH003", "PD011"]
 line-length = 100
 target-version = "py310"
 extend-exclude = ["__init__.py"]

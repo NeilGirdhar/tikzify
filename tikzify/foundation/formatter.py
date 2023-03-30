@@ -39,7 +39,7 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
         for x in keyword.split(','):
             add_space = x and x[-1] == ' '
             stripped_x = x.strip()
-            if stripped_x == '':
+            if not stripped_x:
                 retval.append('')
                 continue
             if kwargs[stripped_x.split(':')[0]] is not None:

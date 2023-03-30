@@ -59,6 +59,7 @@ def generate_legend(f: TextIO,
 class LegendItem:
 
     def __init__(self, id_: str):
+        super().__init__()
         self.id_ = id_
 
     def generate(self, f: TextIO, x: float, y: float, width: float) -> None:

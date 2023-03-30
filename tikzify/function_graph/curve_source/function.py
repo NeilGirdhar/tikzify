@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections import abc
 from collections.abc import Callable, Iterable, Sequence
 from itertools import chain
 from math import ceil
@@ -19,6 +18,7 @@ class FunctionSection:
     def __init__(self,
                  domain_start: float,
                  function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]):
+        super().__init__()
         self.domain_start = domain_start
         self.function = function
 
@@ -26,8 +26,6 @@ class FunctionSection:
 class FunctionCurveSource(CurveSource):
 
     def __init__(self, sections: Sequence[FunctionSection], end_time: float):
-        if not isinstance(sections, abc.Sequence):
-            raise TypeError
         for a, b in pairwise(sections):
             if a.domain_start > b.domain_start:
                 raise ValueError

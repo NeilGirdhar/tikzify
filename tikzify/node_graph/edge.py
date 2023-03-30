@@ -75,7 +75,7 @@ class Edge:
         return None
 
     def opacity_string(self) -> None | str:
-        if self.opacity == 1 or self.opacity is None:
+        if self.opacity == 1:
             return None
         return tikz_option('opacity', str(self.opacity))
 

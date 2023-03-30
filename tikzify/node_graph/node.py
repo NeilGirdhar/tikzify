@@ -57,15 +57,13 @@ def wrap_text(text_lines: Sequence[str],
                                 if size in {TextSize.script, TextSize.footnote}
                                 else size.name) + ' '
             line = size_text + line
-        if not isinstance(line, str):
-            raise TypeError
         if color is not None:
             line = r'\textcolor{' + color + '}{' + line + '}'
         elif size is not None:
             line = '{' + line + '}'
         if wrap_command is not None:
             line = rf"\{wrap_command}{{{line}}}"
-        return line  # noqa: RET504
+        return line
     retval = r' \\ '.join(wrap(line) for line in text_lines)
     # if '\\' in retval:
     #     retval = '{' + retval + '}'
@@ -188,8 +186,8 @@ class NodeContainer:
             r"\node[“color,opacity,text_options,”align=right, below left] at (“name”.north east) "
             r"{“text”}",
             name=parent_name,
-            text_options=None if self.corner_text is None else self.corner_text.latex_options(),
-            text=None if self.corner_text is None else self.corner_text.latex(color),
+            text_options=self.corner_text.latex_options(),
+            text=self.corner_text.latex(color),
             color=color,
             opacity=None if opacity is None else tikz_option('opacity', str(opacity)))
 

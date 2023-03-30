@@ -20,6 +20,7 @@ LOOP_LOOSENESS = 1.5
 
 class Annotation:
     def __init__(self, text: None | NodeText):
+        super().__init__()
         self.text = text
 
     def generate(self, f: TextIO) -> None:
