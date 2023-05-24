@@ -33,7 +33,7 @@ class FunctionMultiGraph:
         self.resolution = resolution
 
         # Memoize.
-        self.altitudes = []
+        self.altitudes: list[float] = []
         altitude = 0.0
         for _ in graphs:
             self.altitudes.append(altitude)

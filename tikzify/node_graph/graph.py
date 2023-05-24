@@ -237,7 +237,7 @@ class NodeGraph:
                         edge.pf(f, source, target, color=color)
 
     # Private methods ------------------------------------------------------------------------------
-    def _dependencies(self) -> tuple[Sequence[str], nx.DiGraph]:
+    def _dependencies(self) -> tuple[nx.DiGraph, Sequence[str]]:
         """The dependencies of nodes in the graph.
 
         Returns:
