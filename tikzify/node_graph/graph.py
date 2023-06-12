@@ -66,7 +66,7 @@ class NodeGraph:
                               position=position,
                               is_coordinate=True)
 
-    def create_node(self,
+    def create_node(self,  # noqa: PLR0913
                     name: str,
                     position: None | NodePosition,
                     container: None | NodeContainer = None,
@@ -115,7 +115,7 @@ class NodeGraph:
             raise ValueError(msg)
         self.digraph.add_edge(source, target, edge=edge, via=via)
 
-    def create_edges(self,
+    def create_edges(self,  # noqa: PLR0913
                      left: str, right: str, top: str, bottom: str,
                      *,
                      margin_left: bool = True,

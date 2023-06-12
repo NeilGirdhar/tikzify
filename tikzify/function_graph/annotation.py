@@ -76,7 +76,7 @@ class RectAnnotation(Annotation):
 
 
 class BraceAnnotation(Annotation):
-    def __init__(self,
+    def __init__(self,  # noqa: PLR0913
                  left: float,
                  right: float,
                  y: float,
@@ -152,7 +152,7 @@ class CircleAnnotation(Annotation):
 
 
 class EdgeAnnotation(Annotation):
-    def __init__(self,
+    def __init__(self,  # noqa: PLR0913
                  edge: Edge,
                  y_source: float,
                  y_targets: Sequence[float],
