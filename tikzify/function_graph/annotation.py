@@ -182,7 +182,7 @@ class EdgeAnnotation(Annotation):
         self.edge = edge
         self.swipe_right = swipe_right
 
-    def generate(self, f: TextIO) -> None:  # noqa: PLR0915
+    def generate(self, f: TextIO) -> None:  # noqa: PLR0915, C901
         x_source = self.x_source
         x_target = self.x_target
 

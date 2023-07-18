@@ -55,7 +55,7 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
         stripped = dedented.strip('\n')
         retval = re.sub("\\\\\n\\s*", "", stripped)
     except KeyError as e:
-        msg = (f"No key \"{e.args[0]}\" found in {kwargs} for formatted string "
+        msg = (f'No key "{e.args[0]}" found in {kwargs} for formatted string '
                f"{string_to_be_printed}.")
         raise ValueError(msg) from None
     if '“' in retval:
