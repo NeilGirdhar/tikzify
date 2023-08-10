@@ -41,6 +41,7 @@ class NodeGraph:
 
         # Calculate the maximum opacity of the node and its afferent edges.
         o = node_dict.get('opacity', 0.0)
+        assert isinstance(o, float)
         for successor in it.chain([name], dependency_graph.successors(name)):
             for ed in it.chain(g.succ[successor].values(), g.pred[successor].values()):
                 for tip in ed.values():
