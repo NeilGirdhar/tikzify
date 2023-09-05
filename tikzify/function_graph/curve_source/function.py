@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Sequence
-from itertools import chain
+from itertools import chain, pairwise
 from math import ceil
 from typing import Any
 
 import numpy as np
-from more_itertools import pairwise
 
 from .curve_source import CurveSource
 
