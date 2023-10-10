@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from numbers import Real
 import itertools as it
 from collections.abc import Iterable, Reversible, Sequence
 from typing import Any
@@ -52,7 +53,7 @@ class Constraints:
         if len(args) <= 1:
             raise ValueError
         deltas: Iterable[float]
-        deltas = it.repeat(delta) if isinstance(delta, float) else delta
+        deltas = it.repeat(delta) if isinstance(delta, Real) else delta
         for x, y, this_delta in zip(args, args[1:], deltas, strict=False):
             a = self.blank()
             a[self.index(coord, x)] = 1.0
