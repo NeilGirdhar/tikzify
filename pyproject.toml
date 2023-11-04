@@ -24,7 +24,7 @@ classifiers = [
     'License :: OSI Approved :: MIT License']
 
 [tool.poetry.dependencies]
-python = '>=3.10,<4'
+python = '>=3.10,<3.13'
 more_itertools = '>=8'
 networkx = '>=2.5'
 numpy = '>=1.21'

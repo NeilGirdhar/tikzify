@@ -1,6 +1,6 @@
 from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, cast
+from typing import Any
 
 from .anchor import CoordinateAnchor
 from .constraints import Constraints
@@ -41,7 +41,7 @@ def create_nodes(node_graph: NodeGraph,
                  node_name_to_text: Mapping[str, Sequence[str]],
                  node_size: tuple[Real, Real]) -> None:
     for node_name in constraints.labels:
-        position = cast(tuple[float, float], tuple(constraints.solved(node_name)))
+        position = constraints.solved(node_name)
         if node_name in node_name_to_text:
             text_lines = node_name_to_text[node_name]
             text = NodeText(text_lines=text_lines,

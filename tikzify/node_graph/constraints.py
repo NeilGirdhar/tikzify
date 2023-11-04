@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from numbers import Real
 import itertools as it
 from collections.abc import Iterable, Reversible, Sequence
 from typing import Any
@@ -53,7 +52,7 @@ class Constraints:
         if len(args) <= 1:
             raise ValueError
         deltas: Iterable[float]
-        deltas = it.repeat(delta) if isinstance(delta, Real) else delta
+        deltas = it.repeat(delta) if isinstance(delta, int | float) else delta
         for x, y, this_delta in zip(args, args[1:], deltas, strict=False):
             a = self.blank()
             a[self.index(coord, x)] = 1.0
@@ -77,7 +76,7 @@ class Constraints:
 
     def set_delta_x(self, *args: str, delta_x: Reversible[float] | float = 0.0) -> None:
         """Stack each of the args horizontally, spaced by delta_x, from left to right."""
-        if not isinstance(delta_x, float):
+        if not isinstance(delta_x, int | float):
             delta_x = list(reversed(delta_x))
         self.set_delta('x', *reversed(args), delta=delta_x)
 
@@ -158,10 +157,10 @@ class Constraints:
         solution_is_zero = solution == 0.0  # noqa: PLR2004
         self.solution = np.where(np.signbit(solution) & solution_is_zero, -solution, solution)
 
-    def solved(self, c: str) -> np.ndarray[Any, Any]:
+    def solved(self, c: str) -> tuple[float, float]:
         if self.solution is None:
             raise ValueError
-        return self.solution[[self.index('x', c), self.index('y', c)]]
+        return self.solution[self.index('x', c)], self.solution[self.index('y', c)]
 
     # Exceptions --------------------------------------------------------------
     class InsufficientConstraintsError(Exception):  # noqa: D106
