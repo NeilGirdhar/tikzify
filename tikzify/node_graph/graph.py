@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools as it
 from collections.abc import Mapping, Sequence
 from copy import copy
-from typing import TextIO
+from typing import Any, TextIO
 
 import networkx as nx
 
@@ -30,7 +30,7 @@ class NodeGraph:
     def nodes(self) -> Sequence[str]:
         return sorted(self.digraph)
 
-    def node_opacity(self, name: str, dependency_graph: nx.DiGraph) -> float:
+    def node_opacity(self, name: str, dependency_graph: nx.DiGraph[Any]) -> float:
         """Calcule the node opacity.
 
         This is based on the maximum opacity of the node, its afferent edges, its fit group (if it
@@ -238,7 +238,7 @@ class NodeGraph:
                         edge.pf(f, source, target, color=color)
 
     # Private methods ------------------------------------------------------------------------------
-    def _dependencies(self) -> tuple[nx.DiGraph, Sequence[str]]:
+    def _dependencies(self) -> tuple[nx.DiGraph[Any], Sequence[str]]:
         """The dependencies of nodes in the graph.
 
         Returns:
