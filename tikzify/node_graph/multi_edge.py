@@ -19,7 +19,7 @@ def default_waypoint_names() -> Iterable[str]:
         yield f"w{i}"
 
 
-def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str,  # noqa: PLR0913
+def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str,
                     stop: str, create: str, arm: int, color: str, *, vertical: bool) -> None:
     """Prints a round edge in the direction of the waypoint."""
     edge_copy = copy(edge)

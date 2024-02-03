@@ -28,7 +28,7 @@ class Annotation:
 
 
 class RectAnnotation(Annotation):
-    def __init__(self,  # noqa: PLR0913
+    def __init__(self,
                  left: float,
                  right: float,
                  top: float,
@@ -76,7 +76,7 @@ class RectAnnotation(Annotation):
 
 
 class BraceAnnotation(Annotation):
-    def __init__(self,  # noqa: PLR0913
+    def __init__(self,
                  left: float,
                  right: float,
                  y: float,
@@ -152,7 +152,7 @@ class CircleAnnotation(Annotation):
 
 
 class EdgeAnnotation(Annotation):
-    def __init__(self,  # noqa: PLR0913
+    def __init__(self,
                  edge: Edge,
                  y_source: float,
                  y_targets: Sequence[float],
@@ -182,7 +182,7 @@ class EdgeAnnotation(Annotation):
         self.edge = edge
         self.swipe_right = swipe_right
 
-    def generate(self, f: TextIO) -> None:  # noqa: PLR0915, C901
+    def generate(self, f: TextIO) -> None:  # noqa: PLR0915
         x_source = self.x_source
         x_target = self.x_target
 

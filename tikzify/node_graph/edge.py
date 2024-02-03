@@ -18,7 +18,7 @@ def edge_text(text: NodeText,
 
 
 class Edge:
-    def __init__(self,  # noqa: PLR0913
+    def __init__(self,
                  from_: None | str = None,
                  to: None | str = None,
                  bend: float = 0,
