@@ -154,7 +154,7 @@ class Constraints:
             msg = f"Only {rank} constraints provided for a problem that needs {2 * self.num_labels}"
             raise Constraints.InsufficientConstraintsError(msg)
         solution = np.around(solution, decimals=decimals)
-        solution_is_zero = solution == 0.0  # noqa: PLR2004
+        solution_is_zero = solution == 0.0
         self.solution = np.where(np.signbit(solution) & solution_is_zero, -solution, solution)
 
     def solved(self, c: str) -> tuple[float, float]:
