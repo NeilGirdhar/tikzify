@@ -9,7 +9,7 @@ import numpy as np
 __all__ = ['Constraints']
 
 
-class Constraints:
+class Constraints:  # noqa: PLR0904
     """Constraint-solver.
 
     This class transforms a set of constraints into two-dimensional positions

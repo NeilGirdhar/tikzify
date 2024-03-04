@@ -13,18 +13,18 @@ from ._src.function_graph.legend import (LegendArrow, LegendItem, LegendNode, Le
                                          generate_legend)
 from ._src.function_graph.multi_graph import FunctionMultiGraph
 from ._src.function_graph.trait import GraphedTrait
-from ._src.node_graph.anchor import (Anchor, CoordinateAnchor, MidpointAnchor, NodeAnchor,
-                                     IntersectionAnchor, RelativeAnchor)
+from ._src.node_graph.anchor import (Anchor, CoordinateAnchor, IntersectionAnchor, MidpointAnchor,
+                                     NodeAnchor, RelativeAnchor)
 from ._src.node_graph.constraints import Constraints
 from ._src.node_graph.edge import Edge, edge_text
 from ._src.node_graph.graph import NodeGraph
-from ._src.node_graph.node import (Alignment, TerminalSpacing, NodeContainer, NodeLabel, NodePosition, NodeText,
-                                   TextSize)
+from ._src.node_graph.node import (Alignment, NodeContainer, NodeLabel, NodePosition, NodeText,
+                                   TerminalSpacing, TextSize)
 from ._src.node_graph.tools import EdgeSpecification, create_links, create_nodes
 
-__all__ = ['Anchor', 'CoordinateAnchor', 'IntersectionAnchor', 'TerminalSpacing', 'MidpointAnchor', 'RelativeAnchor', 'NodeAnchor',
-           'Annotation', 'RectAnnotation', 'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation',
-           'Constraints', 'CurveSource', 'Edge', 'edge_text',
+__all__ = ['Anchor', 'CoordinateAnchor', 'IntersectionAnchor', 'TerminalSpacing', 'MidpointAnchor',
+           'RelativeAnchor', 'NodeAnchor', 'Annotation', 'RectAnnotation', 'BraceAnnotation',
+           'CircleAnnotation', 'EdgeAnnotation', 'Constraints', 'CurveSource', 'Edge', 'edge_text',
            'EdgeSpecification', 'create_nodes', 'create_links', 'FunctionCurveSource',
            'FunctionSection', 'FunctionGraph', 'FunctionMultiGraph', 'GraphedTrait', 'NodeGraph',
            'NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment', 'TextSize',

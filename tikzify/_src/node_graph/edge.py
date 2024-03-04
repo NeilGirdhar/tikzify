@@ -1,4 +1,5 @@
 from collections.abc import Mapping
+from dataclasses import dataclass
 from functools import reduce
 from typing import Any, TextIO
 
@@ -17,35 +18,20 @@ def edge_text(text: NodeText,
     return d
 
 
+@dataclass
 class Edge:
-    def __init__(self,
-                 from_: None | str = None,
-                 to: None | str = None,
-                 bend: float = 0,
-                 in_: None | float = None,
-                 out: None | float = None,
-                 looseness: None | float = None,
-                 loop: None | str = None,
-                 opacity: float = 1,
-                 dash: None | str = None,
-                 color: None | str = None,
-                 thickness: None | str = None,
-                 text_node: None | Mapping[str, Any] = None,
-                 **kwargs: Any):
-        """* loop can be "left", "right", "above", "below", etc."""
-        super().__init__(**kwargs)
-        self.from_ = from_
-        self.to = to
-        self.bend = bend
-        self.in_ = in_
-        self.out = out
-        self.looseness = looseness
-        self.opacity = opacity
-        self.dash = dash
-        self.loop = loop
-        self.color = color
-        self.thickness = thickness
-        self.text_node = text_node
+    from_: None | str = None
+    to: None | str = None
+    bend: float = 0
+    in_: None | float = None
+    out: None | float = None
+    looseness: None | float = None
+    loop: None | str = None
+    opacity: float = 1
+    dash: None | str = None
+    color: None | str = None
+    thickness: None | str = None
+    text_node: None | Mapping[str, Any] = None
 
     def tip_string(self) -> str:
         def tip_convert(x: None | str) -> str:

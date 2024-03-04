@@ -18,9 +18,3 @@ def tikz_option(name: str, value: None | str) -> None | str:
     if value is None:
         return None
     return f"{name}={value}"
-
-
-def tikz_flag(name: str, value: None | bool) -> None | str:
-    if value is None or not value:
-        return None
-    return name

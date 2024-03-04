@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from dataclasses import KW_ONLY, dataclass
 from typing import TextIO
 
 from ..foundation.pf import pf, tikz_option
@@ -19,38 +20,27 @@ SWIPE_ANGLE = 50
 LOOP_LOOSENESS = 1.5
 
 
+@dataclass
 class Annotation:
-    def __init__(self, text: None | NodeText):
-        super().__init__()
-        self.text = text
+    text: None | NodeText
 
     def generate(self, f: TextIO) -> None:
         raise NotImplementedError
 
 
+@dataclass
 class RectAnnotation(Annotation):
-    def __init__(self,
-                 left: float,
-                 right: float,
-                 top: float,
-                 bottom: float,
-                 color: str,
-                 fill_color: str,
-                 text: None | NodeText = None,
-                 direction: str = 'above',
-                 coordinate: str = 'top',
-                 *,
-                 widen: bool = True):
-        super().__init__(text=text)
-        self.left = left
-        self.right = right
-        self.top = top
-        self.bottom = bottom
-        self.color = color
-        self.fill_color = fill_color
-        self.widen = widen
-        self.direction = direction
-        self.coordinate = coordinate
+    left: float
+    right: float
+    top: float
+    bottom: float
+    color: str
+    fill_color: str
+    text: None | NodeText = None
+    direction: str = 'above'
+    coordinate: str = 'top'
+    _: KW_ONLY
+    widen: bool = True
 
     def generate(self, f: TextIO) -> None:
         left = self.left * FUNCTION_GRAPH_WIDTH - MARK_WIDTH * self.widen
@@ -76,25 +66,17 @@ class RectAnnotation(Annotation):
            file=f)
 
 
+@dataclass
 class BraceAnnotation(Annotation):
-    def __init__(self,
-                 left: float,
-                 right: float,
-                 y: float,
-                 color: str,
-                 *,
-                 text: None | NodeText = None,
-                 direction: str = 'above',
-                 text_size: str = r'\footnotesize',
-                 widen: bool = True):
-        super().__init__(text=text)
-        self.text_size = text_size
-        self.left = left
-        self.right = right
-        self.y = y
-        self.widen = widen
-        self.direction = direction
-        self.color = color
+    left: float
+    right: float
+    y: float
+    color: str
+    _: KW_ONLY
+    text: None | NodeText = None
+    direction: str = 'above'
+    text_size: str = r'\footnotesize'
+    widen: bool = True
 
     def generate(self, f: TextIO) -> None:
         left = self.left * FUNCTION_GRAPH_WIDTH - MARK_WIDTH * self.widen
@@ -118,21 +100,15 @@ class BraceAnnotation(Annotation):
            file=f)
 
 
+@dataclass
 class CircleAnnotation(Annotation):
-    def __init__(self,
-                 x: float,
-                 y: float,
-                 color: str,
-                 text: None | NodeText = None,
-                 direction: str = 'above',
-                 *,
-                 draw_circle: bool = True):
-        super().__init__(text=text)
-        self.x = x
-        self.y = y
-        self.direction = direction
-        self.draw_circle = draw_circle
-        self.color = color
+    x: float
+    y: float
+    color: str
+    text: None | NodeText = None
+    direction: str = 'above'
+    _: KW_ONLY
+    draw_circle: bool = True
 
     def generate(self, f: TextIO) -> None:
         pf(r"""
@@ -152,40 +128,26 @@ class CircleAnnotation(Annotation):
            file=f)
 
 
+@dataclass
 class EdgeAnnotation(Annotation):
-    def __init__(self,
-                 edge: Edge,
-                 y_source: float,
-                 y_targets: Sequence[float],
-                 x_source: float,
-                 *,
-                 x_target: None | float = None,
-                 swipe: None | bool = None,
-                 # edge options
-                 loop: None | str = None,
-                 swipe_right: bool = False,
-                 # edge label options
-                 text: None | NodeText = None,
-                 swap: bool = False,
-                 pos: None | float = None):
-        assert pos is None or isinstance(pos, float)
-        super().__init__(text=text)
-        self.swipe = swipe
-        self.y_source = y_source
-        self.y_targets = y_targets
-        self.x_source = x_source
-        self.x_target = (x_source
-                         if x_target is None
-                         else x_target)
-        self.swap = swap
-        self.pos = str(pos) if pos is not None else None
-        self.loop = loop
-        self.edge = edge
-        self.swipe_right = swipe_right
+    edge: Edge
+    y_source: float
+    y_targets: Sequence[float]
+    x_source: float
+    _: KW_ONLY
+    x_target: None | float = None
+    swipe: None | bool = None
+    # edge options
+    loop: None | str = None
+    swipe_right: bool = False
+    # edge label options
+    text: None | NodeText = None
+    swap: bool = False
+    pos: None | float = None
 
     def generate(self, f: TextIO) -> None:  # noqa: PLR0915
         x_source = self.x_source
-        x_target = self.x_target
+        x_target = self.x_source if self.x_target is None else self.x_target
 
         def possibly_reverse_angle(angle: float, *, reverse_angle: bool) -> float:
             return 180 - angle if reverse_angle else angle
@@ -226,7 +188,7 @@ class EdgeAnnotation(Annotation):
             direction = None
 
         text_node = ({"col": self.edge.color,
-                          "pos": tikz_option('pos', self.pos),
+                          "pos": tikz_option('pos', str(self.pos)),
                           "swap": 'swap' if swap else None,
                           "text": self.text}
                      if self.text is not None
