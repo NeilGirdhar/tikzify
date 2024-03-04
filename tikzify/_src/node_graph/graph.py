@@ -180,7 +180,7 @@ class NodeGraph:
                   terminal: str,
                   relative: None | float = None) -> None:
         """Places an input/output on the edge, perpendicular to the terminal."""
-        if edge in ['bottom_edge', 'top_edge']:
+        if edge in {'bottom_edge', 'top_edge'}:
             intersection = IntersectionAnchor(NodeAnchor(terminal), NodeAnchor(edge))
             key = 'above' if edge == 'top_edge' else 'below'
         else:

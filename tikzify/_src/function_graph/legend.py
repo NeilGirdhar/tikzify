@@ -1,10 +1,10 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, TextIO
 
-from ..foundation import tex_pic
+from ..foundation.contexts import tex_pic
 from ..foundation.pf import pf
 
-__all__ = ['generate_legend', 'LegendItem', 'LegendRect', 'LegendNode', 'LegendArrow']
+__all__ = ['LegendArrow', 'LegendItem', 'LegendNode', 'LegendRect', 'generate_legend']
 
 
 def generate_legend(f: TextIO,

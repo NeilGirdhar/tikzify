@@ -51,7 +51,7 @@ class Edge:
         def tip_convert(x: None | str) -> str:
             if not x:
                 return ''
-            if x in ['>', 'stealth', '|']:
+            if x in {'>', 'stealth', '|'}:
                 return x
             return 'tip_' + x
         return tip_convert(self.from_) + '-' + tip_convert(self.to)

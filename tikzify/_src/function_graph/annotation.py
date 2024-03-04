@@ -2,10 +2,11 @@ from collections.abc import Sequence
 from typing import TextIO
 
 from ..foundation.pf import pf, tikz_option
-from ..node_graph import Edge, NodeText
+from ..node_graph.edge import Edge
+from ..node_graph.node import NodeText
 from .draw import FUNCTION_GRAPH_WIDTH, MARK_HEIGHT, MARK_WIDTH
 
-__all__ = ['Annotation', 'RectAnnotation', 'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation']
+__all__ = ['Annotation', 'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation', 'RectAnnotation']
 
 
 BRACE_HEIGHT = 0.3

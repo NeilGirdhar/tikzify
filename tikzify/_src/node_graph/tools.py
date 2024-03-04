@@ -8,7 +8,7 @@ from .edge import Edge
 from .graph import NodeGraph
 from .node import Alignment, NodePosition, NodeText
 
-__all__ = ['EdgeSpecification', 'create_nodes', 'create_links']
+__all__ = ['EdgeSpecification', 'create_links', 'create_nodes']
 
 
 Real = int | float

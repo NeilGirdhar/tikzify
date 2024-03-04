@@ -5,8 +5,14 @@ from typing import Any
 
 import numpy as np
 
-__all__ = ['Anchor', 'CoordinateAnchor', 'MidpointAnchor', 'RelativeAnchor', 'NodeAnchor',
-           'IntersectionAnchor']
+__all__ = [
+    'Anchor',
+    'CoordinateAnchor',
+    'IntersectionAnchor',
+    'MidpointAnchor',
+    'NodeAnchor',
+    'RelativeAnchor',
+]
 
 
 def _fix_node(x: str | Anchor) -> Anchor:

@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 from more_itertools import mark_ends
 
-from .curve_source import CurveSource
+from .curve_source.curve_source import CurveSource
 
 __all__ = ['generate_curve']
 

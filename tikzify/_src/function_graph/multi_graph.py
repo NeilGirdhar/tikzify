@@ -2,10 +2,10 @@ import string
 from collections.abc import Callable, Iterable, Sequence
 from typing import TextIO
 
-from ..node_graph import NodeText
+from ..node_graph.node import NodeText
 from .annotation import Annotation
 from .curve_generator import generate_curve
-from .curve_source import CurveSource
+from .curve_source.curve_source import CurveSource
 from .draw import (FILL_OPACITY, FUNCTION_GRAPH_WIDTH, draw_curve, function_graph_line,
                    function_graph_marks)
 from .graph import FunctionGraph

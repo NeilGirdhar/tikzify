@@ -5,7 +5,7 @@ from typing import TextIO
 
 from .pf import pf
 
-__all__ = ['tex_pic', 'tex_file']
+__all__ = ['tex_file', 'tex_pic']
 
 
 @contextmanager

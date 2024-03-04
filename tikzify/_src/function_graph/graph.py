@@ -1,6 +1,6 @@
 from collections.abc import Mapping, Sequence
 
-from .curve_source import CurveSource
+from .curve_source.curve_source import CurveSource
 from .trait import GraphedTrait
 
 __all__ = ['FunctionGraph']
