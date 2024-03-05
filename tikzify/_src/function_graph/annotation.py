@@ -36,7 +36,6 @@ class RectAnnotation(Annotation):
     bottom: float
     color: str
     fill_color: str
-    text: None | NodeText = None
     direction: str = 'above'
     coordinate: str = 'top'
     _: KW_ONLY
@@ -73,7 +72,6 @@ class BraceAnnotation(Annotation):
     y: float
     color: str
     _: KW_ONLY
-    text: None | NodeText = None
     direction: str = 'above'
     text_size: str = r'\footnotesize'
     widen: bool = True
@@ -105,7 +103,6 @@ class CircleAnnotation(Annotation):
     x: float
     y: float
     color: str
-    text: None | NodeText = None
     direction: str = 'above'
     _: KW_ONLY
     draw_circle: bool = True
@@ -141,7 +138,6 @@ class EdgeAnnotation(Annotation):
     loop: None | str = None
     swipe_right: bool = False
     # edge label options
-    text: None | NodeText = None
     swap: bool = False
     pos: None | float = None
 

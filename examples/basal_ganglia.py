@@ -4,7 +4,7 @@ from tikzify import (Alignment, EdgeSpecification, IntersectionAnchor, NodeAncho
                      NodeGraph, NodePosition, NodeText, RelativeAnchor, TerminalSpacing, TextSize,
                      create_links, tex_file, tex_pic)
 
-from .edge_colors import EDGE_COLORS
+from edge_colors import EDGE_COLORS
 
 dimmed_opacity = 0.18
 node_size = (13.0, 11.0)
