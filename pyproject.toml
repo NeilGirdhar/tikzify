@@ -81,6 +81,8 @@ ignore-imports = 'yes'
 [tool.pyright]
 include = ["tikzify", "examples"]
 stubPath = ""
+venvPath = "."
+venv = ".venv"
 enableTypeIgnoreComments = false
 reportImportCycles = false
 reportCallInDefaultInitializer = true
