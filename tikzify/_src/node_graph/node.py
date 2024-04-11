@@ -109,7 +109,7 @@ class NodeText:
                            align=(None
                                   if self.align is None
                                   else tikz_option('align', self.align.name)))
-        return retval if retval else None
+        return retval or None
 
 
 @dataclass
