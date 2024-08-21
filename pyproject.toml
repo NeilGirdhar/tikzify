@@ -1,15 +1,16 @@
 [build-system]
-requires = ['setuptools', 'poetry_core>=1.0']
-build-backend = 'poetry.core.masonry.api'
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = 'tikzify'
 version = '0.17.1'
 description = 'Utilities for programmatically generating TikZ code.'
-license = 'MIT'
-authors = ['Neil Girdhar <mistersheik@gmail.com>']
 readme = 'README.rst'
-repository = 'https://github.com/NeilGirdhar/tikzify'
+requires-python = '>=3.10,<3.13'
+license = {file = 'LICENSE'}
+authors = [{email = 'mistersheik@gmail.com'}, {name = 'Neil Girdhar'}]
+maintainers = [{email = 'mistersheik@gmail.com'}, {name = 'Neil Girdhar'}]
 classifiers = [
   'Development Status :: 4 - Beta',
   'Intended Audience :: Developers',
@@ -23,21 +24,25 @@ classifiers = [
   'Topic :: Software Development :: Libraries :: Python Modules',
   'License :: OSI Approved :: MIT License',
 ]
+dependencies = [
+  'more_itertools >= 8',
+  'networkx >= 2.5',
+  'numpy >= 1.21',
+  'scipy >= 1.9',
+]
 
-[tool.poetry.dependencies]
-python = '>=3.10,<3.13'
-more_itertools = '>=8'
-networkx = '>=2.5'
-numpy = '>=1.21'
-scipy = '>=1.9'
+[project.urls]
+repository = 'https://github.com/NeilGirdhar/tikzify'
 
-[tool.poetry.group.dev.dependencies]
-isort = '>=5.8'
-jupyter = '>=1'
-mypy = '>=1.0'
-pylint = '>=2.8'
-pyright = '>=0.0.13'
-ruff = '>=0.2'
+[tool.uv]
+dev-dependencies = [
+  'isort >= 5.8',
+  'jupyter >= 1',
+  'mypy >= 1.0',
+  'pylint >= 2.8',
+  'pyright >= 0.0.13',
+  'ruff >= 0.2',
+]
 
 [tool.isort]
 line_length = 100
