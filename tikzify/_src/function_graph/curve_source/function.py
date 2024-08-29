@@ -16,7 +16,7 @@ class FunctionSection:
 
     def __init__(self,
                  domain_start: float,
-                 function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]):
+                 function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]) -> None:
         super().__init__()
         self.domain_start = domain_start
         self.function = function
@@ -24,7 +24,7 @@ class FunctionSection:
 
 class FunctionCurveSource(CurveSource):
 
-    def __init__(self, sections: Sequence[FunctionSection], end_time: float):
+    def __init__(self, sections: Sequence[FunctionSection], end_time: float) -> None:
         for a, b in pairwise(sections):
             if a.domain_start > b.domain_start:
                 raise ValueError

@@ -30,7 +30,7 @@ class Anchor:
 
 
 class CoordinateAnchor(Anchor):
-    def __init__(self, x: float, y: float):
+    def __init__(self, x: float, y: float) -> None:
         super().__init__()
         self.x = x
         self.y = y
@@ -52,7 +52,7 @@ class MidpointAnchor(Anchor):
     def __init__(self,
                  x: str | Anchor,
                  y: str | Anchor,
-                 fraction: float = 0.5):
+                 fraction: float = 0.5) -> None:
         super().__init__()
         self.x = _fix_node(x)
         self.y = _fix_node(y)
@@ -67,7 +67,7 @@ class MidpointAnchor(Anchor):
 
 
 class RelativeAnchor(Anchor):
-    def __init__(self, node: str | Anchor, anchor: Any):
+    def __init__(self, node: str | Anchor, anchor: Any) -> None:
         super().__init__()
         self.node = _fix_node(node)
         self.anchor = str(anchor)
@@ -80,7 +80,7 @@ class RelativeAnchor(Anchor):
 
 
 class NodeAnchor(Anchor):
-    def __init__(self, node: str):
+    def __init__(self, node: str) -> None:
         super().__init__()
         self.node = node
 
@@ -92,7 +92,7 @@ class NodeAnchor(Anchor):
 
 
 class IntersectionAnchor(Anchor):
-    def __init__(self, xnode: str | Anchor, ynode: str | Anchor):
+    def __init__(self, xnode: str | Anchor, ynode: str | Anchor) -> None:
         super().__init__()
         self.xnode = _fix_node(xnode)
         self.ynode = _fix_node(ynode)

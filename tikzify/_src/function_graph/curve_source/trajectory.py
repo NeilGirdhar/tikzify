@@ -15,7 +15,7 @@ class TrajectoryCurveSource(CurveSource):
 
     def __init__(self,
                  times: np.ndarray[Any, Any],
-                 values: np.ndarray[Any, Any]):
+                 values: np.ndarray[Any, Any]) -> None:
         assert times.ndim == 1
         super().__init__(times[0], times[-1])
         self.times = times

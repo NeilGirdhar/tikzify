@@ -16,7 +16,7 @@ class Constraints:  # noqa: PLR0904
     that best satisfy those constraints.
     """
 
-    def __init__(self, labels: Sequence[str]):
+    def __init__(self, labels: Sequence[str]) -> None:
         super().__init__()
         self.labels = labels
         self.a = np.zeros((0, 2 * len(labels)))

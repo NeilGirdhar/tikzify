@@ -16,7 +16,7 @@ class CurveSource:
         end_time: The end time, which is inclusive.
     """
 
-    def __init__(self, start_time: float, end_time: float):
+    def __init__(self, start_time: float, end_time: float) -> None:
         super().__init__()
         self.start_time = start_time
         self.end_time = end_time

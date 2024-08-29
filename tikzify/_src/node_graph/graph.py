@@ -17,7 +17,7 @@ __all__ = ['NodeGraph']
 
 class NodeGraph:
 
-    def __init__(self, edge_colors: None | Mapping[str, str] = None):
+    def __init__(self, edge_colors: None | Mapping[str, str] = None) -> None:
         super().__init__()
         self.digraph = nx.MultiDiGraph()
         self.edge_colors = {} if edge_colors is None else edge_colors

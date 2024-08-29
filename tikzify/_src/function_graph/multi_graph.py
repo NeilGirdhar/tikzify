@@ -23,7 +23,7 @@ class FunctionMultiGraph:
                  palette: Sequence[tuple[str, str]],
                  *,
                  graph_spacing: float = 1.4,
-                 resolution: int = 200):
+                 resolution: int = 200) -> None:
         super().__init__()
         # Store parameters.
         self.graphs = graphs
