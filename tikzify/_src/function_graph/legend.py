@@ -1,5 +1,5 @@
 from collections.abc import Mapping, Sequence
-from typing import Any, TextIO
+from typing import Any, TextIO, override
 
 from ..foundation.contexts import tex_pic
 from ..foundation.pf import pf
@@ -73,6 +73,7 @@ class LegendRect(LegendItem):
         self.draw = draw
         self.fill = fill
 
+    @override
     def generate(self, f: TextIO, x: float, y: float, width: float) -> None:
         pf(r"""
            \node[thin, -, shape=rectangle, right, draw=“draw”, fill=“fill”,
@@ -97,6 +98,7 @@ class LegendNode(LegendItem):
         self.nodetype = nodetype
         self.scale = scale
 
+    @override
     def generate(self, f: TextIO, x: float, y: float, width: float) -> None:
         pf(r"""
            \node[scale=“scale”, transform shape, “nodetype”,
@@ -124,6 +126,7 @@ class LegendArrow(LegendItem):
         self.scale = scale
         self.col = edge_colors.get(tip, None)
 
+    @override
     def generate(self, f: TextIO, x: float, y: float, width: float) -> None:
         pf(r"""
            \node (mainnode) at (“x”, “y”) {};

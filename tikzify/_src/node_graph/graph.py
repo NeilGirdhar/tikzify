@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools as it
 from collections.abc import Mapping, Sequence
 from copy import copy
-from typing import Any, TextIO
+from typing import Any, TextIO, override
 
 import networkx as nx
 
@@ -23,6 +23,7 @@ class NodeGraph:
         self.edge_colors = {} if edge_colors is None else edge_colors
 
     # Magic methods --------------------------------------------------------------------------------
+    @override
     def __repr__(self) -> str:
         return repr(self.digraph)
 

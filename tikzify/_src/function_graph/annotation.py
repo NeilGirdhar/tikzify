@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 from dataclasses import KW_ONLY, dataclass
-from typing import TextIO
+from typing import TextIO, override
 
 from ..foundation.pf import pf, tikz_option
 from ..node_graph.edge import Edge
@@ -41,6 +41,7 @@ class RectAnnotation(Annotation):
     _: KW_ONLY
     widen: bool = True
 
+    @override
     def generate(self, f: TextIO) -> None:
         left = self.left * FUNCTION_GRAPH_WIDTH - MARK_WIDTH * self.widen
         right = self.right * FUNCTION_GRAPH_WIDTH + MARK_WIDTH * self.widen
@@ -76,6 +77,7 @@ class BraceAnnotation(Annotation):
     text_size: str = r'\footnotesize'
     widen: bool = True
 
+    @override
     def generate(self, f: TextIO) -> None:
         left = self.left * FUNCTION_GRAPH_WIDTH - MARK_WIDTH * self.widen
         right = self.right * FUNCTION_GRAPH_WIDTH + MARK_WIDTH * self.widen
@@ -107,6 +109,7 @@ class CircleAnnotation(Annotation):
     _: KW_ONLY
     draw_circle: bool = True
 
+    @override
     def generate(self, f: TextIO) -> None:
         pf(r"""
            \node[shape=circle, “draw,” inner sep=1pt, “color,”
@@ -141,6 +144,7 @@ class EdgeAnnotation(Annotation):
     swap: bool = False
     pos: None | float = None
 
+    @override
     def generate(self, f: TextIO) -> None:  # noqa: PLR0915
         x_source = self.x_source
         x_target = self.x_source if self.x_target is None else self.x_target

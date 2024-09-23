@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, override
 
 import numpy as np
 from scipy.signal import resample
@@ -22,6 +22,7 @@ class TrajectoryCurveSource(CurveSource):
         self.values = values
 
     # Implemented methods --------------------------------------------------------------------------
+    @override
     def times_and_values(self, resolution: int) -> Iterable[np.ndarray[Any, Any]]:
         data_length = len(self.times)
         use_resample = data_length > resolution

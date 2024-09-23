@@ -58,21 +58,46 @@ jobs = 0
 disable = [
   'abstract-method',
   'arguments-differ',
+  'bad-dunder-name',
+  'confusing-consecutive-elif',
+  'consider-using-assignment-expr',
+  'consider-using-tuple',
+  'cyclic-import',
+  'duplicate-code',
+  'empty-comment',
+  'fixme',
+  'import-outside-toplevel',
+  'invalid-field-call',
   'invalid-name',
   'invalid-unary-operand-type',
+  'line-too-long',
+  'keyword-arg-before-vararg',
+  'magic-value-comparison',
   'missing-docstring',
   'no-member',
-  'self-cls-assignment',
+  'no-self-use',
+  'not-callable',
+  'protected-access',
+  'redefined-builtin',
+  'redefined-outer-name',
+  'redefined-variable-type',
+  'signature-differs',
+  'too-complex',
   'too-few-public-methods',
   'too-many-ancestors',
   'too-many-arguments',
   'too-many-branches',
   'too-many-instance-attributes',
   'too-many-locals',
-  'too-many-public-methods',
+  'too-many-positional-arguments',
   'too-many-return-statements',
   'too-many-statements',
+  'too-many-try-statements',
+  'unexpected-keyword-arg',
   'unused-argument',
+  'unused-import',
+  'use-set-for-membership',
+  'while-used',
 ]
 enable = [
   'useless-suppression',
@@ -94,7 +119,11 @@ venv = '.venv'
 enableTypeIgnoreComments = false
 reportImportCycles = false
 reportCallInDefaultInitializer = true
-reportImplicitOverride = false
+reportConstantRedefinition = true
+reportDeprecated = true
+reportDuplicateImport = true
+reportImplicitOverride = true
+reportImplicitStringConcatenation = false
 reportIncompatibleMethodOverride = true
 reportIncompatibleVariableOverride = true
 reportInconsistentConstructor = true
@@ -104,6 +133,7 @@ reportMissingSuperCall = true
 reportMissingTypeArgument = true
 reportOverlappingOverload = true
 reportPrivateImportUsage = true
+reportPropertyTypeMismatch = true
 reportShadowedImports = true
 reportUninitializedInstanceVariable = true
 reportUnknownArgumentType = false
@@ -120,6 +150,11 @@ reportUntypedBaseClass = true
 reportUntypedClassDecorator = true
 reportUntypedFunctionDecorator = true
 reportUntypedNamedTuple = true
+reportUnusedCallResult = false
+reportUnusedClass = true
+reportUnusedExpression = true
+reportUnusedFunction = true
+reportUnusedVariable = true
 
 [tool.mypy]
 files = ['tikzify', 'examples']

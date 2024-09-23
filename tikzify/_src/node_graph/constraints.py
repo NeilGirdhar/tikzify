@@ -65,8 +65,8 @@ class Constraints:  # noqa: PLR0904
                    ) -> None:
         deltas: Sequence[tuple[float, float]]
         deltas = [delta for _ in range(len(args))] if isinstance(delta, tuple) else delta
-        self.set_delta_x(*args, delta_x=[x for x, y in deltas])
-        self.set_delta_y(*args, delta_y=[y for x, y in deltas])
+        self.set_delta_x(*args, delta_x=[x for x, _ in deltas])
+        self.set_delta_y(*args, delta_y=[y for _, y in deltas])
 
     def set_x(self, c: str, x: float) -> None:
         self.set_value('x', c, x)

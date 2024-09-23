@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, override
 
 import numpy as np
 
@@ -35,15 +35,18 @@ class CoordinateAnchor(Anchor):
         self.x = x
         self.y = y
 
+    @override
     def as_tikz(self) -> str:
         return f"{self.x}, {self.y}"
 
     def as_array(self) -> np.ndarray[Any, Any]:
         return np.array([self.x, self.y], dtype='f')
 
+    @override
     def base_nodes(self) -> Iterable[str]:
         return []
 
+    @override
     def __repr__(self) -> str:
         return f'{type(self).__name__}({self.x:.4f}, {self.y:.4f})'
 
@@ -58,9 +61,11 @@ class MidpointAnchor(Anchor):
         self.y = _fix_node(y)
         self.fraction = fraction
 
+    @override
     def as_tikz(self) -> str:
         return f"$({self.x.as_tikz()})!{self.fraction}!({self.y.as_tikz()})$"
 
+    @override
     def base_nodes(self) -> Iterable[str]:
         yield from self.x.base_nodes()
         yield from self.y.base_nodes()
@@ -72,9 +77,11 @@ class RelativeAnchor(Anchor):
         self.node = _fix_node(node)
         self.anchor = str(anchor)
 
+    @override
     def as_tikz(self) -> str:
         return f"{self.node.as_tikz()}.{self.anchor}"
 
+    @override
     def base_nodes(self) -> Iterable[str]:
         yield from self.node.base_nodes()
 
@@ -84,9 +91,11 @@ class NodeAnchor(Anchor):
         super().__init__()
         self.node = node
 
+    @override
     def as_tikz(self) -> str:
         return self.node
 
+    @override
     def base_nodes(self) -> Iterable[str]:
         return [self.node]
 
@@ -97,9 +106,11 @@ class IntersectionAnchor(Anchor):
         self.xnode = _fix_node(xnode)
         self.ynode = _fix_node(ynode)
 
+    @override
     def as_tikz(self) -> str:
         return f"{self.xnode.as_tikz()} |- {self.ynode.as_tikz()}"
 
+    @override
     def base_nodes(self) -> Iterable[str]:
         yield from self.xnode.base_nodes()
         yield from self.ynode.base_nodes()

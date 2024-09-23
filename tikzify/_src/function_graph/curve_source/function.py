@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable, Sequence
 from itertools import chain, pairwise
 from math import ceil
-from typing import Any
+from typing import Any, override
 
 import numpy as np
 
@@ -35,6 +35,7 @@ class FunctionCurveSource(CurveSource):
         self.sections = sections
 
     # Implemented methods --------------------------------------------------------------------------
+    @override
     def times_and_values(self, resolution: int) -> Iterable[np.ndarray[Any, Any]]:
         time_resolution = (self.end_time - self.start_time) / resolution
         for section, next_section in pairwise(chain(self.sections, [None])):
