@@ -11,9 +11,6 @@ from .node import Alignment, NodePosition, NodeText
 __all__ = ['EdgeSpecification', 'create_links', 'create_nodes']
 
 
-Real = int | float
-
-
 @dataclass
 class EdgeSpecification:
     source: str
@@ -39,7 +36,7 @@ class EdgeSpecification:
 def create_nodes(node_graph: NodeGraph,
                  constraints: Constraints,
                  node_name_to_text: Mapping[str, Sequence[str]],
-                 node_size: tuple[Real, Real]) -> None:
+                 node_size: tuple[float, float]) -> None:
     for node_name in constraints.labels:
         position = constraints.solved(node_name)
         if node_name in node_name_to_text:
@@ -59,7 +56,7 @@ def create_nodes(node_graph: NodeGraph,
 
 def create_links(node_graph: NodeGraph,
                  links: Sequence[EdgeSpecification],
-                 dimmed_opacity: Real = 1.0,
+                 dimmed_opacity: float = 1.0,
                  diagram_keywords: None | Collection[str] = None) -> None:
     if diagram_keywords is None:
         diagram_keywords = []

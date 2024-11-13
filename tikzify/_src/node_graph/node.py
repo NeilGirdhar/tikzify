@@ -18,9 +18,6 @@ __all__ = [
 ]
 
 
-Real = float | int
-
-
 class Alignment(Enum):
     left = auto()
     right = auto()
@@ -40,7 +37,7 @@ class TextSize(Enum):
     Huge = auto()
 
 
-def format_length(length: None | Real) -> None | str:
+def format_length(length: None | float) -> None | str:
     if length is None:
         return None
     if int(length) == length:
@@ -79,8 +76,8 @@ def wrap_text(text_lines: Sequence[str],
 
 @dataclass
 class TerminalSpacing:
-    horizontal: Sequence[Real]
-    vertical: Sequence[Real]
+    horizontal: Sequence[float]
+    vertical: Sequence[float]
 
 
 @dataclass
@@ -88,7 +85,7 @@ class NodeText:
     text_lines: Sequence[str]
     wrap_command: None | str = None
     color: None | str = None
-    width: None | Real = None
+    width: None | float = None
     align: None | Alignment = None
     size: None | TextSize = None
     standard_height: bool = False
@@ -133,10 +130,10 @@ class NodeLabel:
 @dataclass
 class NodePosition:
     anchor: Anchor
-    left: None | Real = None
-    right: None | Real = None
-    above: None | Real = None
-    below: None | Real = None
+    left: None | float = None
+    right: None | float = None
+    above: None | float = None
+    below: None | float = None
 
     def __post_init__(self) -> None:
         assert self.left is None or self.right is None
@@ -184,7 +181,7 @@ class NodeContainer:
 
     def latex_corner(self,
                      parent_name: str,
-                     opacity: None | Real,
+                     opacity: None | float,
                      inherit_color: None | str) -> str:
         if self.corner_text is None:
             return ""
@@ -202,7 +199,7 @@ class NodeContainer:
 def generate_node(name: None | str,
                   node_dict: Mapping[str, Any],
                   *,
-                  opacity: None | Real = None,
+                  opacity: None | float = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
     """Generate text for a node."""
