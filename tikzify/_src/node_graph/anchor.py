@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any, override
+from typing import Any, overload, override
 
 import numpy as np
+
+from .constraints import Location
 
 __all__ = [
     'Anchor',
@@ -30,8 +32,19 @@ class Anchor:
 
 
 class CoordinateAnchor(Anchor):
-    def __init__(self, x: float, y: float) -> None:
+    @overload
+    def __init__(self, location: Location, /) -> None: ...
+    @overload
+    def __init__(self, x: float, y: float, /) -> None: ...
+    def __init__(self, x: float | Location, y: float | None = None, /) -> None:
         super().__init__()
+        if isinstance(x, Location):
+            assert y is None
+            self.x = x.x
+            self.y = x.y
+            return
+        assert isinstance(x, int | float)
+        assert isinstance(y, int | float)
         self.x = x
         self.y = y
 

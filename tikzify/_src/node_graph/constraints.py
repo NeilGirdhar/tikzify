@@ -1,12 +1,19 @@
 from __future__ import annotations
 
 import itertools as it
-from collections.abc import Iterable, Reversible, Sequence
+from collections.abc import Iterable, Mapping, Reversible, Sequence
+from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 
-__all__ = ['Constraints']
+__all__ = []
+
+
+@dataclass
+class Location:
+    x: float
+    y: float
 
 
 class Constraints:  # noqa: PLR0904
@@ -21,7 +28,6 @@ class Constraints:  # noqa: PLR0904
         self.labels = labels
         self.a = np.zeros((0, 2 * len(labels)))
         self.b = np.zeros((0,))
-        self.solution: None | np.ndarray[Any, Any] = None
 
     # Properties --------------------------------------------------------------
     @property
@@ -147,7 +153,7 @@ class Constraints:  # noqa: PLR0904
             a[self.index('y', d)] += 1.0
             self.add_constraint(a, 0.0)
 
-    def solve(self, decimals: int = 6) -> None:
+    def solve(self, decimals: int = 6) -> Mapping[str, Location]:
         solution, _, rank, _ = np.linalg.lstsq(self.a, self.b, rcond=None)
         # solution = np.linalg.solve(self.a, self.b)
         if rank != 2 * self.num_labels:
@@ -155,13 +161,10 @@ class Constraints:  # noqa: PLR0904
             raise Constraints.InsufficientConstraintsError(msg)
         solution = np.around(solution, decimals=decimals)
         solution_is_zero = solution == 0.0
-        self.solution = np.where(np.signbit(solution) & solution_is_zero, -solution, solution)
-
-    def solved(self, c: str) -> tuple[float, float]:
-        if self.solution is None:
-            raise ValueError
-        return self.solution[self.index('x', c)], self.solution[self.index('y', c)]
+        solution = np.where(np.signbit(solution) & solution_is_zero, -solution, solution)
+        return {name: Location(solution[self.index('x', name)], solution[self.index('y', name)])
+                for name in self.labels}
 
     # Exceptions --------------------------------------------------------------
-    class InsufficientConstraintsError(Exception):  # noqa: D106
+    class InsufficientConstraintsError(Exception):
         pass

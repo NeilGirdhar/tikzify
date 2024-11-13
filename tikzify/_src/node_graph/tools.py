@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .anchor import CoordinateAnchor
-from .constraints import Constraints
+from .constraints import Location
 from .edge import Edge
 from .graph import NodeGraph
 from .node import Alignment, NodePosition, NodeText
@@ -34,24 +34,30 @@ class EdgeSpecification:
 
 
 def create_nodes(node_graph: NodeGraph,
-                 constraints: Constraints,
+                 positions: Mapping[str, Location],
                  node_name_to_text: Mapping[str, Sequence[str]],
-                 node_size: tuple[float, float]) -> None:
-    for node_name in constraints.labels:
-        position = constraints.solved(node_name)
+                 node_size: tuple[float, float],
+                 margin: float
+                 ) -> None:
+    for node_name, position in positions.items():
         if node_name in node_name_to_text:
             text_lines = node_name_to_text[node_name]
             text = NodeText(text_lines=text_lines,
                             wrap_command='nodename',
                             align=Alignment.center)
             node_graph.create_node(node_name,
-                                   NodePosition(CoordinateAnchor(*position)),
+                                   NodePosition(CoordinateAnchor(position)),
                                    text=text,
                                    size=node_size,
                                    shape='rectangle',
                                    opacity=None)
         else:
-            node_graph.create_coordinate(node_name, position)
+            node_graph.create_coordinate(node_name, (position.x, position.y))
+    left = min(positions.items(), key=lambda n_location: n_location[1].x)[0]
+    right = max(positions.items(), key=lambda n_location: n_location[1].x)[0]
+    top = max(positions.items(), key=lambda n_location: n_location[1].y)[0]
+    bottom = min(positions.items(), key=lambda n_location: n_location[1].y)[0]
+    node_graph.create_edges(left, right, top, bottom, margin=margin)
 
 
 def create_links(node_graph: NodeGraph,
