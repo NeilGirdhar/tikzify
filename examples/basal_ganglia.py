@@ -18,38 +18,42 @@ links = [
     # Subthalamic links.
     *[EdgeSpecification(source, target, to, ['all'], ['complete', 'stn'],
                         via=(True, ['right_of_gpep2'] if target.startswith('below') else []))
-      for source, target, to in [('above_stn0', 'right_of_gpep0', 'waking'),
-                                 ('above_stn4', 'left_of_gpi0', 'waking'),
-                                 ('above_stn1', 'below_gpen2', 'pooling'),
-                                 ('above_stn3', 'below_sncv0', 'demand')]],
+      for source, target, to in [('above_stn0', 'right_of_gpep0', 'recognition'),
+                                 ('above_stn4', 'left_of_gpi0', 'recognition'),
+                                 ('above_stn1', 'below_gpen2', 'attention'),
+                                 ('above_stn3', 'below_sncv0', 'attention')]],
     EdgeSpecification('above_stn2', 'below_sncd0', 'pooling', ['all'], ['complete', 'stn']),
 
     # --------------------------------------------------------------------------------------
     # Nigro-cortical links.
-    EdgeSpecification('above_sncv0', 'below_ctxpt0', 'co_prediction', ['all'],
-                      ['complete', 'strp']),
+    EdgeSpecification('above_sncv0', 'below_ctxpt0', 'control', ['all'],
+                      ['complete', 'strp']),  # negate
 
     # Nigro-striatal links.
-    EdgeSpecification('above_sncv1', 'strm_sncv1', 'co_prediction', ['all'], ['complete', 'strp']),
-    EdgeSpecification('above_sncv2', 'strp_sncv2', 'co_explanation', ['all'], ['complete', 'strp']),
-    EdgeSpecification('above_sncd0', 'strm_sncd0', 'demand', ['all'], ['complete', 'strm']),
+    # negate
+    EdgeSpecification('above_sncv1', 'strm_sncv1', 'control', ['all'], ['complete', 'strp']),
+    # negate
+    EdgeSpecification('above_sncv2', 'strp_sncv2', 'explanation', ['all'], ['complete', 'strp']),
+    EdgeSpecification('above_sncd0', 'strm_sncd0', 'recognition', ['all'], ['complete', 'strm']),
 
     # Nigro-nigral link.
-    EdgeSpecification('left_of_sncv0', 'right_of_sncd0', 'co_demand', ['all'], ['complete']),
+    # negate
+    EdgeSpecification('left_of_sncv0', 'right_of_sncd0', 'recognition', ['all'], ['complete']),
 
     # --------------------------------------------------------------------------------------
     # Striato-nigral links.
     EdgeSpecification('strp_sncv3', 'above_sncv3', 'explanation', ['all'], ['complete', 'strp']),
-    EdgeSpecification('strm_sncd1', 'above_sncd1', 'prediction', ['all'], ['complete', 'strm']),
+    EdgeSpecification('strm_sncd1', 'above_sncd1', 'deduction', ['all'], ['complete', 'strm']),
 
     # Striato-striatal links.
-    EdgeSpecification('above_strp', 'below_strm', 'pooling', ['all'], ['complete']),
+    # negate
+    EdgeSpecification('above_strp', 'below_strm', 'deduction', ['all'], ['complete']),
 
     # Striato-pallidal links.
     EdgeSpecification('striatum_gpen', 'above_gpen0', 'explanation', ['all'], ['complete', 'strm']),
-    EdgeSpecification('below_strmi0', 'left_of_gpep0', 'prediction', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_strmi0', 'left_of_gpep0', 'control', ['all'], ['complete', 'strm'],
                       via=(True, [])),
-    EdgeSpecification('below_strmd0', 'right_of_gpi1', 'prediction', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_strmd0', 'right_of_gpi1', 'control', ['all'], ['complete', 'strm'],
                       via=(True, [])),
     EdgeSpecification('below_strpi0', 'above_gpep0', 'explanation', ['all'], ['complete', 'strp']),
     EdgeSpecification('below_strpd0', 'above_gpi0', 'explanation', ['all'], ['complete', 'strp']),
@@ -66,21 +70,23 @@ links = [
                       ['complete', 'strm']),
 
     # Pallido-thalamic link.
-    EdgeSpecification('right_of_gpi0', 'left_of_tha0', 'selection', ['all'], ['complete', 'strm']),
-    EdgeSpecification('below_gpep0', 'left_of_trn0', 'selection', ['all'], ['complete', 'strm'],
+    # negate
+    EdgeSpecification('right_of_gpi0', 'left_of_tha0', 'control', ['all'], ['complete', 'strm']),
+    # negate
+    EdgeSpecification('below_gpep0', 'left_of_trn0', 'control', ['all'], ['complete', 'strm'],
                       via=(True, [])),
-    EdgeSpecification('right_of_trn0', 'below_tha0', 'selection', ['all'], ['complete', 'strm'],
+    EdgeSpecification('right_of_trn0', 'below_tha0', 'gln', ['all'], ['complete', 'strm'],
                       via=(False, [])),
 
     # Pallido-subthalamic link.
-    EdgeSpecification('below_gpen1', 'left_of_stn0', 'demand', ['all'], ['complete', 'stn'],
+    EdgeSpecification('below_gpen1', 'left_of_stn0', 'attention', ['all'], ['complete', 'stn'],
                       via=(True, [])),
 
     # --------------------------------------------------------------------------------------
     # Cortico-striatal links.
     EdgeSpecification('below_ctxpt3', 'strm_ctxpt', 'pooling', ['all'], ['complete', 'strm']),
     # Dashed lines indicates a diffuse link.
-    EdgeSpecification('below_ctxit0', 'strp_ctxit', 'selection', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_ctxit0', 'strp_ctxit', 'pooling', ['all'], ['complete', 'strm'],
                       dash='densely dashdotted'),
 
     # Hyper-direct pathway.
@@ -89,12 +95,14 @@ links = [
 
     # --------------------------------------------------------------------------------------
     # Thalamo-cortical link.
-    EdgeSpecification('right_of_tha0', 'right_of_ctxpt0', 'gln', ['all'], ['complete', 'strm'],
+    # negate
+    EdgeSpecification('right_of_tha0', 'right_of_ctxpt0', 'explanation', ['all'],
+                      ['complete', 'strm'],
                       via=(False, ['thalamo_cortical0'])),
 
     # Exogenous signals.
     EdgeSpecification('reward_in', 'below_sncv1', 'pooling', ['all'], ['complete']),
-    EdgeSpecification('policy_in', 'below_tha1', 'prediction', ['all'], ['complete']),
+    EdgeSpecification('policy_in', 'below_tha1', 'pooling', ['all'], ['complete']),
 ]
 
 
@@ -120,7 +128,6 @@ with tex_file('basal_ganglia.tex',
         g = node_graph.digraph
         with tex_pic(f, 'basal_ganglia-' + diagram, 'Flow diagram, /CMA tips'):
             # Create nodes.
-            mx, my = 5.5, 2.7
             y = 2.4
             for name, direction in [('strmi', 'left'), ('strmd', 'right')]:
                 d = {direction: 5.5}
@@ -164,13 +171,13 @@ with tex_file('basal_ganglia.tex',
             # Create inputs and outputs.
             node_graph.create_io('reward_in',
                                  NodeText(['reward', 'input'],
-                                          align=Alignment.center, color='dcolorr',
+                                          align=Alignment.center, color='dcoloro',
                                           size=TextSize.footnote, standard_height=True),
                                  'bottom_edge',
                                  'below_sncv1')
             node_graph.create_io('policy_in',
                                  NodeText(['policy', 'input'],
-                                          align=Alignment.center, color='dcolorb',
+                                          align=Alignment.center, color='dcoloro',
                                           size=TextSize.footnote, standard_height=True),
                                  'bottom_edge',
                                  'below_tha1')
