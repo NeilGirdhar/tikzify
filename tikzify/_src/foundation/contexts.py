@@ -12,7 +12,8 @@ __all__ = ['tex_file', 'tex_pic']
 def tex_pic(f: TextIO,
             filename: str,
             pic_type: str,
-            options: None | Mapping[str, str] = None) -> Generator[None, None, None]:
+            options: Mapping[str, str] | None = None
+            ) -> Generator[None]:
     """A context manager that creates a tikzpicture environment in the given file.
 
     filename is the name of the generated pdf for the tikz code.
@@ -40,8 +41,8 @@ def tex_pic(f: TextIO,
 
 @contextmanager
 def tex_file(filename: str,
-             inputs: None | Iterable[str] = None,
-             preamble: None | str = None) -> Generator[TextIO, None, None]:
+             inputs: Iterable[str] | None = None,
+             preamble: str | None = None) -> Generator[TextIO, None, None]:
     if inputs is None:
         inputs = []
     input_string = "\n".join(rf"\input{{{i}.tex}}" for i in inputs)

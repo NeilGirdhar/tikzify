@@ -49,7 +49,7 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str],
                      waypoint_names: Iterable[str],
                      color: str, *, vertical: bool) -> None:
     drawn = False
-    from_: None | str = None
+    from_: str | None = None
     for arm, (turn, next_turn, create) in enumerate(zip(turns, turns[1:], waypoint_names,
                                                         strict=False)):
         create_waypoint(f, edge, source, turn, next_turn, create, arm, color, vertical=vertical)

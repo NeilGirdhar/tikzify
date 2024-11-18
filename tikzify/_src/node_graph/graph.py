@@ -17,7 +17,7 @@ __all__ = ['NodeGraph']
 
 class NodeGraph:
 
-    def __init__(self, edge_colors: None | Mapping[str, str] = None) -> None:
+    def __init__(self, edge_colors: Mapping[str, str] | None = None) -> None:
         super().__init__()
         self.digraph = nx.MultiDiGraph()
         self.edge_colors = {} if edge_colors is None else edge_colors
@@ -70,19 +70,19 @@ class NodeGraph:
 
     def create_node(self,
                     name: str,
-                    position: None | NodePosition,
-                    container: None | NodeContainer = None,
+                    position: NodePosition | None,
+                    container: NodeContainer | None = None,
                     *,
                     # Text
-                    text: None | str | NodeText = None,
-                    label: None | NodeLabel = None,
+                    text: str | NodeText | None = None,
+                    label: NodeLabel | None = None,
                     # Appearance
-                    size: None | tuple[float, float] = None,
-                    shape: None | str = None,
-                    color: None | str = None,
-                    dash: None | str = None,
-                    opacity: None | float = None,
-                    inner_sep: None | float = None) -> None:
+                    size: tuple[float, float] | None = None,
+                    shape: str | None = None,
+                    color: str | None = None,
+                    dash: str | None = None,
+                    opacity: float | None = None,
+                    inner_sep: float | None = None) -> None:
         if position is None and container is None:
             raise ValueError
         if position is not None and container is not None:
@@ -108,7 +108,7 @@ class NodeGraph:
                     target: str,
                     edge: Edge,
                     *,
-                    via: None | tuple[bool, Sequence[str]] = None) -> None:
+                    via: tuple[bool, Sequence[str]] | None = None) -> None:
         if source not in self.digraph:
             msg = f"{source} not in graph."
             raise ValueError(msg)
@@ -124,7 +124,7 @@ class NodeGraph:
                      margin_right: bool = True,
                      margin_top: bool = True,
                      margin_bottom: bool = True,
-                     margin: None | float = None) -> None:
+                     margin: float | None = None) -> None:
         if left not in self.digraph:
             msg = f"{left} not in graph."
             raise ValueError(msg)
@@ -179,7 +179,7 @@ class NodeGraph:
                   text: NodeText,
                   edge: str,
                   terminal: str,
-                  relative: None | float = None) -> None:
+                  relative: float | None = None) -> None:
         """Places an input/output on the edge, perpendicular to the terminal."""
         if edge in {'bottom_edge', 'top_edge'}:
             intersection = IntersectionAnchor(NodeAnchor(terminal), NodeAnchor(edge))

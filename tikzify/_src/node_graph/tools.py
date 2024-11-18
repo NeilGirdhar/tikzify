@@ -18,9 +18,9 @@ class EdgeSpecification:
     to: str
     present: list[str]
     opaque: list[str]
-    via: None | tuple[bool, Sequence[str]] = None
-    text_node: None | Mapping[str, Any] = None
-    dash: None | str = None
+    via: tuple[bool, Sequence[str]] | None = None
+    text_node: Mapping[str, Any] | None = None
+    dash: str | None = None
 
     def is_present(self, diagram_keywords: Iterable[str]) -> bool:
         present_keywords = self.present + self.opaque
@@ -63,7 +63,7 @@ def create_nodes(node_graph: NodeGraph,
 def create_links(node_graph: NodeGraph,
                  links: Sequence[EdgeSpecification],
                  dimmed_opacity: float = 1.0,
-                 diagram_keywords: None | Collection[str] = None) -> None:
+                 diagram_keywords: Collection[str] | None = None) -> None:
     if diagram_keywords is None:
         diagram_keywords = []
     diagram_keywords = [*list(diagram_keywords), 'all']

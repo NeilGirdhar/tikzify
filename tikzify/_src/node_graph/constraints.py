@@ -100,7 +100,7 @@ class Constraints:  # noqa: PLR0904
     def set_between(self,
                     coord: str,
                     *items: str,
-                    ratios: None | Sequence[float] = None) -> None:
+                    ratios: Sequence[float] | None = None) -> None:
         """Space n items with spacing according to (n-1) ratios.
 
         E.g., ratios=[0, 1] puts item[1] at item[0]
@@ -117,10 +117,10 @@ class Constraints:  # noqa: PLR0904
             a[self.index(coord, e)] -= fraction
             self.add_constraint(a, 0.0)
 
-    def set_x_between(self, *items: str, ratios: None | Sequence[float] = None) -> None:
+    def set_x_between(self, *items: str, ratios: Sequence[float] | None = None) -> None:
         self.set_between('x', *items, ratios=ratios)
 
-    def set_y_between(self, *items: str, ratios: None | Sequence[float] = None) -> None:
+    def set_y_between(self, *items: str, ratios: Sequence[float] | None = None) -> None:
         self.set_between('y', *items, ratios=ratios)
 
     def set_deltas_equal(self, c: str, d: str, e: str, f: str) -> None:

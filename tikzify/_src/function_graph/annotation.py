@@ -22,7 +22,7 @@ LOOP_LOOSENESS = 1.5
 
 @dataclass
 class Annotation:
-    text: None | NodeText
+    text: NodeText | None
 
     def generate(self, f: TextIO) -> None:
         raise NotImplementedError
@@ -135,14 +135,14 @@ class EdgeAnnotation(Annotation):
     y_targets: Sequence[float]
     x_source: float
     _: KW_ONLY
-    x_target: None | float = None
-    swipe: None | bool = None
+    x_target: float | None = None
+    swipe: bool | None = None
     # edge options
-    loop: None | str = None
+    loop: str | None = None
     swipe_right: bool = False
     # edge label options
     swap: bool = False
-    pos: None | float = None
+    pos: float | None = None
 
     @override
     def generate(self, f: TextIO) -> None:  # noqa: PLR0915
@@ -175,7 +175,7 @@ class EdgeAnnotation(Annotation):
         swipe = len(y_targets) > 1 or self.swipe or self.loop
 
         # text
-        direction: None | int
+        direction: int | None
         if swipe:
             below = y_targets and y_source > y_targets[0]
             if below:

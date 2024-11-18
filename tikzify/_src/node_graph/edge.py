@@ -10,7 +10,7 @@ __all__ = ['Edge', 'edge_text']
 
 
 def edge_text(text: NodeText,
-              arm: None | int = None) -> Mapping[str, Any]:
+              arm: int | None = None) -> Mapping[str, Any]:
     d: dict[str, Any] = {}
     d['text'] = text
     if arm is not None:
@@ -20,21 +20,21 @@ def edge_text(text: NodeText,
 
 @dataclass
 class Edge:
-    from_: None | str = None
-    to: None | str = None
+    from_: str | None = None
+    to: str | None = None
     bend: float = 0
-    in_: None | float = None
-    out: None | float = None
-    looseness: None | float = None
-    loop: None | str = None
+    in_: float | None = None
+    out: float | None = None
+    looseness: float | None = None
+    loop: str | None = None
     opacity: float = 1
-    dash: None | str = None
-    color: None | str = None
-    thickness: None | str = None
-    text_node: None | Mapping[str, Any] = None
+    dash: str | None = None
+    color: str | None = None
+    thickness: str | None = None
+    text_node: Mapping[str, Any] | None = None
 
     def tip_string(self) -> str:
-        def tip_convert(x: None | str) -> str:
+        def tip_convert(x: str | None) -> str:
             if not x:
                 return ''
             if x in {'>', 'stealth', '|'}:
@@ -42,7 +42,7 @@ class Edge:
             return 'tip_' + x
         return tip_convert(self.from_) + '-' + tip_convert(self.to)
 
-    def bend_string(self, *, loop: bool) -> None | str:
+    def bend_string(self, *, loop: bool) -> str | None:
         if self.bend != 0:
             direction = 'left' if self.bend < 0 else 'right'
             angle = abs(self.bend)
@@ -60,18 +60,18 @@ class Edge:
 
         return None
 
-    def opacity_string(self) -> None | str:
+    def opacity_string(self) -> str | None:
         if self.opacity == 1:
             return None
         return tikz_option('opacity', str(self.opacity))
 
-    def solve_for_color(self, edge_colors: None | Mapping[str, str] = None) -> str:
+    def solve_for_color(self, edge_colors: Mapping[str, str] | None = None) -> str:
         if self.color is not None:
             return self.color
         if edge_colors is None:
             raise ValueError
 
-        def choose_color(x: None | str, y: None | str) -> None | str:
+        def choose_color(x: str | None, y: str | None) -> str | None:
             return min(x, y) if x and y else x or y
 
         retval = reduce(choose_color,
@@ -88,9 +88,9 @@ class Edge:
            f: TextIO,
            source: str,
            target: str,
-           color: None | str = None,
-           text_node: None | Mapping[str, Any] = None,
-           more_options: None | str = None,
+           color: str | None = None,
+           text_node: Mapping[str, Any] | None = None,
+           more_options: str | None = None,
            to_command: str = 'to') -> None:
         if color is None:
             color = self.color

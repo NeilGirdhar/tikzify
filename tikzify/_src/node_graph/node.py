@@ -37,7 +37,7 @@ class TextSize(Enum):
     Huge = auto()
 
 
-def format_length(length: None | float) -> None | str:
+def format_length(length: float | None) -> str | None:
     if length is None:
         return None
     if int(length) == length:
@@ -48,9 +48,9 @@ def format_length(length: None | float) -> None | str:
 
 
 def wrap_text(text_lines: Sequence[str],
-              color: None | str,
-              wrap_command: None | str,
-              size: None | TextSize,
+              color: str | None,
+              wrap_command: str | None,
+              size: TextSize | None,
               *,
               standard_height: bool) -> str:
     def wrap(line: str) -> str:
@@ -83,21 +83,21 @@ class TerminalSpacing:
 @dataclass
 class NodeText:
     text_lines: Sequence[str]
-    wrap_command: None | str = None
-    color: None | str = None
-    width: None | float = None
-    align: None | Alignment = None
-    size: None | TextSize = None
+    wrap_command: str | None = None
+    color: str | None = None
+    width: float | None = None
+    align: Alignment | None = None
+    size: TextSize | None = None
     standard_height: bool = False
 
-    def latex(self, inherit_color: None | str) -> str:
+    def latex(self, inherit_color: str | None) -> str:
         return wrap_text(self.text_lines,
                          inherit_color if self.color is None else self.color,
                          self.wrap_command,
                          self.size,
                          standard_height=self.standard_height)
 
-    def latex_options(self) -> None | str:
+    def latex_options(self) -> str | None:
         if self.align is None and len(self.text_lines) >= 2:  # noqa: PLR2004
             msg = "No alignment specified"
             raise ValueError(msg)
@@ -112,12 +112,12 @@ class NodeText:
 @dataclass
 class NodeLabel:
     text_lines: Sequence[str]
-    location: None | str = None
-    color: None | str = None
-    size: None | TextSize = None
+    location: str | None = None
+    color: str | None = None
+    size: TextSize | None = None
     standard_height: bool = False
 
-    def latex(self, inherit_color: None | str) -> str:
+    def latex(self, inherit_color: str | None) -> str:
         text_lines = self.text_lines
 
         color = inherit_color if self.color is None else self.color
@@ -130,10 +130,10 @@ class NodeLabel:
 @dataclass
 class NodePosition:
     anchor: Anchor
-    left: None | float = None
-    right: None | float = None
-    above: None | float = None
-    below: None | float = None
+    left: float | None = None
+    right: float | None = None
+    above: float | None = None
+    below: float | None = None
 
     def __post_init__(self) -> None:
         assert self.left is None or self.right is None
@@ -172,8 +172,8 @@ class NodePosition:
 @dataclass
 class NodeContainer:
     nodes: Collection[str]
-    corner_text: None | NodeText = None
-    corner_color: None | str = None
+    corner_text: NodeText | None = None
+    corner_color: str | None = None
 
     def latex_fit(self) -> str:
         nodes = sorted('(' + node + ')' for node in self.nodes)
@@ -181,8 +181,8 @@ class NodeContainer:
 
     def latex_corner(self,
                      parent_name: str,
-                     opacity: None | float,
-                     inherit_color: None | str) -> str:
+                     opacity: float | None,
+                     inherit_color: str | None) -> str:
         if self.corner_text is None:
             return ""
         color = self.corner_color if self.corner_color is not None else inherit_color
@@ -196,10 +196,10 @@ class NodeContainer:
             opacity=None if opacity is None else tikz_option('opacity', str(opacity)))
 
 
-def generate_node(name: None | str,
+def generate_node(name: str | None,
                   node_dict: Mapping[str, Any],
                   *,
-                  opacity: None | float = None,
+                  opacity: float | None = None,
                   file: TextIO,
                   end: str = ';\n') -> None:
     """Generate text for a node."""

@@ -9,8 +9,8 @@ __all__ = ['FunctionGraph']
 class FunctionGraph:
 
     def __init__(self,
-                 trait_to_curve: None | Mapping[GraphedTrait, CurveSource] = None,
-                 trait_to_marks: None | Mapping[GraphedTrait, Sequence[float]] = None,
+                 trait_to_curve: Mapping[GraphedTrait, CurveSource] | None = None,
+                 trait_to_marks: Mapping[GraphedTrait, Sequence[float]] | None = None,
                  label: str = "") -> None:
         super().__init__()
         self.trait_to_curve = {} if trait_to_curve is None else trait_to_curve

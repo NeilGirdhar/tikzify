@@ -14,7 +14,7 @@ def pf(string_to_be_printed: str,
     print(formatter(string_to_be_printed, **kwargs), end=end, file=file)
 
 
-def tikz_option(name: str, value: None | str) -> None | str:
+def tikz_option(name: str, value: str | None) -> str | None:
     if value is None:
         return None
     return f"{name}={value}"

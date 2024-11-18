@@ -17,7 +17,7 @@ MARK_WIDTH = 0.06
 MARK_HEIGHT = 0.3
 
 
-def function_graph_mark(f: TextIO, x: float, y: float, col: None | str,
+def function_graph_mark(f: TextIO, x: float, y: float, col: str | None,
                         scale: float = 1.0) -> None:
     h = scale * MARK_HEIGHT * 0.5
     w = scale * MARK_WIDTH
@@ -36,7 +36,7 @@ def function_graph_mark(f: TextIO, x: float, y: float, col: None | str,
 def function_graph_marks(f: TextIO,
                          y: float,
                          marks: Iterable[float],
-                         mark_color: None | str = None) -> None:
+                         mark_color: str | None = None) -> None:
     for x in marks:
         function_graph_mark(f, x * FUNCTION_GRAPH_WIDTH, y, mark_color)
 
@@ -65,7 +65,7 @@ def draw_curve(f: TextIO,
                fill_color: str,
                curve: np.ndarray[Any, Any],
                transform: Callable[[float, float], tuple[float, float]] = identity,
-               options: None | str = None,
+               options: str | None = None,
                clip: tuple[float, float] = (-10.0, 10.0),
                *,
                fill: bool) -> None:
