@@ -1,5 +1,5 @@
 from collections.abc import Collection, Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from .anchor import CoordinateAnchor
@@ -16,19 +16,23 @@ class EdgeSpecification:
     source: str
     target: str
     to: str
-    present: list[str]
-    opaque: list[str]
+    present: list[str] = field(default_factory=list)
+    opaque: list[str] = field(default_factory=list)
     via: tuple[bool, Sequence[str]] | None = None
     text_node: Mapping[str, Any] | None = None
     dash: str | None = None
 
     def is_present(self, diagram_keywords: Iterable[str]) -> bool:
         present_keywords = self.present + self.opaque
+        if not present_keywords:
+            return True
         return any(dk in present_keywords
                    for dk in diagram_keywords)
 
     def is_opaque(self, diagram_keywords: Iterable[str]) -> bool:
         present_keywords = self.opaque
+        if not present_keywords:
+            return True
         return any(dk in present_keywords
                    for dk in diagram_keywords)
 
