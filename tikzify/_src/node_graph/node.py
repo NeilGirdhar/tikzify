@@ -1,5 +1,5 @@
 from collections.abc import Collection, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, KW_ONLY
 from enum import Enum, auto
 from typing import Any, TextIO
 
@@ -83,8 +83,9 @@ class TerminalSpacing:
 @dataclass
 class NodeText:
     text_lines: Sequence[str]
-    wrap_command: str | None = None
     color: str | None = None
+    _: KW_ONLY
+    wrap_command: str | None = None
     width: float | None = None
     align: Alignment | None = None
     size: TextSize | None = None
