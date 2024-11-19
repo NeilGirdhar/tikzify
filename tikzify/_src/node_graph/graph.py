@@ -3,6 +3,7 @@ from __future__ import annotations
 import itertools as it
 from collections.abc import Mapping, Sequence
 from copy import copy
+from dataclasses import replace
 from typing import Any, TextIO, override
 
 import networkx as nx
@@ -10,7 +11,8 @@ import networkx as nx
 from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAnchor
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names
-from .node import NodeContainer, NodeLabel, NodePosition, NodeText, TerminalSpacing, generate_node
+from .node import (Alignment, NodeContainer, NodeLabel, NodePosition, NodeText, TerminalSpacing,
+                   TextSize, generate_node)
 
 __all__ = ['NodeGraph']
 
@@ -180,13 +182,18 @@ class NodeGraph:
                   edge: str,
                   terminal: str,
                   relative: float | None = None) -> None:
-        """Places an input/output on the edge, perpendicular to the terminal."""
+        """Place an input/output on the edge, perpendicular to the terminal."""
         if edge in {'bottom_edge', 'top_edge'}:
             intersection = IntersectionAnchor(NodeAnchor(terminal), NodeAnchor(edge))
             key = 'above' if edge == 'top_edge' else 'below'
+            text = replace(text, align=Alignment.center)
         else:
             intersection = IntersectionAnchor(NodeAnchor(edge), NodeAnchor(terminal))
             key = 'right' if edge == 'right_edge' else 'left'
+            text = replace(text, align=Alignment.left if key == 'right' else Alignment.right)
+        text = replace(text, standard_height=True)
+        if text.size is None:
+            text = replace(text, size=TextSize.footnote)
         position = NodePosition(intersection, **{key: 0.0 if relative is None else relative})
 
         self.create_node(node_name,
