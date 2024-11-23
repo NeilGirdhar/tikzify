@@ -6,6 +6,7 @@ from copy import copy
 from dataclasses import replace
 from io import StringIO
 from typing import Any, TextIO, override
+from collections.abc import Generator
 
 import networkx as nx
 
@@ -34,36 +35,12 @@ class NodeGraph:
     def nodes(self) -> Sequence[str]:
         return sorted(self.digraph)
 
-    def node_opacity(self, name: str, dependency_graph: nx.DiGraph[Any]) -> float:
-        """Calcule the node opacity.
-
-        This is based on the maximum opacity of the node, its afferent edges, its fit group (if it
-        has one).
-        """
-        g = self.digraph
-        node = g.nodes[name]['node']
-        assert isinstance(node, Node)
-
-        # Calculate the maximum opacity of the node and its afferent edges.
-        found_something = False
-        o = 0.0 if node.opacity is None else node.opacity
-        assert isinstance(o, float)
-        for successor in it.chain([name], dependency_graph.successors(name)):
-            for ed in it.chain(g.succ[successor].values(), g.pred[successor].values()):
-                for tip in ed.values():
-                    found_something = True
-                    o = max(o, tip.get('opacity', 1.0))
-
-        # If the node is in a fit group, consider that too.
-        if node.container is not None:
-            for sub_node_name in node.container.nodes:
-                found_something = True
-                o = max(o, self.node_opacity(sub_node_name, dependency_graph))
-
-        if not found_something:
-            o = 1.0 if node.opacity is None else node.opacity
-
-        return o
+    def _all_edges_connected_to(self, node_name: str) -> Generator[Edge]:
+        for _, _, edge_dict in it.chain(self.digraph.in_edges(node_name, data=True),
+                                        self.digraph.out_edges(node_name, data=True)):
+            edge = edge_dict['edge']
+            assert isinstance(edge, Edge)
+            yield edge
 
     # Graph creation methods -----------------------------------------------------------------------
     def create_coordinate(self,
@@ -228,7 +205,7 @@ class NodeGraph:
     # Output methods -------------------------------------------------------------------------------
     def generate(self, f: TextIO) -> None:
         g = self.digraph
-        dependency_graph, topo_sorted = self._dependencies()
+        _, topo_sorted = self._dependencies()
         waypoint_names = default_waypoint_names()
 
         # Draw nodes.
@@ -236,7 +213,11 @@ class NodeGraph:
             node = g.nodes[name]['node']
             assert isinstance(node, Node)
             assert isinstance(node.name, str)
-            node = replace(node, opacity=self.node_opacity(node.name, dependency_graph))
+            if isinstance(node.text, NodeText) and node.text.color is None:
+                for edge in self._all_edges_connected_to(name):
+                    if (color := edge.solve_for_color(self.edge_colors)) is not None:
+                        node = replace(node, color=color)
+                        break
             node.generate(file=f)
 
         # Draw edges.

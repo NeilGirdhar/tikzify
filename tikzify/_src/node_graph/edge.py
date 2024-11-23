@@ -65,7 +65,7 @@ class Edge:
             return None
         return tikz_option('opacity', str(self.opacity))
 
-    def solve_for_color(self, edge_colors: Mapping[str, str] | None = None) -> str:
+    def solve_for_color(self, edge_colors: Mapping[str, str] | None = None) -> str | None:
         if self.color is not None:
             return self.color
         if edge_colors is None:

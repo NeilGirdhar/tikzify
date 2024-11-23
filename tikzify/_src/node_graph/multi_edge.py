@@ -20,7 +20,8 @@ def default_waypoint_names() -> Iterable[str]:
 
 
 def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str,
-                    stop: str, create: str, arm: int, color: str, *, vertical: bool) -> None:
+                    stop: str, create: str, arm: int, color: str | None, *, vertical: bool
+                    ) -> None:
     """Prints a round edge in the direction of the waypoint."""
     edge_copy = copy(edge)
     edge_copy.to = None
@@ -47,7 +48,8 @@ def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str,
 
 def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str],
                      waypoint_names: Iterable[str],
-                     color: str, *, vertical: bool) -> None:
+                     color: str | None, *, vertical: bool
+                     ) -> None:
     drawn = False
     from_: str | None = None
     for arm, (turn, next_turn, create) in enumerate(zip(turns, turns[1:], waypoint_names,
