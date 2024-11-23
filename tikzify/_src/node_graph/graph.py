@@ -4,10 +4,12 @@ import itertools as it
 from collections.abc import Mapping, Sequence
 from copy import copy
 from dataclasses import replace
+from io import StringIO
 from typing import Any, TextIO, override
 
 import networkx as nx
 
+from ..foundation.pf import pf
 from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAnchor
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names
@@ -171,6 +173,57 @@ class NodeGraph:
         position = NodePosition(intersection, **{key: 0.0 if relative is None else relative})
         node = Node(node_name, position, text=text)
         self.create_node(node)
+
+    def create_legend(self,
+                      position: NodePosition,
+                      *,
+                      link_heading: str = 'Link type',
+                      arrow_heading: str = 'Arrowhead'
+                      ) -> None:
+        f = StringIO()
+        pf(r"""
+           \begin{threeparttable}
+           \begin{tabular}{rl} \toprule
+           \footnotesize “link_heading” & \footnotesize “arrow_heading” \\ \midrule
+           """,
+           f,
+           link_heading=link_heading,
+           arrow_heading=arrow_heading)
+
+        all_tips = list(self.edge_colors)
+        tip_names = set[str]()
+        _, topo_sorted = self._dependencies()
+        for source in topo_sorted:
+            for _, ed in sorted(self.digraph.succ[source].items()):
+                for _, edge_dict in enumerate(ed.values()):
+                    edge = edge_dict['edge']
+                    assert isinstance(edge, Edge)
+                    if edge.from_:
+                        tip_names.add(edge.from_)
+                    if edge.to:
+                        tip_names.add(edge.to)
+
+        for tip_name in sorted(tip_names, key=all_tips.index):
+            color = self.edge_colors[tip_name]
+            pf(r"""
+               \footnotesize “name” & \tikz[baseline=-1mm]{\node[minimum height=2mm] at (0, 0) {};
+                                                         \draw[“col, tip”] (0, 0) to (1, 0);} \\
+               """,
+               end='\n',
+               col=color,
+               name=tip_name,
+               tip='-tip_' + tip_name,
+               file=f)
+            assert f.getvalue().endswith('\n')
+
+        pf(r"""
+               \bottomrule
+             \end{tabular}
+           \end{threeparttable}
+           """,
+           f)
+        legend = Node('legend', position, text=f.getvalue())
+        self.create_node(legend)
 
     # Output methods -------------------------------------------------------------------------------
     def generate(self, f: TextIO) -> None:

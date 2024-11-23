@@ -52,8 +52,7 @@ def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
     try:
         expanded_macros = re.sub(r"“(.+?)”", repl, string_to_be_printed)
         dedented = dedent(expanded_macros)
-        stripped = dedented.strip('\n')
-        retval = re.sub("\\\\\n\\s*", "", stripped)
+        retval = dedented.strip('\n')
     except KeyError as e:
         msg = (f'No key "{e.args[0]}" found in {kwargs} for formatted string '
                f"{string_to_be_printed}.")
