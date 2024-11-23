@@ -187,10 +187,11 @@ class EdgeAnnotation(Annotation):
         else:
             direction = None
 
-        text_node = ({"col": self.edge.color,
-                          "pos": tikz_option('pos', str(self.pos)),
-                          "swap": 'swap' if swap else None,
-                          "text": self.text}
+        text_node = ({"color": self.edge.color,
+                      # These are unused!
+                      # "pos": tikz_option('pos', str(self.pos)),
+                      # "swap": 'swap' if swap else None,
+                      "text": self.text}
                      if self.text is not None
                      else None)
 

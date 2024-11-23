@@ -4,7 +4,7 @@ from functools import reduce
 from typing import Any, TextIO
 
 from ..foundation.pf import formatter, pf, tikz_option
-from .node import NodeText, generate_node
+from .node import Node, NodeText
 
 __all__ = ['Edge', 'edge_text']
 
@@ -110,7 +110,8 @@ class Edge:
            end='',
            file=f)
         if text_node is not None:
-            generate_node(None, text_node, file=f, end=' ')
+            node = Node(None, None, **text_node)
+            node.generate(file=f, end=' ')
         pf(r"(“t”);",
            t=target,
            file=f)

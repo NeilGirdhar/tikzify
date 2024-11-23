@@ -6,7 +6,7 @@ from .anchor import CoordinateAnchor
 from .constraints import Location
 from .edge import Edge
 from .graph import NodeGraph
-from .node import Alignment, NodePosition, NodeText
+from .node import Alignment, Node, NodePosition, NodeText
 
 __all__ = ['EdgeSpecification', 'create_links', 'create_nodes']
 
@@ -49,12 +49,13 @@ def create_nodes(node_graph: NodeGraph,
             text = NodeText(text_lines=text_lines,
                             wrap_command='nodename',
                             align=Alignment.center)
-            node_graph.create_node(node_name,
-                                   NodePosition(CoordinateAnchor(position)),
-                                   text=text,
-                                   size=node_size,
-                                   shape='rectangle',
-                                   opacity=None)
+            node = Node(node_name,
+                        NodePosition(CoordinateAnchor(position)),
+                        text=text,
+                        size=node_size,
+                        shape='rectangle',
+                        opacity=None)
+            node_graph.create_node(node)
         else:
             node_graph.create_coordinate(node_name, (position.x, position.y))
     left = min(positions.items(), key=lambda n_location: n_location[1].x)[0]

@@ -1,21 +1,13 @@
-from collections.abc import Collection, Mapping, Sequence
-from dataclasses import dataclass, KW_ONLY
+from collections.abc import Collection, Sequence
+from dataclasses import KW_ONLY, dataclass
 from enum import Enum, auto
-from typing import Any, TextIO
+from typing import TextIO
 
 from ..foundation.formatter import formatter
 from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
 
-__all__ = [
-    'Alignment',
-    'NodeContainer',
-    'NodeLabel',
-    'NodePosition',
-    'NodeText',
-    'TerminalSpacing',
-    'TextSize',
-]
+__all__ = []
 
 
 class Alignment(Enum):
@@ -197,61 +189,70 @@ class NodeContainer:
             opacity=None if opacity is None else tikz_option('opacity', str(opacity)))
 
 
-def generate_node(name: str | None,
-                  node_dict: Mapping[str, Any],
-                  *,
-                  opacity: float | None = None,
-                  file: TextIO,
-                  end: str = ';\n') -> None:
-    """Generate text for a node."""
-    # Arguments.
-    position = node_dict.get('position', None)
-    coordinate = node_dict.get('is_coordinate', False)
-    text = node_dict.get('text', None)
-    label = node_dict.get('label', None)
-    size = node_dict.get('size', None)
-    shape = node_dict.get('shape', None)
-    color = node_dict.get('color', None)
-    dash = node_dict.get('dash', None)
-    inner_sep = node_dict.get('inner_sep', None)
-    container = node_dict.get('container', None)
+@dataclass
+class Node:
+    name: str | None
+    position: NodePosition | None
+    container: NodeContainer | None = None
+    _: KW_ONLY
+    # Text
+    text: str | NodeText | None = None
+    label: NodeLabel | None = None
+    # Appearance
+    size: tuple[float, float] | None = None
+    shape: str | None = None
+    color: str | None = None
+    dash: str | None = None
+    opacity: float | None = None
+    inner_sep: float | None = None
+    is_coordinate: bool = False
 
-    size_latex = (None
-                  if size is None
-                  else (f'minimum width={format_length(size[0])}, '
-                        f'minimum height={format_length(size[1])}'))
+    def generate(self,
+                 file: TextIO,
+                 end: str = ';\n'
+                 ) -> None:
+        """Generate text for a node."""
+        text = NodeText([self.text]) if isinstance(self.text, str) else self.text
+        size_latex = (None
+                      if self.size is None
+                      else (f'minimum width={format_length(self.size[0])}, '
+                            f'minimum height={format_length(self.size[1])}'))
+        opacity = (None if self.opacity is None or self.opacity == 1
+                   else tikz_option('opacity', str(self.opacity)))
 
-    d = {"name": name,
-             "position": None if position is None else position.latex_position(),
-             "relative_position": None if position is None else position.latex_relative_position(),
-             "text": None if text is None else text.latex(color),
+        d = {"name": self.name,
+             "position": None if self.position is None else self.position.latex_position(),
+             "relative_position": (
+                 None if self.position is None else self.position.latex_relative_position()),
+             "text": None if text is None else text.latex(self.color),
              "text_options": None if text is None else text.latex_options(),
-             "label": None if label is None else label.latex(color),
+             "label": None if self.label is None else self.label.latex(self.color),
              "size": size_latex,
-             "shape": shape,
-             "color": color,
-             "dash": dash,
-             "opacity": None if opacity is None else tikz_option('opacity', str(opacity)),
-             "inner_sep": tikz_option('inner sep', format_length(inner_sep)),
-             "fit": None if container is None else container.latex_fit()}
-    if coordinate:
-        pf(r"\coordinate “relative_position” (“name”) “position”",
-           **d,
-           file=file,
-           end=end)
-    elif name is None:
-        assert position is None
-        pf(r"node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] {“text”}",
-           **d,
-           file=file,
-           end=end)
-    else:
-        pf(r"\node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] "
-           r"“position” (“name”) “relative_position” {“text”}",
-           **d,
-           file=file,
-           end=end)
-    if container is not None:
-        print(container.latex_corner(name, opacity, color),
-              file=file,
-              end=end)
+             "shape": self.shape,
+             "color": self.color,
+             "dash": self.dash,
+             "opacity": opacity,
+             "inner_sep": tikz_option('inner sep', format_length(self.inner_sep)),
+             "fit": None if self.container is None else self.container.latex_fit()}
+        if self.is_coordinate:
+            pf(r"\coordinate “relative_position” (“name”) “position”",
+               **d,
+               file=file,
+               end=end)
+        elif self.name is None:
+            assert self.position is None
+            pf(r"node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] {“text”}",
+               **d,
+               file=file,
+               end=end)
+        else:
+            pf(r"\node[“text_options,label,shape,size,color,dash,opacity,inner_sep,fit”] "
+               r"“position” (“name”) “relative_position” {“text”}",
+               **d,
+               file=file,
+               end=end)
+        if self.container is not None:
+            assert isinstance(self.name, str)
+            print(self.container.latex_corner(self.name, self.opacity, self.color),
+                  file=file,
+                  end=end)

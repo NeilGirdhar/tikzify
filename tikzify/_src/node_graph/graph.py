@@ -11,8 +11,7 @@ import networkx as nx
 from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAnchor
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names
-from .node import (Alignment, NodeContainer, NodeLabel, NodePosition, NodeText, TerminalSpacing,
-                   TextSize, generate_node)
+from .node import Alignment, Node, NodePosition, NodeText, TerminalSpacing, TextSize
 
 __all__ = ['NodeGraph']
 
@@ -40,77 +39,52 @@ class NodeGraph:
         has one).
         """
         g = self.digraph
-        node_dict = g.nodes[name]
+        node = g.nodes[name]['node']
+        assert isinstance(node, Node)
 
         # Calculate the maximum opacity of the node and its afferent edges.
-        o = node_dict.get('opacity', 0.0)
+        found_something = False
+        o = 0.0 if node.opacity is None else node.opacity
         assert isinstance(o, float)
         for successor in it.chain([name], dependency_graph.successors(name)):
             for ed in it.chain(g.succ[successor].values(), g.pred[successor].values()):
                 for tip in ed.values():
+                    found_something = True
                     o = max(o, tip.get('opacity', 1.0))
 
         # If the node is in a fit group, consider that too.
-        if 'container' in node_dict:
-            container = node_dict['container']
-            if not isinstance(container, NodeContainer):
-                raise TypeError
-            for node in container.nodes:
-                o = max(o, self.node_opacity(node, dependency_graph))
+        if node.container is not None:
+            for sub_node_name in node.container.nodes:
+                found_something = True
+                o = max(o, self.node_opacity(sub_node_name, dependency_graph))
+
+        if not found_something:
+            o = 1.0 if node.opacity is None else node.opacity
 
         return o
 
     # Graph creation methods -----------------------------------------------------------------------
     def create_coordinate(self,
                           name: str,
-                          position: tuple[float, float] | NodePosition) -> None:
+                          position: tuple[float, float] | NodePosition
+                          ) -> None:
         if isinstance(position, tuple):
             position = NodePosition(CoordinateAnchor(*position))
-        self.digraph.add_node(name,
-                              position=position,
-                              is_coordinate=True)
+        node = Node(name, position, is_coordinate=True)
+        self.create_node(node)
 
-    def create_node(self,
-                    name: str,
-                    position: NodePosition | None,
-                    container: NodeContainer | None = None,
-                    *,
-                    # Text
-                    text: str | NodeText | None = None,
-                    label: NodeLabel | None = None,
-                    # Appearance
-                    size: tuple[float, float] | None = None,
-                    shape: str | None = None,
-                    color: str | None = None,
-                    dash: str | None = None,
-                    opacity: float | None = None,
-                    inner_sep: float | None = None) -> None:
-        if position is None and container is None:
+    def create_node(self, node: Node) -> None:
+        if (node.position is None) == (node.container is None):
             raise ValueError
-        if position is not None and container is not None:
-            raise ValueError
-        if isinstance(text, str):
-            text = NodeText([text])
-        d = {"text": text,
-                 "label": label,
-                 "size": size,
-                 "shape": shape,
-                 "color": color,
-                 "dash": dash,
-                 "opacity": opacity,
-                 "inner_sep": inner_sep,
-                 "container": container}
-        d = {key: value
-             for key, value in d.items()
-             if value is not None}
-        self.digraph.add_node(name, position=position, **d)
+        self.digraph.add_node(node.name, node=node)
 
     def create_edge(self,
                     source: str,
                     target: str,
                     edge: Edge,
                     *,
-                    via: tuple[bool, Sequence[str]] | None = None) -> None:
+                    via: tuple[bool, Sequence[str]] | None = None
+                    ) -> None:
         if source not in self.digraph:
             msg = f"{source} not in graph."
             raise ValueError(msg)
@@ -195,10 +169,8 @@ class NodeGraph:
         if text.size is None:
             text = replace(text, size=TextSize.footnote)
         position = NodePosition(intersection, **{key: 0.0 if relative is None else relative})
-
-        self.create_node(node_name,
-                         position,
-                         text=text)
+        node = Node(node_name, position, text=text)
+        self.create_node(node)
 
     # Output methods -------------------------------------------------------------------------------
     def generate(self, f: TextIO) -> None:
@@ -208,9 +180,11 @@ class NodeGraph:
 
         # Draw nodes.
         for name in topo_sorted:
-            node_dict = g.nodes[name]
-            generate_node(name, node_dict, opacity=self.node_opacity(name, dependency_graph),
-                          file=f)
+            node = g.nodes[name]['node']
+            assert isinstance(node, Node)
+            assert isinstance(node.name, str)
+            node = replace(node, opacity=self.node_opacity(node.name, dependency_graph))
+            node.generate(file=f)
 
         # Draw edges.
         for source in topo_sorted:
@@ -257,19 +231,13 @@ class NodeGraph:
         g2 = nx.DiGraph()  # A graph with all dependencies.
         g2.add_nodes_from(g)
         for name in g:
-            node_dict = g.nodes[name]
-            position = node_dict.get('position', None)
-            if position is not None:
-                if not isinstance(position, NodePosition):
-                    raise TypeError
-                for node in position.anchor.base_nodes():
-                    g2.add_edge(node, name)
-            if 'container' in node_dict:
-                container = node_dict['container']
-                if not isinstance(container, NodeContainer):
-                    raise TypeError
-                for node in container.nodes:
-                    g2.add_edge(node, name)
+            node = g.nodes[name]['node']
+            if node.position is not None:
+                for sub_node_name in node.position.anchor.base_nodes():
+                    g2.add_edge(sub_node_name, name)
+            if node.container is not None:
+                for sub_node_name in node.container.nodes:
+                    g2.add_edge(node.name, sub_node_name)
         try:
             return g2, list(nx.lexicographical_topological_sort(g2))
         except nx.NetworkXUnfeasible:
