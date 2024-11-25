@@ -53,6 +53,34 @@ skip_glob = ['.pytype/*.py']
 
 [tool.pylint.master]
 jobs = 0
+py-version = '3.10'
+load-plugins = [
+  'pylint.extensions.bad_builtin',
+  'pylint.extensions.broad_try_clause',
+  'pylint.extensions.check_elif',
+  'pylint.extensions.code_style',
+  'pylint.extensions.comparison_placement',
+  'pylint.extensions.confusing_elif',
+  'pylint.extensions.consider_refactoring_into_while_condition',
+  'pylint.extensions.consider_ternary_expression',
+  'pylint.extensions.dict_init_mutate',
+  'pylint.extensions.docparams',
+  'pylint.extensions.docstyle',
+  'pylint.extensions.dunder',
+  'pylint.extensions.empty_comment',
+  'pylint.extensions.eq_without_hash',
+  'pylint.extensions.for_any_all',
+  'pylint.extensions.magic_value',
+  'pylint.extensions.mccabe',
+  'pylint.extensions.no_self_use',
+  'pylint.extensions.overlapping_exceptions',
+  'pylint.extensions.private_import',
+  'pylint.extensions.redefined_loop_name',
+  'pylint.extensions.redefined_variable_type',
+  'pylint.extensions.set_membership',
+  'pylint.extensions.typing',
+  'pylint.extensions.while_used',
+]
 
 [tool.pylint.messages_control]
 disable = [
@@ -188,8 +216,6 @@ line-length = 100
 preview = true
 select = ['ALL']
 ignore = [
-  'ANN101', # Missing type annotation for self.
-  'ANN102', # Missing type annotation for cls.
   'ANN401', # Dynamically typed expressions (Any).
   'ARG001', # Unused function argument.
   'ARG002', # Unused method argument.
@@ -221,9 +247,9 @@ ignore = [
   'Q000', # Single quotes found but double quotes preferred.
   'RUF021', # Parenthesize `a and b` expressions when chaining `and` and `or` together...
   'S101', # Assert used.
-  'TCH001', # Move application import into a type-checking block.
-  'TCH002', # Move third-party import into a type-checking block.
-  'TCH003', # Move standard library import into a type-checking block.
+  'TC001', # Move application import into a type-checking block.
+  'TC002', # Move third-party import into a type-checking block.
+  'TC003', # Move standard library import into a type-checking block.
   'TD002', # Missing author in TODO; try: # TODO(<author_name>): ....
   'TD003', # Missing issue link on the line following this TODO.
   'TID252', # Relative imports from parent modules are banned.

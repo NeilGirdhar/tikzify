@@ -213,9 +213,10 @@ class NodeGraph:
     # Output methods -------------------------------------------------------------------------------
     def generate(self, f: TextIO) -> None:
         _, topo_sorted = self._dependencies()
-        waypoint_names = default_waypoint_names()
+        self._draw_nodes(f, topo_sorted)
+        self._draw_edges(f, topo_sorted)
 
-        # Draw nodes.
+    def _draw_nodes(self, f: TextIO, topo_sorted: Sequence[str]) -> None:
         for name in topo_sorted:
             node = self.digraph.nodes[name]['node']
             assert isinstance(node, Node)
@@ -227,7 +228,8 @@ class NodeGraph:
                         break
             node.generate(file=f)
 
-        # Draw edges.
+    def _draw_edges(self, f: TextIO, topo_sorted: Sequence[str]) -> None:
+        waypoint_names = default_waypoint_names()
         for source in topo_sorted:
             for (target, ed) in sorted(self.digraph.succ[source].items()):
                 len_ed = len(ed)
