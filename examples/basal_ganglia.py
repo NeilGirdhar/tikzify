@@ -1,11 +1,19 @@
 from __future__ import annotations
 
-from edge_colors import EDGE_COLORS  # type: ignore[import-not-found]
-
-from tikzify import (Alignment, EdgeSpecification, IntersectionAnchor, NodeAnchor, NodeContainer,
+from tikzify import (EdgeSpecification, IntersectionAnchor, Node, NodeAnchor, NodeContainer,
                      NodeGraph, NodePosition, NodeText, RelativeAnchor, TerminalSpacing, TextSize,
                      create_links, tex_file, tex_pic)
 
+tip_colors = {prefix + edge_name: color
+              for color, edges in [('dcolorb', ['explanation', 'nexting']),
+                                   ('dcoloro', ['variational', 'pooling',
+                                                'affordance', 'attention', 'ordinary']),
+                                   ('dcolorr', ['recognition', 'control']),
+                                   ('dcolorg', ['gating', 'geminate'])]
+              for edge_name in edges
+              for prefix in ['', 'co_']}
+standard_inputs = ['latex/includes', 'latex/commands', 'tikz/base', 'tikz/color_macros',
+                   'tikz/extra_tips', 'tikz/cma_tips', 'tikz/flow_style']
 dimmed_opacity = 0.18
 node_size = (13.0, 11.0)
 w = 0.8
@@ -16,114 +24,115 @@ terminal_spacing = TerminalSpacing(horizontal=[0.0, 0.8, w / 2, w / 3, w / 4, w 
 links = [
     # --------------------------------------------------------------------------------------
     # Subthalamic links.
-    *[EdgeSpecification(source, target, to, ['all'], ['complete', 'stn'],
+    # Not actually attention, but something to create a baseline signal.
+    *[EdgeSpecification(source, target, to, opaque=['complete', 'stn'],
                         via=(True, ['right_of_gpep2'] if target.startswith('below') else []))
-      for source, target, to in [('above_stn0', 'right_of_gpep0', 'recognition'),
-                                 ('above_stn4', 'left_of_gpi0', 'recognition'),
-                                 ('above_stn1', 'below_gpen2', 'attention'),
-                                 ('above_stn3', 'below_sncv0', 'attention')]],
-    EdgeSpecification('above_stn2', 'below_sncd0', 'pooling', ['all'], ['complete', 'stn']),
+      for source, target, to in [('above_stn0', 'right_of_gpep0', 'gating'),
+                                 ('above_stn4', 'left_of_gpi0', 'gating'),
+                                 ('above_stn1', 'below_gpen2', 'gating'),
+                                 ('above_stn3', 'below_sncv0', 'gating')]],
+    EdgeSpecification('above_stn2', 'below_sncd0', 'pooling', opaque=['complete', 'stn']),
 
     # --------------------------------------------------------------------------------------
     # Nigro-cortical links.
-    EdgeSpecification('above_sncv0', 'below_ctxpt0', 'control', ['all'],
-                      ['complete', 'strp']),  # negate
+    # The mediator (Cpt) wants to maximize the covariance of the TD-error and its instrument.
+    # negate
+    EdgeSpecification('above_sncv0', 'below_ctxpt0', 'control', opaque=['complete', 'strp']),
 
     # Nigro-striatal links.
+    # Bootstrapping signal to tell the treatment: "you've done something (pleasurable), but we don't
+    # know what" (learn the treatment at the same time as the mediator).
     # negate
-    EdgeSpecification('above_sncv1', 'strm_sncv1', 'control', ['all'], ['complete', 'strp']),
+    EdgeSpecification('above_sncv1', 'strm_sncv1', 'recognition', opaque=['complete', 'strp']),
     # negate
-    EdgeSpecification('above_sncv2', 'strp_sncv2', 'explanation', ['all'], ['complete', 'strp']),
-    EdgeSpecification('above_sncd0', 'strm_sncd0', 'recognition', ['all'], ['complete', 'strm']),
+    EdgeSpecification('above_sncv2', 'strp_sncv2', 'co_geminate', opaque=['complete', 'strp']),
+    # Bootstrapping signal to tell the treatment: "you've done something (unrelated to reward), but
+    # we don't know what" (learn the treatment at the same time as the mediator).
+    EdgeSpecification('above_sncd0', 'strm_sncd0', 'co_geminate', opaque=['complete', 'strm']),
 
     # Nigro-nigral link.
     # negate
-    EdgeSpecification('left_of_sncv0', 'right_of_sncd0', 'recognition', ['all'], ['complete']),
+    EdgeSpecification('left_of_sncv0', 'right_of_sncd0', 'recognition', opaque=['complete']),
 
     # --------------------------------------------------------------------------------------
     # Striato-nigral links.
-    EdgeSpecification('strp_sncv3', 'above_sncv3', 'explanation', ['all'], ['complete', 'strp']),
-    EdgeSpecification('strm_sncd1', 'above_sncd1', 'deduction', ['all'], ['complete', 'strm']),
+    EdgeSpecification('strp_sncv3', 'above_sncv3', 'geminate', opaque=['complete', 'strp']),
+    EdgeSpecification('strm_sncd1', 'above_sncd1', 'geminate', opaque=['complete', 'strm']),
 
     # Striato-striatal links.
     # negate
-    EdgeSpecification('above_strp', 'below_strm', 'deduction', ['all'], ['complete']),
+    # Ordinary recognition: mark eligibility trace because the action you intended to do was
+    # completed.
+    EdgeSpecification('above_strp', 'below_strm', 'recognition', opaque=['complete']),
 
     # Striato-pallidal links.
-    EdgeSpecification('striatum_gpen', 'above_gpen0', 'explanation', ['all'], ['complete', 'strm']),
-    EdgeSpecification('below_strmi0', 'left_of_gpep0', 'control', ['all'], ['complete', 'strm'],
+    EdgeSpecification('striatum_gpen', 'above_gpen0', 'pooling', opaque=['complete', 'strm']),
+    EdgeSpecification('below_strmi0', 'left_of_gpep0', 'geminate', opaque=['complete', 'strm'],
                       via=(True, [])),
-    EdgeSpecification('below_strmd0', 'right_of_gpi1', 'control', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_strmd0', 'right_of_gpi1', 'geminate', opaque=['complete', 'strm'],
                       via=(True, [])),
-    EdgeSpecification('below_strpi0', 'above_gpep0', 'explanation', ['all'], ['complete', 'strp']),
-    EdgeSpecification('below_strpd0', 'above_gpi0', 'explanation', ['all'], ['complete', 'strp']),
+    EdgeSpecification('below_strpi0', 'above_gpep0', 'control', opaque=['complete', 'strp']),
+    EdgeSpecification('below_strpd0', 'above_gpi0', 'control', opaque=['complete', 'strp']),
 
     # --------------------------------------------------------------------------------------
     # Pallido-nigral link.
-    EdgeSpecification('left_of_gpi2', 'below_sncv2', 'gln', ['all'], ['complete', 'strm'],
+    EdgeSpecification('left_of_gpi2', 'below_sncv2', 'nexting', opaque=['complete', 'strm'],
                       via=(False, [])),
 
     # Pallido-pallidal links.
-    EdgeSpecification('right_of_gpep2', 'below_gpen0', 'gln', ['all'], ['complete', 'strm'],
+    EdgeSpecification('right_of_gpep2', 'below_gpen0', 'pooling', opaque=['complete', 'strm'],
                       via=(False, [])),
-    EdgeSpecification('right_of_gpep1', 'left_of_gpi1', 'explanation', ['all'],
-                      ['complete', 'strm']),
+    EdgeSpecification('right_of_gpep1', 'left_of_gpi1', 'nexting', opaque=['complete', 'strm']),
 
     # Pallido-thalamic link.
     # negate
-    EdgeSpecification('right_of_gpi0', 'left_of_tha0', 'control', ['all'], ['complete', 'strm']),
+    EdgeSpecification('right_of_gpi0', 'left_of_tha0', 'affordance', opaque=['complete', 'strm']),
     # negate
-    EdgeSpecification('below_gpep0', 'left_of_trn0', 'control', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_gpep0', 'left_of_trn0', 'affordance', opaque=['complete', 'strm'],
                       via=(True, [])),
-    EdgeSpecification('right_of_trn0', 'below_tha0', 'gln', ['all'], ['complete', 'strm'],
+    EdgeSpecification('right_of_trn0', 'below_tha0', 'affordance', opaque=['complete', 'strm'],
                       via=(False, [])),
 
     # Pallido-subthalamic link.
-    EdgeSpecification('below_gpen1', 'left_of_stn0', 'attention', ['all'], ['complete', 'stn'],
+    EdgeSpecification('below_gpen1', 'left_of_stn0', 'attention', opaque=['complete', 'stn'],
                       via=(True, [])),
 
     # --------------------------------------------------------------------------------------
     # Cortico-striatal links.
-    EdgeSpecification('below_ctxpt3', 'strm_ctxpt', 'pooling', ['all'], ['complete', 'strm']),
+    EdgeSpecification('below_ctxpt3', 'strm_ctxpt', 'pooling', opaque=['complete', 'strm']),
     # Dashed lines indicates a diffuse link.
-    EdgeSpecification('below_ctxit0', 'strp_ctxit', 'pooling', ['all'], ['complete', 'strm'],
+    EdgeSpecification('below_ctxit0', 'strp_ctxit', 'pooling', opaque=['complete', 'strm'],
                       dash='densely dashdotted'),
 
     # Hyper-direct pathway.
-    EdgeSpecification('right_of_ctxpt1', 'right_of_stn0', 'pooling', ['all'], ['complete', 'stn'],
+    EdgeSpecification('right_of_ctxpt1', 'right_of_stn0', 'pooling', opaque=['complete', 'stn'],
                       via=(False, ['thalamo_cortical1'])),
 
     # --------------------------------------------------------------------------------------
     # Thalamo-cortical link.
     # negate
-    EdgeSpecification('right_of_tha0', 'right_of_ctxpt0', 'explanation', ['all'],
-                      ['complete', 'strm'],
+    EdgeSpecification('right_of_tha0', 'right_of_ctxpt0', 'variational',
+                      opaque=['complete', 'strm'],
                       via=(False, ['thalamo_cortical0'])),
 
     # Exogenous signals.
-    EdgeSpecification('reward_in', 'below_sncv1', 'pooling', ['all'], ['complete']),
-    EdgeSpecification('policy_in', 'below_tha1', 'pooling', ['all'], ['complete']),
+    EdgeSpecification('reward_in', 'below_sncv1', 'geminate', opaque=['complete']),
+    EdgeSpecification('policy_in', 'below_tha1', 'pooling', opaque=['complete']),
 ]
 
 
-with tex_file('basal_ganglia.tex',
-              ['latex/includes',
-               'latex/commands',
-               'tikz/base',
-               'tikz/color_macros',
-               'tikz/extra_tips',
-               'tikz/cma_tips',
-               'tikz/flow_style']) as f:
+with tex_file('basal_ganglia.tex', standard_inputs) as f:
     for diagram in ['complete',
                     # 'strp', 'strm', 'stn',
                     ]:
-        node_graph = NodeGraph(edge_colors=EDGE_COLORS)
+        node_graph = NodeGraph(tip_colors=tip_colors, terminal_spacing=terminal_spacing)
 
         def create_rectangular_node(node_name: str,
                                     position: NodePosition,
                                     node_text: NodeText,
                                     ng: NodeGraph = node_graph) -> None:
-            ng.create_node(node_name, position, text=node_text, size=node_size, shape='rectangle')
+            ng.create_node(Node(node_name, position, text=node_text, size=node_size,
+                                shape='rectangle'))
 
         g = node_graph.digraph
         with tex_pic(f, 'basal_ganglia-' + diagram, 'Flow diagram, /CMA tips'):
@@ -170,15 +179,11 @@ with tex_file('basal_ganglia.tex',
 
             # Create inputs and outputs.
             node_graph.create_io('reward_in',
-                                 NodeText(['reward', 'input'],
-                                          align=Alignment.center, color='dcoloro',
-                                          size=TextSize.footnote, standard_height=True),
+                                 NodeText(['reward', 'input']),
                                  'bottom_edge',
                                  'below_sncv1')
             node_graph.create_io('policy_in',
-                                 NodeText(['policy', 'input'],
-                                          align=Alignment.center, color='dcoloro',
-                                          size=TextSize.footnote, standard_height=True),
+                                 NodeText(['policy', 'input']),
                                  'bottom_edge',
                                  'below_tha1')
 
@@ -190,31 +195,32 @@ with tex_file('basal_ganglia.tex',
                                       ('strm', 'Striatal matrix', [f'strm{a}' for a in 'di']),
                                       # ('snc', 'SNc', ['sncd', 'sncv']),
                                       ]:
-                node_graph.create_node(name,
-                                       None,
-                                       container=NodeContainer(
-                                           group,
-                                           corner_text=NodeText([text], size=TextSize.footnote)),
-                                       inner_sep=12 if name == 'striatum' else 5,
-                                       shape='rectangle, draw',
-                                       color='dcolorr',
-                                       dash='dashed')
+                node_graph.create_node(Node(name,
+                                            None,
+                                            container=NodeContainer(
+                                                group,
+                                                corner_text=NodeText([text],
+                                                                     size=TextSize.footnote)),
+                                            inner_sep=12 if name == 'striatum' else 5,
+                                            shape='rectangle, draw',
+                                            color='dcolorr',
+                                            dash='dashed'))
 
             # Create terminals.
-            node_graph.create_node_terminals('ctxit', terminal_spacing, 0, 0, 0, 1)
-            node_graph.create_node_terminals('ctxpt', terminal_spacing, 0, 2, 0, 4)
-            node_graph.create_node_terminals('gpi', terminal_spacing, 3, 2, 1, 0)
-            node_graph.create_node_terminals('gpep', terminal_spacing, 1, 3, 1, 1)
-            node_graph.create_node_terminals('gpen', terminal_spacing, 0, 0, 1, 3)
-            node_graph.create_node_terminals('sncv', terminal_spacing, 1, 0, 4, 3)
-            node_graph.create_node_terminals('sncd', terminal_spacing, 0, 1, 2, 1)
-            node_graph.create_node_terminals('strpi', terminal_spacing, 0, 0, 0, 1)
-            node_graph.create_node_terminals('strpd', terminal_spacing, 0, 0, 0, 1)
-            node_graph.create_node_terminals('strmi', terminal_spacing, 0, 0, 0, 1)
-            node_graph.create_node_terminals('strmd', terminal_spacing, 0, 0, 0, 1)
-            node_graph.create_node_terminals('stn', terminal_spacing, 1, 1, 5, 0)
-            node_graph.create_node_terminals('tha', terminal_spacing, 1, 1, 0, 2)
-            node_graph.create_node_terminals('trn', terminal_spacing, 1, 1, 0, 0)
+            node_graph.create_node_terminals('ctxit', 0, 0, 0, 1)
+            node_graph.create_node_terminals('ctxpt', 0, 2, 0, 4)
+            node_graph.create_node_terminals('gpi', 3, 2, 1, 0)
+            node_graph.create_node_terminals('gpep', 1, 3, 1, 1)
+            node_graph.create_node_terminals('gpen', 0, 0, 1, 3)
+            node_graph.create_node_terminals('sncv', 1, 0, 4, 3)
+            node_graph.create_node_terminals('sncd', 0, 1, 2, 1)
+            node_graph.create_node_terminals('strpi', 0, 0, 0, 1)
+            node_graph.create_node_terminals('strpd', 0, 0, 0, 1)
+            node_graph.create_node_terminals('strmi', 0, 0, 0, 1)
+            node_graph.create_node_terminals('strmd', 0, 0, 0, 1)
+            node_graph.create_node_terminals('stn', 1, 1, 5, 0)
+            node_graph.create_node_terminals('tha', 1, 1, 0, 2)
+            node_graph.create_node_terminals('trn', 1, 1, 0, 0)
 
             # Create coordinates.
             for str_group, anchor, horizontal, name in [

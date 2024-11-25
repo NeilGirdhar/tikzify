@@ -21,10 +21,15 @@ __all__ = ['NodeGraph']
 
 class NodeGraph:
 
-    def __init__(self, edge_colors: Mapping[str, str] | None = None) -> None:
+    def __init__(self,
+                 *,
+                 tip_colors: Mapping[str, str] | None = None,
+                 terminal_spacing: TerminalSpacing | None = None,
+                 ) -> None:
         super().__init__()
         self.digraph = nx.MultiDiGraph()
-        self.edge_colors = {} if edge_colors is None else edge_colors
+        self.tip_colors = {} if tip_colors is None else tip_colors
+        self.terminal_spacing = terminal_spacing
 
     # Magic methods --------------------------------------------------------------------------------
     @override
@@ -107,11 +112,17 @@ class NodeGraph:
 
     def create_node_terminals(self,
                               node_name: str,
-                              spacing: TerminalSpacing,
                               left: int = 0,
                               right: int = 0,
                               above: int = 0,
-                              below: int = 0) -> None:
+                              below: int = 0,
+                              *,
+                              spacing: TerminalSpacing | None = None
+                              ) -> None:
+        if spacing is None:
+            spacing = self.terminal_spacing
+        if spacing is None:
+            raise ValueError
         for num_anchors, cardinal, name_prefix, vertical in zip(
                 [left, right, above, below],
                 ['west', 'east', 'north', 'south'],
@@ -167,21 +178,18 @@ class NodeGraph:
            link_heading=link_heading,
            arrow_heading=arrow_heading)
 
-        all_tips = list(self.edge_colors)
+        all_tips = list(self.tip_colors)
         tip_names = set[str]()
-        _, topo_sorted = self._dependencies()
-        for source in topo_sorted:
-            for _, ed in sorted(self.digraph.succ[source].items()):
-                for _, edge_dict in enumerate(ed.values()):
-                    edge = edge_dict['edge']
-                    assert isinstance(edge, Edge)
-                    if edge.from_:
-                        tip_names.add(edge.from_)
-                    if edge.to:
-                        tip_names.add(edge.to)
+        for _, _, edge_dict in self.digraph.edges(data=True):
+            edge = edge_dict['edge']
+            assert isinstance(edge, Edge)
+            if edge.from_:
+                tip_names.add(edge.from_)
+            if edge.to:
+                tip_names.add(edge.to)
 
         for tip_name in sorted(tip_names, key=all_tips.index):
-            color = self.edge_colors[tip_name]
+            color = self.tip_colors[tip_name]
             pf(r"""
                \footnotesize “name” & \tikz[baseline=-1mm]{\node[minimum height=2mm] at (0, 0) {};
                                                          \draw[“col, tip”] (0, 0) to (1, 0);} \\
@@ -204,25 +212,24 @@ class NodeGraph:
 
     # Output methods -------------------------------------------------------------------------------
     def generate(self, f: TextIO) -> None:
-        g = self.digraph
         _, topo_sorted = self._dependencies()
         waypoint_names = default_waypoint_names()
 
         # Draw nodes.
         for name in topo_sorted:
-            node = g.nodes[name]['node']
+            node = self.digraph.nodes[name]['node']
             assert isinstance(node, Node)
             assert isinstance(node.name, str)
             if isinstance(node.text, NodeText) and node.text.color is None:
                 for edge in self._all_edges_connected_to(name):
-                    if (color := edge.solve_for_color(self.edge_colors)) is not None:
+                    if (color := edge.solve_for_color(self.tip_colors)) is not None:
                         node = replace(node, color=color)
                         break
             node.generate(file=f)
 
         # Draw edges.
         for source in topo_sorted:
-            for (target, ed) in sorted(g.succ[source].items()):
+            for (target, ed) in sorted(self.digraph.succ[source].items()):
                 len_ed = len(ed)
                 for i, edge_dict in enumerate(ed.values()):
                     edge: Edge = copy(edge_dict['edge'])
@@ -239,7 +246,7 @@ class NodeGraph:
                                  0)
                         edge.bend = bend
 
-                    color = edge.solve_for_color(self.edge_colors)
+                    color = edge.solve_for_color(self.tip_colors)
 
                     if via is not None:
                         vertical, turns = via
@@ -261,11 +268,10 @@ class NodeGraph:
             topo_sorted: A topological sort of the dependency graph.
             dependency_graph: The graph of dependencies.
         """
-        g = self.digraph
         g2 = nx.DiGraph()  # A graph with all dependencies.
-        g2.add_nodes_from(g)
-        for name in g:
-            node = g.nodes[name]['node']
+        g2.add_nodes_from(self.digraph)
+        for name in self.digraph:
+            node = self.digraph.nodes[name]['node']
             if node.position is not None:
                 for sub_node_name in node.position.anchor.base_nodes():
                     g2.add_edge(sub_node_name, name)
