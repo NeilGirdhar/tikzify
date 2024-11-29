@@ -279,7 +279,7 @@ class NodeGraph:
                     g2.add_edge(sub_node_name, name)
             if node.container is not None:
                 for sub_node_name in node.container.nodes:
-                    g2.add_edge(node.name, sub_node_name)
+                    g2.add_edge(sub_node_name, node.name)
         try:
             return g2, list(nx.lexicographical_topological_sort(g2))
         except nx.NetworkXUnfeasible:
