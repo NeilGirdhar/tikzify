@@ -55,8 +55,7 @@ def create_nodes(node_graph: NodeGraph,
                         NodePosition(CoordinateAnchor(position)),
                         text=text,
                         size=node_size,
-                        shape='rectangle',
-                        opacity=None)
+                        shape='rectangle')
             node_graph.create_node(node)
         else:
             node_graph.create_coordinate(node_name, (position.x, position.y))
