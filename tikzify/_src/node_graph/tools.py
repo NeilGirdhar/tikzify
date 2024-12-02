@@ -41,7 +41,9 @@ def create_nodes(node_graph: NodeGraph,
                  positions: Mapping[str, Location],
                  node_name_to_text: Mapping[str, Sequence[str]],
                  node_size: tuple[float, float],
-                 margin: float
+                 margin: float,
+                 *,
+                 containers: Sequence[Node] = ()
                  ) -> None:
     for node_name, position in positions.items():
         if node_name in node_name_to_text:
@@ -58,10 +60,19 @@ def create_nodes(node_graph: NodeGraph,
             node_graph.create_node(node)
         else:
             node_graph.create_coordinate(node_name, (position.x, position.y))
-    left = min(positions.items(), key=lambda n_location: n_location[1].x)[0]
-    right = max(positions.items(), key=lambda n_location: n_location[1].x)[0]
-    top = max(positions.items(), key=lambda n_location: n_location[1].y)[0]
-    bottom = min(positions.items(), key=lambda n_location: n_location[1].y)[0]
+    for container in containers:
+        node_graph.create_node(container)
+    extents = {}
+    for name, node in node_graph.digraph.nodes(data='node'):
+        assert isinstance(node, Node)
+        extent = node.extent(node_graph)
+        if extent is None:
+            continue
+        extents[name] = extent
+    left = min(extents.items(), key=lambda n_ex: n_ex[1].mins[0])[0]
+    right = max(extents.items(), key=lambda n_ex: n_ex[1].maxes[0])[0]
+    top = max(extents.items(), key=lambda n_ex: n_ex[1].maxes[1])[0]
+    bottom = min(extents.items(), key=lambda n_ex: n_ex[1].mins[1])[0]
     node_graph.create_edges(left, right, top, bottom, margin=margin)
 
 

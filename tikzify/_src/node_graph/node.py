@@ -1,11 +1,18 @@
 from collections.abc import Collection, Sequence
 from dataclasses import KW_ONLY, dataclass
 from enum import Enum, auto
-from typing import TextIO
+from functools import reduce
+from typing import TYPE_CHECKING, TextIO
+
+import numpy as np
+from rectangle import Rect
 
 from ..foundation.formatter import formatter
 from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
+
+if TYPE_CHECKING:
+    from .graph import NodeGraph
 
 
 class Alignment(Enum):
@@ -32,9 +39,7 @@ def format_length(length: float | None) -> str | None:
         return None
     if int(length) == length:
         length = int(length)
-        if length % 10 == 0:
-            return f"{length // 10}cm"
-    return f"{length}mm"
+    return f"{length}cm"
 
 
 def wrap_text(text_lines: Sequence[str],
@@ -204,6 +209,24 @@ class Node:
     opacity: float | None = None
     inner_sep: float | None = None
     is_coordinate: bool = False
+
+    def extent(self, node_graph: 'NodeGraph') -> Rect | None:
+        if self.position is not None:
+            from .anchor import CoordinateAnchor  # noqa: PLC0415
+            if isinstance(self.position.anchor, CoordinateAnchor):
+                position = np.asarray([self.position.anchor.x, self.position.anchor.y])
+                size = np.asarray(self.size) if self.size else np.zeros(2)
+                return Rect.from_point(position).bordered(size / 2)
+        elif self.container is not None:
+            nodes: list[Node] = [node_graph.digraph.nodes[node]['node']
+                                 for node in self.container.nodes]
+            extents = [node.extent(node_graph) for node in nodes]
+            if not extents or any(extent is None for extent in extents):
+                return None
+            non_none_extents = [extent for extent in extents if extent is not None]
+            combined = reduce(Rect.union, non_none_extents)
+            return combined.bordered(self.inner_sep) if self.inner_sep else combined
+        return None
 
     def generate(self,
                  file: TextIO,

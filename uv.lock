@@ -1344,6 +1344,18 @@ wheels = [
 ]
 
 [[package]]
+name = "rectangle"
+version = "0.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/13/21/f3eb7cc05e83c2056017d19cd120ccecfdb7d3f50ae17d95cb3f6c55da12/rectangle-0.5.tar.gz", hash = "sha256:62676ca77443905125eb74523dde809ca0095106159570e5c57d5d0fb193698a", size = 64777 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/37/a1/100b922fafa3c01b1b2d6dbeac012f7f50e9574dcfe41cd686ae9c5ca75e/rectangle-0.5-py3-none-any.whl", hash = "sha256:9c05495b1e55b9d7192a0e46a0bc572a19874839890f116dafb83921ab5220b2", size = 4466 },
+]
+
+[[package]]
 name = "referencing"
 version = "0.35.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1592,6 +1604,7 @@ dependencies = [
     { name = "more-itertools" },
     { name = "networkx" },
     { name = "numpy" },
+    { name = "rectangle" },
     { name = "scipy" },
 ]
 
@@ -1610,6 +1623,7 @@ requires-dist = [
     { name = "more-itertools", specifier = ">=8" },
     { name = "networkx", specifier = ">=2.5" },
     { name = "numpy", specifier = ">=1.21" },
+    { name = "rectangle", specifier = ">=0.5" },
     { name = "scipy", specifier = ">=1.9" },
 ]
 

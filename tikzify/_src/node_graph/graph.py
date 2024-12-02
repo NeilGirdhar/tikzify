@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import itertools as it
-from collections.abc import Mapping, Sequence
+from collections.abc import Generator, Mapping, Sequence
 from copy import copy
 from dataclasses import replace
 from io import StringIO
 from typing import Any, TextIO, override
-from collections.abc import Generator
 
 import networkx as nx
 

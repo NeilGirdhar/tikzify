@@ -28,6 +28,7 @@ dependencies = [
   'more_itertools >= 8',
   'networkx >= 2.5',
   'numpy >= 1.21',
+  'rectangle >= 0.5',
   'scipy >= 1.9',
 ]
 
