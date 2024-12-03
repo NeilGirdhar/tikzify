@@ -36,8 +36,8 @@ def create_waypoint(f: TextIO, edge: Edge, source: str, turn: str,
        turn=turn,
        stop=stop,
        file=f)
-    if edge.text_node is not None and edge.text_node['arm'] != arm:
-        edge_copy.text_node = None
+    # if edge.text_node is not None and edge.text_node.arm != arm:
+    #     edge_copy.text_node = None
     edge_copy.pf(f,
                  source,
                  create,
@@ -62,8 +62,8 @@ def create_waypoints(f: TextIO, edge: Edge, source: str, turns: Sequence[str],
         vertical = not vertical
     to_command = '|-' if vertical else '-|'
     edge_copy = copy(edge)
-    if edge.text_node is not None and edge.text_node['arm'] != len(turns) - 1:
-        edge_copy.text_node = None
+    # if edge.text_node is not None and edge.text_node.arm != len(turns) - 1:
+    #     edge_copy.text_node = None
     edge_copy.pf(f,
                  source,
                  turns[-1],

@@ -4,7 +4,7 @@ from typing import TextIO, override
 
 from ..foundation.pf import pf
 from ..node_graph.edge import Edge
-from ..node_graph.node import NodeText
+from ..node_graph.node import Node, NodeText
 from .draw import FUNCTION_GRAPH_WIDTH, MARK_HEIGHT, MARK_WIDTH
 
 __all__ = ['Annotation', 'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation', 'RectAnnotation']
@@ -187,11 +187,7 @@ class EdgeAnnotation(Annotation):
         else:
             direction = None
 
-        text_node = ({"color": self.edge.color,
-                      # These are unused!
-                      # "pos": tikz_option('pos', str(self.pos)),
-                      # "swap": 'swap' if swap else None,
-                      "text": self.text}
+        text_node = (Node(color=self.edge.color, text=self.text)
                      if self.text is not None
                      else None)
 

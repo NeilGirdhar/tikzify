@@ -194,8 +194,8 @@ class NodeContainer:
 
 @dataclass
 class Node:
-    name: str | None
-    position: NodePosition | None
+    name: str | None = None
+    position: NodePosition | None = None
     container: NodeContainer | None = None
     _: KW_ONLY
     # Text

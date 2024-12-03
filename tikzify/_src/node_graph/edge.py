@@ -1,21 +1,10 @@
 from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import reduce
-from typing import Any, TextIO
+from typing import TextIO
 
 from ..foundation.pf import formatter, pf, tikz_option
-from .node import Node, NodeText
-
-__all__ = ['Edge', 'edge_text']
-
-
-def edge_text(text: NodeText,
-              arm: int | None = None) -> Mapping[str, Any]:
-    d: dict[str, Any] = {}
-    d['text'] = text
-    if arm is not None:
-        d['arm'] = arm
-    return d
+from .node import Node
 
 
 @dataclass
@@ -31,7 +20,7 @@ class Edge:
     dash: str | None = None
     color: str | None = None
     thickness: str | None = None
-    text_node: Mapping[str, Any] | None = None
+    text_node: Node | None = None
 
     def tip_string(self) -> str:
         def tip_convert(x: str | None) -> str:
@@ -89,7 +78,7 @@ class Edge:
            source: str,
            target: str,
            color: str | None = None,
-           text_node: Mapping[str, Any] | None = None,
+           text_node: Node | None = None,
            more_options: str | None = None,
            to_command: str = 'to') -> None:
         if color is None:
@@ -110,8 +99,7 @@ class Edge:
            end='',
            file=f)
         if text_node is not None:
-            node = Node(None, None, **text_node)
-            node.generate(file=f, end=' ')
+            text_node.generate(file=f, end=' ')
         pf(r"(“t”);",
            t=target,
            file=f)

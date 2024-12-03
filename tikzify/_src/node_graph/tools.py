@@ -1,6 +1,5 @@
 from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any
 
 from .anchor import CoordinateAnchor
 from .constraints import Location
@@ -19,7 +18,7 @@ class EdgeSpecification:
     present: list[str] = field(default_factory=list)
     opaque: list[str] = field(default_factory=list)
     via: tuple[bool, Sequence[str]] | None = None
-    text_node: Mapping[str, Any] | None = None
+    text_node: Node | None = None
     dash: str | None = None
 
     def is_present(self, diagram_keywords: Iterable[str]) -> bool:
