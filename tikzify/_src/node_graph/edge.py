@@ -65,17 +65,17 @@ class Edge:
             return None
         return tikz_option('opacity', str(self.opacity))
 
-    def solve_for_color(self, edge_colors: Mapping[str, str] | None = None) -> str | None:
+    def solve_for_color(self, tip_colors: Mapping[str, str] | None = None) -> str | None:
         if self.color is not None:
             return self.color
-        if edge_colors is None:
+        if tip_colors is None:
             raise ValueError
 
         def choose_color(x: str | None, y: str | None) -> str | None:
             return min(x, y) if x and y else x or y
 
         retval = reduce(choose_color,
-                        [edge_colors.get(x, None)
+                        [tip_colors.get(x, None)
                          for x in [self.from_, self.to]
                          if x is not None],
                         None)

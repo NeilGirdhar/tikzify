@@ -57,7 +57,6 @@ def generate_legend(f: TextIO,
 
 
 class LegendItem:
-
     def __init__(self, id_: str) -> None:
         super().__init__()
         self.id_ = id_
@@ -67,7 +66,6 @@ class LegendItem:
 
 
 class LegendRect(LegendItem):
-
     def __init__(self, id_: str, draw: str, fill: str) -> None:
         super().__init__(id_)
         self.draw = draw
@@ -92,7 +90,6 @@ class LegendRect(LegendItem):
 
 
 class LegendNode(LegendItem):
-
     def __init__(self, nodetype: str, id_: str, scale: float = 1) -> None:
         super().__init__(id_)
         self.nodetype = nodetype
@@ -119,12 +116,11 @@ class LegendNode(LegendItem):
 
 
 class LegendArrow(LegendItem):
-
-    def __init__(self, edge_colors: Mapping[str, str], tip: str, scale: float = 1) -> None:
+    def __init__(self, tip_colors: Mapping[str, str], tip: str, scale: float = 1) -> None:
         super().__init__(tip)
         self.tip = 'tip_' + tip
         self.scale = scale
-        self.col = edge_colors.get(tip, None)
+        self.col = tip_colors.get(tip, None)
 
     @override
     def generate(self, f: TextIO, x: float, y: float, width: float) -> None:
