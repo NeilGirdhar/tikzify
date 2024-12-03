@@ -57,13 +57,9 @@ def tex_file(filename: str,
            \setheaderspaces{*}{13pt}{*}
            \checkandfixthelayout
            \makeatletter
-           “input_string”
-           \begin{document}
-           """,
-           file=f,
-           input_string=input_string)
-        yield f
-        pf(r"""
-           \end{document}
            """,
            file=f)
+        pf(input_string, file=f)
+        pf(r"\begin{document}", file=f)
+        yield f
+        pf(r"\end{document}", file=f)
