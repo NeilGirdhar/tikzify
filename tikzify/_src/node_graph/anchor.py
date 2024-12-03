@@ -68,7 +68,8 @@ class MidpointAnchor(Anchor):
     def __init__(self,
                  x: str | Anchor,
                  y: str | Anchor,
-                 fraction: float = 0.5) -> None:
+                 fraction: float = 0.5
+                 ) -> None:
         super().__init__()
         self.x = _fix_node(x)
         self.y = _fix_node(y)
@@ -84,10 +85,17 @@ class MidpointAnchor(Anchor):
         yield from self.y.base_nodes()
 
 
+possible_anchors = {'base east', 'base west', 'base', 'center', 'east', 'mid east', 'mid west',
+                    'mid', 'north east', 'north west', 'north', 'south east', 'south west', 'south',
+                    'text', 'west'}
+
+
 class RelativeAnchor(Anchor):
-    def __init__(self, node: str | Anchor, anchor: Any) -> None:
+    def __init__(self, node: str | Anchor, anchor: str | float) -> None:
         super().__init__()
         self.node = _fix_node(node)
+        if not isinstance(anchor, float | int) and anchor not in possible_anchors:
+            raise ValueError
         self.anchor = str(anchor)
 
     @override
