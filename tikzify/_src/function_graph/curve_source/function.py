@@ -43,7 +43,7 @@ class FunctionCurveSource(CurveSource):
             section_start = section.domain_start
             section_end = self.end_time if next_section is None else next_section.domain_start
             section_period = section_end - section_start
-            section_resolution = int(ceil(section_period / time_resolution))
+            section_resolution = ceil(section_period / time_resolution)
             times = np.linspace(section_start, section_end, section_resolution, endpoint=True)
             values = section.function(times)
             yield np.stack((times, values), axis=-1)
