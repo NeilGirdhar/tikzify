@@ -39,7 +39,7 @@ class Constraints:  # noqa: PLR0904
     # New methods -------------------------------------------------------------
     def add_constraint(self, a: np.ndarray[Any, Any], b: float) -> None:
         self.a = np.vstack((self.a, a.reshape((1, 2 * self.num_labels))))
-        self.b = np.hstack((self.b, b))
+        self.b = np.hstack((self.b, b))  # type: ignore[assignment]
 
     def blank(self) -> np.ndarray[Any, Any]:
         return np.zeros((2 * self.num_labels,))
