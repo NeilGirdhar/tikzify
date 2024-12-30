@@ -2,16 +2,18 @@ from __future__ import annotations
 
 from tikzify import (EdgeSpecification, IntersectionAnchor, Node, NodeAnchor, NodeContainer,
                      NodeGraph, NodePosition, NodeText, RelativeAnchor, TerminalSpacing, TextSize,
-                     create_links, tex_file, tex_pic)
+                     TipSpecification, create_links, tex_file, tex_pic)
 
-tip_colors = {prefix + edge_name: color
-              for color, edges in [('dcolorb', ['explanation', 'nexting']),
-                                   ('dcoloro', ['variational', 'pooling',
-                                                'affordance', 'attention', 'ordinary']),
-                                   ('dcolorr', ['recognition', 'control']),
-                                   ('dcolorg', ['gating', 'geminate'])]
-              for edge_name in edges
-              for prefix in ['', 'co_']}
+edge_name_map = {'aoutput': 'associational output',
+                 'coutput': 'causal output'}
+tips = {prefix + edge_name: TipSpecification(edge_name_map.get(edge_name, edge_name), color)
+        for color, edges in [('dcolorb', ['generative', 'nexting', 'output']),
+                             ('dcoloro', ['variational', 'pooling',
+                                          'attention']),
+                             ('dcolorr', ['control', 'operant']),
+                             ('dcolorg', ['gating', 'geminate', 'affordance'])]
+        for edge_name in edges
+        for prefix in ['', 'co_']}
 standard_inputs = ['latex/includes', 'latex/commands', 'tikz/base', 'tikz/color_macros',
                    'tikz/extra_tips', 'tikz/cma_tips', 'tikz/flow_style']
 dimmed_opacity = 0.18
@@ -125,7 +127,7 @@ with tex_file('basal_ganglia.tex', standard_inputs) as f:
     for diagram in ['complete',
                     # 'strp', 'strm', 'stn',
                     ]:
-        node_graph = NodeGraph(tip_colors=tip_colors, terminal_spacing=terminal_spacing)
+        node_graph = NodeGraph(tips=tips, terminal_spacing=terminal_spacing)
 
         def create_rectangular_node(node_name: str,
                                     position: NodePosition,

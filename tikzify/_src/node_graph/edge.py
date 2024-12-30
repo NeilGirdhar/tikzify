@@ -5,6 +5,7 @@ from typing import TextIO
 
 from ..foundation.pf import formatter, pf, tikz_option
 from .node import Node
+from .tips import TipSpecification
 
 
 @dataclass
@@ -54,19 +55,20 @@ class Edge:
             return None
         return tikz_option('opacity', str(self.opacity))
 
-    def solve_for_color(self, tip_colors: Mapping[str, str] | None = None) -> str | None:
+    def solve_for_color(self, tips: Mapping[str, TipSpecification] | None = None) -> str | None:
         if self.color is not None:
             return self.color
-        if tip_colors is None:
+        if tips is None:
             raise ValueError
 
         def choose_color(x: str | None, y: str | None) -> str | None:
             return min(x, y) if x and y else x or y
 
         retval = reduce(choose_color,
-                        [tip_colors.get(x, None)
+                        [tips[x].color
                          for x in [self.from_, self.to]
-                         if x is not None],
+                         if x is not None
+                         if x in tips],
                         None)
         if retval is None:
             msg = f"No color found for tips {self.from_} and {self.to}"

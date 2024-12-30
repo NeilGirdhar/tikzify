@@ -14,6 +14,7 @@ from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAn
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names
 from .node import Alignment, Node, NodePosition, NodeText, TerminalSpacing, TextSize
+from .tips import TipSpecification
 
 __all__ = ['NodeGraph']
 
@@ -22,12 +23,12 @@ class NodeGraph:
 
     def __init__(self,
                  *,
-                 tip_colors: Mapping[str, str] | None = None,
+                 tips: Mapping[str, TipSpecification] | None = None,
                  terminal_spacing: TerminalSpacing | None = None,
                  ) -> None:
         super().__init__()
         self.digraph = nx.MultiDiGraph()
-        self.tip_colors = {} if tip_colors is None else tip_colors
+        self.tips = {} if tips is None else tips
         self.terminal_spacing = terminal_spacing
 
     # Magic methods --------------------------------------------------------------------------------
@@ -177,7 +178,7 @@ class NodeGraph:
            link_heading=link_heading,
            arrow_heading=arrow_heading)
 
-        all_tips = list(self.tip_colors)
+        all_tips = list(self.tips)
         tip_names = set[str]()
         for _, _, edge_dict in self.digraph.edges(data=True):
             edge = edge_dict['edge']
@@ -188,14 +189,14 @@ class NodeGraph:
                 tip_names.add(edge.to)
 
         for tip_name in sorted(tip_names, key=all_tips.index):
-            color = self.tip_colors[tip_name]
+            color = self.tips[tip_name].color
             pf(r"""
                \footnotesize “name” & \tikz[baseline=-1mm]{\node[minimum height=2mm] at (0, 0) {};
                                                          \draw[“col, tip”] (0, 0) to (1, 0);} \\
                """,
                end='\n',
                col=color,
-               name=tip_name,
+               name=self.tips[tip_name].name,
                tip='-tip_' + tip_name,
                file=f)
             assert f.getvalue().endswith('\n')
@@ -222,7 +223,7 @@ class NodeGraph:
             assert isinstance(node.name, str)
             if isinstance(node.text, NodeText) and node.text.color is None:
                 for edge in self._all_edges_connected_to(name):
-                    if (color := edge.solve_for_color(self.tip_colors)) is not None:
+                    if (color := edge.solve_for_color(self.tips)) is not None:
                         node = replace(node, color=color)
                         break
             node.generate(file=f)
@@ -247,7 +248,7 @@ class NodeGraph:
                                  0)
                         edge.bend = bend
 
-                    color = edge.solve_for_color(self.tip_colors)
+                    color = edge.solve_for_color(self.tips)
 
                     if via is not None:
                         vertical, turns = via

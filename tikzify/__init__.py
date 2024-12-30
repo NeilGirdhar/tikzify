@@ -20,12 +20,13 @@ from ._src.node_graph.edge import Edge
 from ._src.node_graph.graph import NodeGraph
 from ._src.node_graph.node import (Alignment, Node, NodeContainer, NodeLabel, NodePosition,
                                    NodeText, TerminalSpacing, TextSize)
+from ._src.node_graph.tips import TipSpecification
 from ._src.node_graph.tools import EdgeSpecification, create_links, create_nodes
 
 __all__ = ['Anchor', 'CoordinateAnchor', 'IntersectionAnchor', 'Node', 'TerminalSpacing',
            'MidpointAnchor', 'RelativeAnchor', 'NodeAnchor', 'Annotation', 'RectAnnotation',
            'BraceAnnotation', 'CircleAnnotation', 'EdgeAnnotation', 'Constraints', 'CurveSource',
-           'Edge', 'EdgeSpecification', 'create_nodes', 'create_links', 'FunctionCurveSource',
+           'TipSpecification', 'Edge', 'EdgeSpecification', 'create_nodes', 'create_links', 'FunctionCurveSource',
            'FunctionSection', 'FunctionGraph', 'FunctionMultiGraph', 'GraphedTrait', 'Location',
            'NodeGraph', 'NodeLabel', 'NodePosition', 'NodeText', 'NodeContainer', 'Alignment',
            'TextSize', 'TrajectoryCurveSource', 'formatter', 'function_graph_marks',
