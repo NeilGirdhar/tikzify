@@ -1,11 +1,23 @@
+.. role:: bash(code)
+    :language: bash
+
+.. role:: python(code)
+    :language: python
+
+.. image:: https://img.shields.io/pypi/v/tikzify
+   :target: https://pypi.org/project/tikzify/
+   :alt: PyPI - Version
+   :align: center
+.. image:: https://img.shields.io/badge/version_scheme-EffVer-0097a7
+   :alt: EffVer Versioning
+   :target: https://jacobtomlinson.dev/effver
+.. image:: https://img.shields.io/pypi/pyversions/tikzify
+   :alt: PyPI - Python Version
+   :align: center
+
 =======
 Tikzify
 =======
-.. image:: https://badge.fury.io/py/tikzify.svg
-    :target: https://badge.fury.io/py/tikzify
-
-.. role:: bash(code)
-    :language: bash
 
 A set of utilities for programmatically generating TikZ code.
 
