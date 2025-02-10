@@ -27,11 +27,12 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  'more_itertools >= 8',
-  'networkx >= 2.5',
-  'numpy >= 1.21',
-  'rectangle >= 0.5.1',
-  'scipy >= 1.9',
+  "more_itertools>=8",
+  "networkx>=2.5",
+  "numpy>=1.21",
+  "rectangle>=0.5.1",
+  "scipy-stubs>=1.15",
+  "scipy>=1.9",
 ]
 
 [project.urls]
@@ -39,12 +40,12 @@ repository = "https://github.com/NeilGirdhar/tikzify"
 
 [tool.uv]
 dev-dependencies = [
-  "isort >= 5.8",
-  "jupyter >= 1",
-  "mypy >= 1.0",
-  "pylint >= 2.8",
-  "pyright >= 0.0.13",
-  "ruff >= 0.2",
+  "isort>=5.8",
+  "jupyter>=1",
+  "mypy>=1.0",
+  "pylint>=2.8",
+  "pyright>=0.0.13",
+  "ruff>=0.2",
 ]
 
 [tool.isort]
@@ -208,7 +209,7 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = ["more_itertools", "networkx", "scipy.signal"]
+module = ["networkx"]
 ignore_missing_imports = true
 
 [tool.ruff]
