@@ -35,11 +35,8 @@ dependencies = [
   "scipy>=1.9",
 ]
 
-[project.urls]
-repository = "https://github.com/NeilGirdhar/tikzify"
-
-[tool.uv]
-dev-dependencies = [
+[project.optional-dependencies]
+dev = [
   "isort>=5.8",
   "jupyter>=1",
   "mypy>=1.0",
@@ -48,12 +45,13 @@ dev-dependencies = [
   "ruff>=0.2",
 ]
 
+[project.urls]
+repository = "https://github.com/NeilGirdhar/tikzify"
+
 [tool.isort]
 line_length = 100
 multi_line_output = 0
 skip_glob = [".pytype/*.py"]
-
-[tool.pytest]
 
 [tool.pylint.master]
 jobs = 0
@@ -260,6 +258,7 @@ ignore = [
   "TD002", # Missing author in TODO; try: # TODO(<author_name>): ....
   "TD003", # Missing issue link on the line following this TODO.
   "TID252", # Relative imports from parent modules are banned.
+  "UP037", # Remove quotes from type annotation.
 ]
 
 [tool.ruff.lint.flake8-errmsg]
@@ -269,7 +268,6 @@ max-string-length = 40
 combine-as-imports = true
 
 [tool.ruff.lint.pydocstyle]
-# Use Google-style docstrings.
 convention = "google"
 
 [tool.ruff.lint.pylint]
