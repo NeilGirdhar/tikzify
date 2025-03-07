@@ -27,22 +27,22 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "more_itertools>=8",
-  "networkx>=2.5",
-  "numpy>=1.21",
+  "more_itertools>=10",
+  "networkx>=3.1",
+  "numpy>=1.25",
   "rectangle>=0.5.1",
   "scipy-stubs>=1.15",
-  "scipy>=1.9",
+  "scipy>=1.11",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "isort>=5.8",
-  "jupyter>=1",
-  "mypy>=1.0",
-  "pylint>=2.8",
-  "pyright>=0.0.13",
-  "ruff>=0.2",
+  "isort>=6",
+  "jupyter>=1.1.1",
+  "mypy>=1.15",
+  "pylint>=3.3",
+  "pyright>=1.1.396",
+  "ruff>=0.9.9",
 ]
 
 [project.urls]
