@@ -24,17 +24,16 @@ A set of utilities for programmatically generating TikZ code.
 Contribution guidelines
 =======================
 
-- Conventions
+The implementation should be consistent with the surrounding style, be type annotated, and pass the
+linters below.
 
-  - Naming conventions are according to PEP8.
+There are a few tools to clean and check the source:
 
-- How to clean the source:
-
-  - :bash:`ruff check .`
-  - :bash:`pyright`
-  - :bash:`mypy`
-  - :bash:`isort .`
-  - :bash:`pylint tikzify`
+- :bash:`ruff check`
+- :bash:`pyright`
+- :bash:`mypy`
+- :bash:`isort .`
+- :bash:`pylint tikzify`
 
 Running
 =======
