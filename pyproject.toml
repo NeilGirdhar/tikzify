@@ -46,7 +46,7 @@ dev = [
 ]
 
 [project.urls]
-repository = "https://github.com/NeilGirdhar/tikzify"
+source = "https://github.com/NeilGirdhar/tikzify"
 
 [tool.isort]
 line_length = 100
