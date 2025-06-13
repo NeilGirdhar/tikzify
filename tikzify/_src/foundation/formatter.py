@@ -1,12 +1,11 @@
 import re
 from re import Match
 from textwrap import dedent
-from typing import Any
 
 __all__ = ['formatter']
 
 
-def formatter(string_to_be_printed: str, **kwargs: Any) -> str:
+def formatter(string_to_be_printed: str, **kwargs: object) -> str:
     """Perform recursive string formatting on a string.
 
     Any keywords enclosed in curly quotation marks are expanded using the keyword arguments passed

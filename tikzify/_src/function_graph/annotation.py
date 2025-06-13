@@ -145,7 +145,7 @@ class EdgeAnnotation(Annotation):
     pos: float | None = None
 
     @override
-    def generate(self, f: TextIO) -> None:  # noqa: PLR0915
+    def generate(self, f: TextIO) -> None:  # noqa: C901, PLR0915
         x_source = self.x_source
         x_target = self.x_source if self.x_target is None else self.x_target
 
