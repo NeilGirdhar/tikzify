@@ -19,7 +19,9 @@
 Tikzify
 =======
 
-A set of utilities for programmatically generating TikZ code.
+A set of utilities for programmatically generating Typst code.
+
+Previously: Tikz/Latex code; now, Typst.  This is a work in progress.
 
 Contribution guidelines
 =======================
@@ -37,14 +39,6 @@ There are a few tools to clean and check the source:
 
 Running
 =======
-
-- This macro is helpful for running examples:
-
-.. code-block:: bash
-
-    function dm {
-        python "$1.py" $2 && pdflatex -shell-escape $1 && open $1.pdf
-    }
 
 - The basal ganglia example can be run by doing :bash:`dm basal_ganglia` from the examples folder.  It should produce :bash:`examples/basal_ganglia.pdf`, which shows all of the output, as well as :bash:`examples/figures/basal_ganglia-*.pdf`, which are the individual diagrams to be included.
 

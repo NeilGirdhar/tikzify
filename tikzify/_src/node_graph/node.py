@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING, TextIO
 import numpy as np
 from rectangle import Rect
 
-from ..foundation.formatter import formatter
-from ..foundation.pf import pf, tikz_option
 from .anchor import Anchor
 
 if TYPE_CHECKING:

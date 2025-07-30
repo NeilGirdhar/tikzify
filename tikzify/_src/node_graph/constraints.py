@@ -164,5 +164,5 @@ class Constraints:  # noqa: PLR0904
                 for name in self.labels}
 
     # Exceptions --------------------------------------------------------------
-    class InsufficientConstraintsError(Exception):  # noqa: D106
+    class InsufficientConstraintsError(Exception):
         pass

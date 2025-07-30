@@ -175,7 +175,6 @@ module = ["networkx"]
 ignore_missing_imports = true
 
 [tool.ruff]
-extend-exclude = ["__init__.py"]
 line-length = 100
 
 [tool.ruff.lint]
@@ -192,6 +191,7 @@ ignore = [
   "D101", # Missing docstring in public class.
   "D102", # Missing docstring in public method.
   "D103", # Missing docstring in public function.
+  "D104", # Missing docstring in public package.
   "D105", # Missing docstring in magic method.
   "D107", # Missing docstring in __init__.
   "DOC201", # return is not documented in docstring.

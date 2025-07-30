@@ -9,7 +9,6 @@ from typing import Any, TextIO, override
 
 import networkx as nx
 
-from ..foundation.pf import pf
 from .anchor import CoordinateAnchor, IntersectionAnchor, NodeAnchor, RelativeAnchor
 from .edge import Edge
 from .multi_edge import angles, create_waypoints, default_waypoint_names

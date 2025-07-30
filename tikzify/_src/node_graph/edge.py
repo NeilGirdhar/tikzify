@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from functools import reduce
 from typing import TextIO
 
-from ..foundation.pf import formatter, pf, tikz_option
 from .node import Node
 from .tips import TipSpecification
 

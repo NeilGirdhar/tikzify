@@ -1,9 +1,6 @@
 from collections.abc import Mapping, Sequence
 from typing import Any, TextIO, override
 
-from ..foundation.contexts import tex_pic
-from ..foundation.pf import pf
-
 __all__ = ['LegendArrow', 'LegendItem', 'LegendNode', 'LegendRect', 'generate_legend']
 
 

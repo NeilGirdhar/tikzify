@@ -2,7 +2,6 @@ from collections.abc import Sequence
 from dataclasses import KW_ONLY, dataclass
 from typing import TextIO, override
 
-from ..foundation.pf import pf
 from ..node_graph.edge import Edge
 from ..node_graph.node import Node, NodeText
 from .draw import FUNCTION_GRAPH_WIDTH, MARK_HEIGHT, MARK_WIDTH

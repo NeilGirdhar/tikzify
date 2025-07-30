@@ -5,8 +5,6 @@ from typing import Any, TextIO
 
 import numpy as np
 
-from ..foundation.pf import pf
-
 __all__ = ['draw_curve', 'function_graph_line', 'function_graph_marks']
 
 # Drawing constants
