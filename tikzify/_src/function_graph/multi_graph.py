@@ -1,9 +1,6 @@
-import string
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Sequence
 from typing import TextIO
 
-from ..node_graph.node import NodeText
-from .annotation import Annotation
 from .curve_generator import generate_curve
 from .curve_source.curve_source import CurveSource
 from .draw import (FILL_OPACITY, FUNCTION_GRAPH_WIDTH, draw_curve, function_graph_line,
@@ -75,14 +72,6 @@ class FunctionMultiGraph:
     def generate_graph_lines(self, f: TextIO) -> None:
         for altitude, graphed_element in zip(self.altitudes, self.graphs, strict=True):
             function_graph_line(f, graphed_element.label, altitude, arrow=True)
-
-    def generate_annotations(self, f: TextIO, annotations: Iterable[Annotation]) -> None:
-        annotation_letter = 0
-        for annotation in annotations:
-            if annotation.text is None:
-                annotation.text = NodeText([string.ascii_uppercase[annotation_letter]])
-                annotation_letter += 1
-            annotation.generate(f)
 
     def generate_legend(self, f: TextIO) -> None:
         legend = []
