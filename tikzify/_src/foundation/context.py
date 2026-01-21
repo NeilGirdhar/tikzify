@@ -3,15 +3,13 @@ from __future__ import annotations
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
-from enum import Enum, auto
 from pathlib import Path
 from textwrap import dedent, indent
 from typing import TextIO
 
-
-class Mode(Enum):
-    code = auto()
-    content = auto()
+# class Mode(Enum):
+#     code = auto()
+#     content = auto()
 
 
 @dataclass
