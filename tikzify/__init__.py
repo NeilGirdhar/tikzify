@@ -8,6 +8,20 @@ from ._src.function_graph.curve_source.trajectory import TrajectoryCurveSource
 from ._src.function_graph.graph import FunctionGraph
 from ._src.function_graph.trait import GraphedTrait
 
-__all__ = ['CalledFunction', 'Context', 'CurveSource', 'Element', 'Function', 'FunctionCurveSource',
-           'FunctionGraph', 'FunctionSection', 'GraphedTrait', 'Import', 'Math',
-           'TrajectoryCurveSource', 'TypstObject', 'function', 'generate_curve']
+__all__ = [
+    "CalledFunction",
+    "Context",
+    "CurveSource",
+    "Element",
+    "Function",
+    "FunctionCurveSource",
+    "FunctionGraph",
+    "FunctionSection",
+    "GraphedTrait",
+    "Import",
+    "Math",
+    "TrajectoryCurveSource",
+    "TypstObject",
+    "function",
+    "generate_curve",
+]

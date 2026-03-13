@@ -9,28 +9,24 @@ import numpy as np
 
 from .curve_source import CurveSource
 
-__all__ = ['FunctionCurveSource', 'FunctionSection']
+__all__ = ["FunctionCurveSource", "FunctionSection"]
 
 
 class FunctionSection:
-
-    def __init__(self,
-                 domain_start: float,
-                 function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]) -> None:
+    def __init__(
+        self, domain_start: float, function: Callable[[np.ndarray[Any, Any]], np.ndarray[Any, Any]]
+    ) -> None:
         super().__init__()
         self.domain_start = domain_start
         self.function = function
 
 
 class FunctionCurveSource(CurveSource):
-
     def __init__(self, sections: Sequence[FunctionSection], end_time: float) -> None:
         for a, b in pairwise(sections):
             if a.domain_start > b.domain_start:
                 raise ValueError
-        start_time = (sections[0].domain_start
-                      if sections
-                      else end_time)
+        start_time = sections[0].domain_start if sections else end_time
         super().__init__(start_time, end_time)
         self.sections = sections
 

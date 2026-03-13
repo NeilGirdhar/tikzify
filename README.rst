@@ -31,18 +31,14 @@ linters below.
 
 There are a few tools to clean and check the source:
 
-- :bash:`ruff check`
-- :bash:`pyright`
-- :bash:`mypy`
-- :bash:`isort .`
-- :bash:`pylint tikzify`
+- :bash:`uv run ruff check`
+- :bash:`uv run ruff format`
+- :bash:`uv run ty check`
 
 Running
 =======
 
-- The basal ganglia example can be run by doing :bash:`dm basal_ganglia` from the examples folder.  It should produce :bash:`examples/basal_ganglia.pdf`, which shows all of the output, as well as :bash:`examples/figures/basal_ganglia-*.pdf`, which are the individual diagrams to be included.
-
-- A copy of the `pdf <examples/basal_ganglia.pdf>` is provided.  It shows three programmatically-generated diagrams, with various sections highlighted.
+To do…
 
 Whom do I talk to?
 ==================

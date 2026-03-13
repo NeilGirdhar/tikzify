@@ -40,11 +40,7 @@ class Function:
     name: str
     defaults: Mapping[str, object] | None = None
 
-    def __call__(self,
-                 *args: object,
-                 inline: bool = False,
-                 **kwargs: object
-                 ) -> CalledFunction:
+    def __call__(self, *args: object, inline: bool = False, **kwargs: object) -> CalledFunction:
         return CalledFunction(self, args, kwargs, inline=inline)
 
 
@@ -54,6 +50,7 @@ def function() -> Callable[[FunctionType], Function]:
         defaults = {}
         for name, parameter in sig.parameters.items():
             if parameter.default is not MISSING:
-                defaults[name.replace('_', '-')] = parameter.default
+                defaults[name.replace("_", "-")] = parameter.default
         return Function(f.__name__, defaults)
+
     return inner

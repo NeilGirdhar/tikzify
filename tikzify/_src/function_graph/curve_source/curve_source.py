@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy as np
 
-__all__ = ['CurveSource']
+__all__ = ["CurveSource"]
 
 
 class CurveSource:

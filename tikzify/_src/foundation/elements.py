@@ -7,7 +7,7 @@ from .context import Context
 
 
 def render_key(x: str, /) -> str:
-    return x.replace('_', '-')
+    return x.replace("_", "-")
 
 
 def render_value(x: object, /) -> str:  # noqa: PLR0911
@@ -26,8 +26,10 @@ def render_value(x: object, /) -> str:  # noqa: PLR0911
             mid = ", ".join(render_value(y) for y in x)
             return f"({mid})"
         case dict():
-            mid = ", ".join(f"{render_key(key)}: {render_value(value)}"
-                            for key, value in x.items())
+            mid = ", ".join(
+                f"{render_key(key)}: {render_value(value)}"  # type: ignore
+                for key, value in x.items()
+            )
             return f"({mid})"
         case Element():
             return x.render()
@@ -71,7 +73,7 @@ class Import(Element):
     def render(self) -> str:
         if self.what is None:
             return f'import "{self.from_}'
-        what_str = '*' if self.what is True else ', '.join(self.what)
+        what_str = "*" if self.what is True else ", ".join(self.what)
         return f'import "{self.from_}: {what_str}'
 
 

@@ -21,7 +21,7 @@ class Context:
     @classmethod
     @contextmanager
     def create(cls, path: Path) -> Generator[Context]:
-        f = path.open('w', encoding="utf-8")
+        f = path.open("w", encoding="utf-8")
         with f:
             yield Context(f)
 
