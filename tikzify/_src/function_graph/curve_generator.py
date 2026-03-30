@@ -21,7 +21,7 @@ def _generate_curve(
         assert section.shape[1] == 2  # noqa: PLR2004
 
         # Generate a Jump from 0.0 for the first key when filling.
-        if is_first and fill and section[0, 1] != 0.0:  # noqa: RUF069
+        if is_first and fill and section[0, 1] != 0.0:
             section_value: float = section[0, 0]
             yield np.array([[section_value, 0.0]])
 
